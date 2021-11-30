@@ -6,9 +6,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AboutPage } from './pages/about/about.page';
 import { HomePage } from './pages/home/home.page';
+import { PokemonCardComponent } from './components/pokemon-card/pokemon-card.component';
 
 @NgModule({
-  declarations: [AppComponent, HomePage, AboutPage],
+  declarations: [AppComponent, HomePage, AboutPage, PokemonCardComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
