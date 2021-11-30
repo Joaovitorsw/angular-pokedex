@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -10,10 +11,14 @@ import { HomePage } from './pages/home/home.page';
   declarations: [AppComponent, HomePage, AboutPage],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     RouterModule.forRoot([
-      { path: '', component: HomePage, data: { animation: 'HomePage' } },
-      { path: 'about', component: AboutPage, data: { animation: 'AboutPage' } },
+      { path: '', component: HomePage },
+      {
+        path: 'about/:pokemonName',
+        component: AboutPage,
+      },
     ]),
   ],
   providers: [],
