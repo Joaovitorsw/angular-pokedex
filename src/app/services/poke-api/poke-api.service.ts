@@ -6,21 +6,19 @@ import { defer, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class PokeAPIService {
-  PokeAPI;
-  constructor() {
-    this.PokeAPI = new PokeAPI();
-  }
+  constructor(private PokeAPI: PokeAPI) {}
   getAllPokemonsDetails() {}
   getPokemonByNameOrID(name: string | number): Observable<PokeAPI.Pokemon> {
     return defer(
-      () => this.PokeAPI.getPokemonByName(name) as Promise<PokeAPI.Pokemon>
+      async () => (await this.PokeAPI.getPokemonByName(name)) as PokeAPI.Pokemon
     );
   }
   getPokemonsByList(
     list: Array<string | number>
   ): Observable<PokeAPI.Pokemon[]> {
     return defer(
-      () => this.PokeAPI.getPokemonByName(list) as Promise<PokeAPI.Pokemon[]>
+      async () =>
+        (await this.PokeAPI.getPokemonByName(list)) as PokeAPI.Pokemon[]
     );
   }
 }
