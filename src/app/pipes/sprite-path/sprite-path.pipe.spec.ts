@@ -1,38 +1,123 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { TestBed } from '@angular/core/testing';
-import { pokemonsMock } from 'src/app/mocks/pokemon-mocks';
+import PokeAPI from 'pokedex-promise-v2';
+import { of } from 'rxjs';
+import {
+  SpriteStorageErrorMessage,
+  SpriteStorageService,
+} from 'src/app/services/sprite-storage/sprite-storage.service';
+import { instance, mock, when } from 'ts-mockito';
 import { SpritePathPipe } from './sprite-path.pipe';
 
 describe('SpritePathPipe', () => {
   let pipe: SpritePathPipe;
-  let httpClient: HttpClient;
+  let spriteStorageMock: SpriteStorageService;
 
-  beforeEach(async () => {
-    TestBed.configureTestingModule({
-      imports: [HttpClientModule],
-    });
-    httpClient = TestBed.inject(HttpClient);
-    pipe = new SpritePathPipe(httpClient);
+  beforeEach(() => {
+    spriteStorageMock = mock(SpriteStorageService);
+    const spriteStorageMockInstance = instance(spriteStorageMock);
+    pipe = new SpritePathPipe(spriteStorageMockInstance);
   });
 
   it('create an instance', () => {
     expect(pipe).toBeTruthy();
   });
-  it('should return the correct sprite path to venusaur-mega', (done) => {
-    expect(
-      pipe.transform(pokemonsMock[0]).subscribe((path) => {
-        expect(path).toBe('../../../assets/gifs/normal/venusaur-mega.gif');
-        done();
-      })
+
+  it('should return the gif path when exists on storage', (done) => {
+    when(spriteStorageMock.getSpritePathByName('bulbasaur')).thenReturn(
+      of('bulbasaur.gif')
     );
+
+    const samplePokemon = {
+      name: 'bulbasaur',
+      sprites: {
+        front_default: 'bulbasaur.png',
+        versions: {
+          'generation-vi': {
+            'omegaruby-alphasapphire': { front_default: 'bulbasaur-vi.png' },
+          },
+        },
+      },
+    };
+
+    const expectedSprite = 'bulbasaur.gif';
+
+    const result = pipe.transform(samplePokemon as unknown as PokeAPI.Pokemon);
+
+    result.subscribe((spritePath) => {
+      expect(spritePath).toBe(expectedSprite);
+      done();
+    });
   });
 
-  it('should return the correct sprite path to charizard-mega-x', (done) => {
-    expect(
-      pipe.transform(pokemonsMock[1]).subscribe((path) => {
-        expect(path).toBe('../../../assets/gifs/normal/charizard-mega-x.gif');
-        done();
-      })
+  it('should return the generation-vi path when storage return not founded', (done) => {
+    when(spriteStorageMock.getSpritePathByName('bulbasaur')).thenReturn(
+      of(SpriteStorageErrorMessage.NOT_FOUND)
     );
+
+    const samplePokemon = {
+      name: 'bulbasaur',
+      sprites: {
+        front_default: 'bulbasaur.png',
+        versions: {
+          'generation-vi': {
+            'omegaruby-alphasapphire': { front_default: 'bulbasaur-vi.png' },
+          },
+        },
+      },
+    };
+
+    const expectedSprite = 'bulbasaur-vi.png';
+
+    const result = pipe.transform(samplePokemon as unknown as PokeAPI.Pokemon);
+
+    result.subscribe((spritePath) => {
+      expect(spritePath).toBe(expectedSprite);
+      done();
+    });
+  });
+
+  it('should return the front_default path when generation-vi does no exist and storage return not found', (done) => {
+    when(spriteStorageMock.getSpritePathByName('bulbasaur')).thenReturn(
+      of(SpriteStorageErrorMessage.NOT_FOUND)
+    );
+
+    const samplePokemon = {
+      name: 'bulbasaur',
+      sprites: {
+        front_default: 'bulbasaur.png',
+        versions: {
+          'generation-vi': {
+            'omegaruby-alphasapphire': { front_default: null },
+          },
+        },
+      },
+    };
+
+    const expectedSprite = 'bulbasaur.png';
+
+    const result = pipe.transform(samplePokemon as unknown as PokeAPI.Pokemon);
+
+    result.subscribe((spritePath) => {
+      expect(spritePath).toBe(expectedSprite);
+      done();
+    });
+  });
+
+  it('should return the gif path ', (done) => {
+    when(spriteStorageMock.getSpritePathByName('bulbasaur')).thenReturn(
+      of('bulbasaur.gif')
+    );
+
+    const samplePokemon = {
+      name: 'bulbasaur',
+    };
+
+    const expectedSprite = 'bulbasaur.gif';
+
+    const result = pipe.transform(samplePokemon as unknown as PokeAPI.Pokemon);
+
+    result.subscribe((spritePath) => {
+      expect(spritePath).toBe(expectedSprite);
+      done();
+    });
   });
 });
