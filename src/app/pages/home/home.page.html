@@ -1,5 +1,7 @@
 <p>home works!</p>
-<px-pokemon-card [pokemon]="item" *ngFor="let item of items | async">
+<px-pokemon-card [pokemon]="item" *ngFor="let item of items$ | async; trackBy: trackByFn">
+</px-pokemon-card>
+<px-pokemon-card [pokemon]="mega" *ngFor="let mega of  megas$ | async; trackBy: trackByFn">
 </px-pokemon-card>
 
 <a [routerLink]="['/about/homepage']">AboutPage</a>

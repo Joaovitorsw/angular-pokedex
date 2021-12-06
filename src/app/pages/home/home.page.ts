@@ -9,11 +9,20 @@ import { PokeAPIService } from 'src/app/services/poke-api/poke-api.service';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
-  items: Observable<PokeAPI.Pokemon[]>;
+  items$: Observable<PokeAPI.Pokemon[]>;
+  megas$: Observable<PokeAPI.Pokemon[]>;
   constructor(private pokeAPI: PokeAPIService) {
-    const indexArray = Array.from({ length: 15 }, (_, index) => ++index);
-    this.items = this.pokeAPI.getPokemonsByList(indexArray);
+    const maxPokemons = Array.from({ length: 898 }, (_, index) => ++index);
+    this.items$ = this.pokeAPI.getPokemonsByList(maxPokemons.slice(0, 8));
+
+    this.megas$ = this.pokeAPI.getPokemonsByList([
+      10033, 10034, 10035, 10036, 10037, 10038, 10039, 10040,
+    ]);
   }
 
   ngOnInit(): void {}
+
+  trackByFn(index: number, item: any) {
+    return index;
+  }
 }
