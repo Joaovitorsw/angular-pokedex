@@ -15,6 +15,7 @@ import { environment } from '../environments/environment';
 import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { provideStorage,getStorage } from '@angular/fire/storage';
+import { TypeIconPathPipe } from './pipes/type-icon-path/type-icon-path.pipe';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { provideStorage,getStorage } from '@angular/fire/storage';
     AboutPage,
     PokemonCardComponent,
     SpritePathPipe,
+    TypeIconPathPipe,
   ],
   imports: [
     BrowserModule,
