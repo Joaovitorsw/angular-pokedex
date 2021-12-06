@@ -21,8 +21,6 @@ export class SpritePathPipe implements PipeTransform {
         const spriteVersionUrl =
           (sprites.versions['generation-vi']['omegaruby-alphasapphire']
             .front_default as string) ?? (sprites.front_default as string);
-        console.log(spritePath);
-        console.log(spriteVersionUrl);
 
         return spriteVersionUrl;
       })
