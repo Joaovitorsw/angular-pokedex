@@ -6,9 +6,11 @@ import { catchError } from 'rxjs/operators';
 
 export const enum SpriteStorageErrorTypeMessage {
   NOT_FOUND = 'storage/object-not-found',
+  QUOTA_EXCEEDED = 'storage/quota-exceeded',
 }
 export const enum SpriteStorageErrorMessage {
   NOT_FOUND = 'Not Found.',
+  QUOTA_EXCEEDED = 'Quota Exceeded.',
 }
 
 @Injectable({
@@ -26,8 +28,21 @@ export class SpriteStorageService {
     const promise = getDownloadURL(spriteStorageRef);
     return from(promise).pipe(
       catchError((error: any) => {
-        const hasError = error.code === SpriteStorageErrorTypeMessage.NOT_FOUND;
-        if (hasError) return of(SpriteStorageErrorMessage.NOT_FOUND);
+        const options = [
+          {
+            available: error.code === SpriteStorageErrorTypeMessage.NOT_FOUND,
+            message: SpriteStorageErrorMessage.NOT_FOUND,
+          },
+          {
+            available:
+              error.code === SpriteStorageErrorTypeMessage.QUOTA_EXCEEDED,
+            message: SpriteStorageErrorMessage.QUOTA_EXCEEDED,
+          },
+        ];
+        const errorOptions = options.find((option) => option.available);
+
+        if (errorOptions?.available) return of(errorOptions.message);
+
         return of(error);
       })
     );

@@ -14,9 +14,11 @@ export class SpritePathPipe implements PipeTransform {
   transform({ name, sprites }: PokeAPI.Pokemon): Observable<string> {
     return this.spriteStorage.getSpritePathByName(name).pipe(
       map((spritePath) => {
-        const hasError = spritePath === SpriteStorageErrorMessage.NOT_FOUND;
+        const NOT_FOUND = spritePath === SpriteStorageErrorMessage.NOT_FOUND;
+        const QUOTA_EXCEEDED =
+          spritePath === SpriteStorageErrorMessage.QUOTA_EXCEEDED;
 
-        if (!hasError) return spritePath;
+        if (!NOT_FOUND && !QUOTA_EXCEEDED) return spritePath;
 
         const spriteVersionUrl =
           (sprites.versions['generation-vi']['omegaruby-alphasapphire']
