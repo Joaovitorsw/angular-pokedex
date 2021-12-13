@@ -69,6 +69,6 @@ describe('PokemonCardComponent', () => {
     const typeElement = fixture.nativeElement.querySelector(`.${type} img`);
     const sample = typeElement.src;
     const expected = sample.includes(type);
-    expect(expected);
+    expect(expected).toBeTruthy();
   });
 });
