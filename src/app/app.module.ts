@@ -14,6 +14,7 @@ import { AppComponent } from './app.component';
 import { PokemonCardComponent } from './components/pokemon-card/pokemon-card.component';
 import { AboutPage } from './pages/about/about.page';
 import { HomePage } from './pages/home/home.page';
+import { PadStartPipe } from './pipes/pad-start/pad-start.pipe';
 import { SpritePathPipe } from './pipes/sprite-path/sprite-path.pipe';
 import { TypeIconPathPipe } from './pipes/type-icon-path/type-icon-path.pipe';
 
@@ -25,6 +26,7 @@ import { TypeIconPathPipe } from './pipes/type-icon-path/type-icon-path.pipe';
     PokemonCardComponent,
     SpritePathPipe,
     TypeIconPathPipe,
+    PadStartPipe,
   ],
   imports: [
     BrowserModule,
