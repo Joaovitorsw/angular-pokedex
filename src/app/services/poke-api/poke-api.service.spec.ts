@@ -41,4 +41,14 @@ describe('PokeAPIService', () => {
       done();
     });
   });
+
+  it('should return range list of pokemon', (done) => {
+    const pokemonStart = 1;
+    const pokemonEnd = 24;
+    const sample = service.getPokemonsByRange(pokemonStart, pokemonEnd);
+    sample.subscribe((pokemons) => {
+      expect(pokemons.length).toEqual(pokemonEnd);
+      done();
+    });
+  });
 });

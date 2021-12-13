@@ -7,7 +7,6 @@ import { defer, Observable } from 'rxjs';
 })
 export class PokeAPIService {
   constructor(private PokeAPI: PokeAPI) {}
-  getAllPokemonsDetails() {}
   getPokemonByNameOrID(name: string | number): Observable<PokeAPI.Pokemon> {
     return defer(
       async () => (await this.PokeAPI.getPokemonByName(name)) as PokeAPI.Pokemon
@@ -19,6 +18,14 @@ export class PokeAPIService {
     return defer(
       async () =>
         (await this.PokeAPI.getPokemonByName(list)) as PokeAPI.Pokemon[]
+    );
+  }
+  getPokemonsByRange(...args: Array<number>): Observable<PokeAPI.Pokemon[]> {
+    const [start, end] = args;
+    const myRange = Array.from({ length: end }, (_, i) => i + start);
+    return defer(
+      async () =>
+        (await this.PokeAPI.getPokemonByName(myRange)) as PokeAPI.Pokemon[]
     );
   }
 }
