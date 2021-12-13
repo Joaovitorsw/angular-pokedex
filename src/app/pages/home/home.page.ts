@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import PokeAPI from 'pokedex-promise-v2';
-import { Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { PokeAPIService } from 'src/app/services/poke-api/poke-api.service';
 
 @Component({
@@ -8,21 +8,31 @@ import { PokeAPIService } from 'src/app/services/poke-api/poke-api.service';
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage implements OnInit {
-  items$: Observable<PokeAPI.Pokemon[]>;
-  megas$: Observable<PokeAPI.Pokemon[]>;
+export class HomePage {
+  pokemons$$: BehaviorSubject<PokeAPI.Pokemon[]>;
   constructor(private pokeAPI: PokeAPIService) {
-    const maxPokemons = Array.from({ length: 898 }, (_, index) => ++index);
-    this.items$ = this.pokeAPI.getPokemonsByList(maxPokemons.slice(0, 8));
-
-    this.megas$ = this.pokeAPI.getPokemonsByList([
-      10033, 10034, 10035, 10036, 10037, 10038, 10039, 10040,
-    ]);
+    const pokemons$ = this.pokeAPI.getPokemonsByRange(1, 24);
+    pokemons$.subscribe((pokemons) => {
+      this.pokemons$$ = new BehaviorSubject(pokemons);
+    });
   }
 
-  ngOnInit(): void {}
+  endScroll() {
+    const pokemonsLength = this.pokemons$$.value.length + 1;
+    const nextLength = 24;
+    this.addPokemons(pokemonsLength, nextLength);
+  }
+
+  addPokemons(previous: number, next: number): void {
+    this.pokeAPI.getPokemonsByRange(previous, next).subscribe((pokemons) => {
+      const previousPokemons = this.pokemons$$.value;
+      this.pokemons$$.next([...previousPokemons, ...pokemons]);
+    });
+  }
 
   trackByFn(index: number, item: any) {
-    return index;
+    const id = index + 1;
+    if (id !== item.id) return;
+    return item.id;
   }
 }

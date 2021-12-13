@@ -1,7 +1,14 @@
-<p>home works!</p>
-<px-pokemon-card [pokemon]="item" *ngFor="let item of items$ | async; trackBy: trackByFn">
-</px-pokemon-card>
-<px-pokemon-card [pokemon]="mega" *ngFor="let mega of  megas$ | async; trackBy: trackByFn">
-</px-pokemon-card>
-
 <a [routerLink]="['/about/homepage']">AboutPage</a>
+<div
+  class="pokemons-content"
+  infiniteScroll
+  [infiniteScrollDistance]="0.5"
+  [infiniteScrollThrottle]="250"
+  (scrolled)="endScroll()"
+>
+  <px-pokemon-card
+    [pokemon]="pokemon"
+    *ngFor="let pokemon of pokemons$$ | async; trackBy: trackByFn"
+  >
+  </px-pokemon-card>
+</div>
