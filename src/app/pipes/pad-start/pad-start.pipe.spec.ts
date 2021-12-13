@@ -6,9 +6,9 @@ describe('PadStartPipe', () => {
     expect(pipe).toBeTruthy();
   });
 
-  it('should return 000005', () => {
+  it('should return 00005', () => {
     const pipe = new PadStartPipe();
-    expect(pipe.transform(5, 5, '0')).toBe('000005');
+    expect(pipe.transform(5, 5, '0')).toBe('00005');
   });
 
   it('should return  05', () => {
