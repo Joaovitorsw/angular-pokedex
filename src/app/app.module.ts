@@ -1,20 +1,20 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { getStorage, provideStorage } from '@angular/fire/storage';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule } from '@angular/router';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import PokeAPI from 'pokedex-promise-v2';
+import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PokemonCardComponent } from './components/pokemon-card/pokemon-card.component';
 import { AboutPage } from './pages/about/about.page';
 import { HomePage } from './pages/home/home.page';
 import { SpritePathPipe } from './pipes/sprite-path/sprite-path.pipe';
-import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
-import { environment } from '../environments/environment';
-import { provideAuth,getAuth } from '@angular/fire/auth';
-import { provideFirestore,getFirestore } from '@angular/fire/firestore';
-import { provideStorage,getStorage } from '@angular/fire/storage';
 import { TypeIconPathPipe } from './pipes/type-icon-path/type-icon-path.pipe';
 
 @NgModule({
@@ -30,14 +30,8 @@ import { TypeIconPathPipe } from './pipes/type-icon-path/type-icon-path.pipe';
     BrowserModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    InfiniteScrollModule,
     AppRoutingModule,
-    RouterModule.forRoot([
-      { path: '', component: HomePage },
-      {
-        path: 'about/:pokemonName',
-        component: AboutPage,
-      },
-    ]),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
