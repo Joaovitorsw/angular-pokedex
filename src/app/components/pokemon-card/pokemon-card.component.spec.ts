@@ -1,42 +1,33 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import PokeAPI from 'pokedex-promise-v2';
 import { pokemonsMock } from 'src/app/mocks/pokemon-mocks';
-import { SpritePathPipe } from 'src/app/pipes/sprite-path/sprite-path.pipe';
+import { PokemonTitleCasePipe } from 'src/app/pipes/pokemon-title-case/pokemon-title-case.pipe';
 import { TypeIconPathPipe } from 'src/app/pipes/type-icon-path/type-icon-path.pipe';
-import { instance, mock } from 'ts-mockito';
 import { PokemonCardComponent } from './pokemon-card.component';
 
 const componentTemplateTest = ` 
-<h1>{{ pokemon?.name }}</h1>
-<p>{{ pokemon?.id }}</p>
+<h1>{{ pokemon.name | pokemonTitleCase }}</h1>
+<p>{{ pokemon.id }}</p>
 <div class="{{ slot.type.name }}  type " *ngFor="let slot of pokemon?.types">
   <div class="icon {{ slot.type.name }}">
     <img [src]="slot.type.name | typeIconPath" alt="" />
   </div>
   <p>{{ slot.type.name }}</p>
 </div>
-<p>{{ pokemon?.weight }}</p>
-<p>{{ pokemon?.height }}</p>
+<p>{{ pokemon.weight }}</p>
+<p>{{ pokemon.height }}</p>
+
 `;
 
 describe('PokemonCardComponent', () => {
   let component: PokemonCardComponent;
   let fixture: ComponentFixture<PokemonCardComponent>;
-  let spritePathMock: SpritePathPipe;
-  let typePathMock: TypeIconPathPipe;
+
   beforeEach(async () => {
-    spritePathMock = mock(SpritePathPipe);
-    typePathMock = mock(TypeIconPathPipe);
-
-    const spritePathMockInstance = instance(spritePathMock);
-    const typePathMockInstance = instance(typePathMock);
-
     await TestBed.configureTestingModule({
-      declarations: [PokemonCardComponent, SpritePathPipe, TypeIconPathPipe],
-      providers: [
-        { provide: PokeAPI, useValue: new PokeAPI() },
-        { provide: SpritePathPipe, useValue: spritePathMockInstance },
-        { provide: TypeIconPathPipe, useValue: typePathMockInstance },
+      declarations: [
+        PokemonCardComponent,
+        PokemonTitleCasePipe,
+        TypeIconPathPipe,
       ],
     })
       .overrideTemplate(PokemonCardComponent, componentTemplateTest)
@@ -58,8 +49,26 @@ describe('PokemonCardComponent', () => {
   });
 
   it('should render pokemon name', () => {
+    const pipe = new PokemonTitleCasePipe();
     expect(fixture.nativeElement.querySelector('h1')?.textContent).toContain(
-      `${component.pokemon.name}`
+      `${pipe.transform(component.pokemon.name)}`
     );
+  });
+  it('should render pokemon type', () => {
+    const types = component.pokemon.types.map((type) => type.type.name);
+    types.forEach((type) => {
+      const typeElement = fixture.nativeElement
+        .querySelector(`.${type}`)
+        ?.querySelector('p');
+      expect(typeElement?.textContent).toContain(`${type}`);
+    });
+  });
+
+  it('should render type image', () => {
+    const type = component.pokemon.types[0].type.name;
+    const typeElement = fixture.nativeElement.querySelector(`.${type} img`);
+    const sample = typeElement.src;
+    const expected = sample.includes(type);
+    expect(expected);
   });
 });

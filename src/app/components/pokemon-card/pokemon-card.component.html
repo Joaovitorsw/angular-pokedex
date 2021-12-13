@@ -1,11 +1,11 @@
-<h1>{{ pokemon?.name }}</h1>
-<p>{{ pokemon?.id }}</p>
+<h1>{{ pokemon.name | pokemonTitleCase }}</h1>
+<p>{{ pokemon.id | padStart: 3:"0" }}</p>
 <div class="{{ slot.type.name }}  type " *ngFor="let slot of pokemon?.types">
   <div class="icon {{ slot.type.name }}">
     <img [src]="slot.type.name | typeIconPath" alt="" />
   </div>
   <p>{{ slot.type.name }}</p>
 </div>
-<p>{{ pokemon?.weight }}</p>
-<p>{{ pokemon?.height }}</p>
+<p>{{ pokemon.weight }}</p>
+<p>{{ pokemon.height }}</p>
 <img src="{{ pokemon | spritePath | async }}" />
