@@ -12,12 +12,15 @@ import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PokemonCardComponent } from './components/pokemon-card/pokemon-card.component';
+import { TypeCardComponent } from './components/type-card/type-card.component';
 import { AboutPage } from './pages/about/about.page';
 import { HomePage } from './pages/home/home.page';
 import { PadStartPipe } from './pipes/pad-start/pad-start.pipe';
 import { PokemonTitleCasePipe } from './pipes/pokemon-title-case/pokemon-title-case.pipe';
 import { SpritePathPipe } from './pipes/sprite-path/sprite-path.pipe';
 import { TypeIconPathPipe } from './pipes/type-icon-path/type-icon-path.pipe';
+import { WeightPipe } from './pipes/weight/weight.pipe';
+import { HeightPipe } from './pipes/height/height.pipe';
 
 @NgModule({
   declarations: [
@@ -29,6 +32,9 @@ import { TypeIconPathPipe } from './pipes/type-icon-path/type-icon-path.pipe';
     TypeIconPathPipe,
     PokemonTitleCasePipe,
     PadStartPipe,
+    TypeCardComponent,
+    WeightPipe,
+    HeightPipe,
   ],
   imports: [
     BrowserModule,

@@ -1,21 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { pokemonsMock } from 'src/app/mocks/pokemon-mocks';
+import { PadStartPipe } from 'src/app/pipes/pad-start/pad-start.pipe';
 import { PokemonTitleCasePipe } from 'src/app/pipes/pokemon-title-case/pokemon-title-case.pipe';
-import { TypeIconPathPipe } from 'src/app/pipes/type-icon-path/type-icon-path.pipe';
 import { PokemonCardComponent } from './pokemon-card.component';
 
 const componentTemplateTest = ` 
 <h1>{{ pokemon.name | pokemonTitleCase }}</h1>
-<p>{{ pokemon.id }}</p>
-<div class="{{ slot.type.name }}  type " *ngFor="let slot of pokemon?.types">
-  <div class="icon {{ slot.type.name }}">
-    <img [src]="slot.type.name | typeIconPath" alt="" />
-  </div>
-  <p>{{ slot.type.name }}</p>
-</div>
+<p>{{ pokemon.id | padStart: 3:"0" }}</p>
 <p>{{ pokemon.weight }}</p>
 <p>{{ pokemon.height }}</p>
-
 `;
 
 describe('PokemonCardComponent', () => {
@@ -24,11 +17,7 @@ describe('PokemonCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        PokemonCardComponent,
-        PokemonTitleCasePipe,
-        TypeIconPathPipe,
-      ],
+      declarations: [PokemonCardComponent, PokemonTitleCasePipe, PadStartPipe],
     })
       .overrideTemplate(PokemonCardComponent, componentTemplateTest)
       .compileComponents();
@@ -50,25 +39,27 @@ describe('PokemonCardComponent', () => {
 
   it('should render pokemon name', () => {
     const pipe = new PokemonTitleCasePipe();
-    expect(fixture.nativeElement.querySelector('h1')?.textContent).toContain(
-      `${pipe.transform(component.pokemon.name)}`
-    );
-  });
-  it('should render pokemon type', () => {
-    const types = component.pokemon.types.map((type) => type.type.name);
-    types.forEach((type) => {
-      const typeElement = fixture.nativeElement
-        .querySelector(`.${type}`)
-        ?.querySelector('p');
-      expect(typeElement?.textContent).toContain(`${type}`);
-    });
+    const sample = fixture.nativeElement.querySelector('h1')?.textContent;
+    const expected = pipe.transform(component.pokemon.name);
+    expect(sample).toContain(`${expected}`);
   });
 
-  it('should render type image', () => {
-    const type = component.pokemon.types[0].type.name;
-    const typeElement = fixture.nativeElement.querySelector(`.${type} img`);
-    const sample = typeElement.src;
-    const expected = sample.includes(type);
-    expect(expected).toBeTruthy();
+  it('should render pokemon id', () => {
+    const pipe = new PadStartPipe();
+    const sample = fixture.nativeElement.querySelectorAll('p')[0].textContent;
+    const expected = pipe.transform(component.pokemon.id, 3, '0');
+    expect(sample).toContain(`${expected}`);
+  });
+
+  it('should render pokemon weight', () => {
+    const sample = fixture.nativeElement.querySelectorAll('p')[1].textContent;
+    const expected = component.pokemon.weight;
+    expect(sample).toContain(`${expected}`);
+  });
+
+  it('should render pokemon height', () => {
+    const sample = fixture.nativeElement.querySelectorAll('p')[2].textContent;
+    const expected = component.pokemon.height;
+    expect(sample).toContain(`${expected}`);
   });
 });
