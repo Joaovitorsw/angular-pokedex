@@ -1,6 +1,24 @@
-main {
+:host {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+}
+
+px-pokemon-card {
+  padding: 20px;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+body {
+  color: white;
+  height: 100%;
+  background-image: linear-gradient(-225deg, #e3fdf5 0%, #ffe6fa 100%);
+  background-size: 400% 400%;
+  background-position: 0% 0%;
+  -webkit-animation: Gradient 15s ease infinite;
+  -moz-animation: Gradient 15s ease infinite;
+  animation: Gradient 15s ease infinite;
+  background-repeat: no-repeat;
 }
