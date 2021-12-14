@@ -1,9 +1,11 @@
-<h1>{{ pokemon.name | pokemonTitleCase }}</h1>
-<p>{{ pokemon.id | padStart: 3:"0" }}</p>
-<px-type-card
-  [type]="slot.type.name"
-  *ngFor="let slot of pokemon?.types"
-></px-type-card>
-<p>{{ pokemon.weight | weight }}</p>
-<p>{{ pokemon.height | height }}</p>
+<p class="id">#{{ pokemon.id | padStart: 3:"0" }}</p>
 <img src="{{ pokemon | spritePath | async }}" />
+<h1>{{ pokemon.name | pokemonTitleCase }}</h1>
+<div class="type-container">
+  <px-type-card
+    [type]="slot.type.name"
+    *ngFor="let slot of pokemon?.types"
+  ></px-type-card>
+</div>
+<p class="weight">{{ pokemon.weight | weight }}</p>
+<p class="height">{{ pokemon.height | height }}</p>

@@ -1,6 +1,92 @@
+@import "../../app.component.scss";
+
 :host {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  border-radius: 5px;
+  max-height: 230px;
+}
+
+@each $name, $color in $type-colors-dark {
+  :host[type="#{$name}"] {
+    .id {
+      color: $color;
+    }
+    h1 {
+      text-shadow: 0 0 5px $shadow-scoff;
+    }
+    .height,
+    .weight {
+      &::before {
+        background-color: $color;
+      }
+    }
+  }
+}
+
+@each $name, $color in $type-colors-light {
+  :host[type="#{$name}"] {
+    background-color: $color;
+  }
+}
+
+.id {
+  font-weight: 800;
+  font-size: 15vh;
+  color: gray;
+  opacity: 0.5;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  transform: translateY(-90%);
+}
+h1 {
+  color: black;
+  position: relative;
+  z-index: 2;
+}
+img {
+  position: relative;
+  z-index: 1;
+}
+.type-container {
+  display: flex;
+}
+
+.weight {
+  top: 0;
+  right: 0;
+}
+.height {
+  top: 0;
+  left: 0;
+}
+
+.height,
+.weight {
+  position: absolute;
+  z-index: 1;
+  font-weight: 800;
+  border-radius: 100%;
+  color: black;
+  transform: translateY(-100%);
+
+  &::before {
+    content: "";
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.6;
+    padding: 15px 6px;
+    border-radius: 100%;
+    background-color: white;
+    box-shadow: 2px 2px 2px 1px $shadow-scoff;
+    transform: translate(-10%, -30%);
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostBinding, Input, OnInit } from '@angular/core';
 import PokeAPI from 'pokedex-promise-v2';
 
 @Component({
@@ -8,7 +8,10 @@ import PokeAPI from 'pokedex-promise-v2';
 })
 export class PokemonCardComponent implements OnInit {
   @Input() pokemon: PokeAPI.Pokemon;
+  @HostBinding('attr.type') type: string;
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.type = this.pokemon.types[0].type.name;
+  }
 }
