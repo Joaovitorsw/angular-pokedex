@@ -2,6 +2,11 @@ import { Component } from '@angular/core';
 import PokeAPI from 'pokedex-promise-v2';
 import { BehaviorSubject } from 'rxjs';
 import { PokeAPIService } from 'src/app/services/poke-api/poke-api.service';
+import { particles } from 'src/assets/particles';
+
+(particles as any).particles.shape.type = 'image';
+(particles as any).particles.shape.image.src =
+  'https://joaovitorsw-pokedex.netlify.app/search-bar-icon.a8e8adbe.svg';
 
 @Component({
   selector: 'px-home',
@@ -10,6 +15,9 @@ import { PokeAPIService } from 'src/app/services/poke-api/poke-api.service';
 })
 export class HomePage {
   pokemons$$: BehaviorSubject<PokeAPI.Pokemon[]>;
+  id = 'ts-particles';
+  particlesOptions = particles;
+
   constructor(private pokeAPI: PokeAPIService) {
     const pokemons$ = this.pokeAPI.getPokemonsByRange(1, 24);
     pokemons$.subscribe((pokemons) => {

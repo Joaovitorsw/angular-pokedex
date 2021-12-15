@@ -3,10 +3,14 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 20px;
+}
+
+.pokemons-content {
+  width: 100%;
 }
 
 px-pokemon-card {
-  padding: 20px;
   margin-top: 25px;
   margin-bottom: 25px;
 }
@@ -21,4 +25,7 @@ body {
   -moz-animation: Gradient 15s ease infinite;
   animation: Gradient 15s ease infinite;
   background-repeat: no-repeat;
+}
+ng-particles {
+  z-index: -1;
 }
