@@ -6,6 +6,7 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgParticlesModule } from 'ng-particles';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import PokeAPI from 'pokedex-promise-v2';
 import { environment } from '../environments/environment';
@@ -15,12 +16,12 @@ import { PokemonCardComponent } from './components/pokemon-card/pokemon-card.com
 import { TypeCardComponent } from './components/type-card/type-card.component';
 import { AboutPage } from './pages/about/about.page';
 import { HomePage } from './pages/home/home.page';
+import { HeightPipe } from './pipes/height/height.pipe';
 import { PadStartPipe } from './pipes/pad-start/pad-start.pipe';
 import { PokemonTitleCasePipe } from './pipes/pokemon-title-case/pokemon-title-case.pipe';
 import { SpritePathPipe } from './pipes/sprite-path/sprite-path.pipe';
 import { TypeIconPathPipe } from './pipes/type-icon-path/type-icon-path.pipe';
 import { WeightPipe } from './pipes/weight/weight.pipe';
-import { HeightPipe } from './pipes/height/height.pipe';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { HeightPipe } from './pipes/height/height.pipe';
   ],
   imports: [
     BrowserModule,
+    NgParticlesModule,
     HttpClientModule,
     BrowserAnimationsModule,
     InfiniteScrollModule,
