@@ -15,6 +15,6 @@ export class HeightPipe implements PipeTransform {
 
     const metros = string.slice(0, index);
     const cm = arr[index];
-    return `${metros}.${cm} m`;
+    return `${metros}.${cm}0 m`;
   }
 }
