@@ -1,52 +1,53 @@
 @import "../../app.component.scss";
 
+$background-color: #fafafa;
+$text-color: rgb(48, 48, 48);
+$id-color: rgba(128, 128, 128, 0.452);
+
+@each $name, $color in $type-colors-light {
+  :host[type="#{$name}"] {
+    h1 {
+      text-shadow: 0px 0px 2px $color;
+    }
+    .id {
+      text-shadow: 0px 0px 2px $color;
+    }
+  }
+}
+a[ng-reflect-router-link] {
+  position: absolute;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+}
 :host {
+  background-color: $background-color;
+  box-shadow: 0px 0px 0px 0.5px $shadow-scoff;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   border-radius: 5px;
-  max-height: 230px;
-}
-
-@each $name, $color in $type-colors-dark {
-  :host[type="#{$name}"] {
-    .id {
-      color: $color;
-    }
-    h1 {
-      text-shadow: 0 0 5px $shadow-scoff;
-    }
-    .height,
-    .weight {
-      &::before {
-        background-color: $color;
-      }
-    }
-  }
-}
-
-@each $name, $color in $type-colors-light {
-  :host[type="#{$name}"] {
-    background-color: $color;
-  }
+  font-family: "Bebas Neue", cursive;
 }
 
 .id {
+  font-family: "Montserrat", sans-serif;
   font-weight: 800;
   font-size: 15vh;
-  color: gray;
-  opacity: 0.5;
+  color: $id-color;
+  opacity: 1;
   position: absolute;
   z-index: 1;
   top: 0;
   transform: translateY(-90%);
 }
 h1 {
-  color: black;
+  color: $text-color;
   position: relative;
   z-index: 2;
+  margin: 0;
 }
 img {
   position: relative;
@@ -67,11 +68,14 @@ img {
 
 .height,
 .weight {
+  text-align: center;
+  width: 40px;
+  height: 20px;
+  color: $text-color;
   position: absolute;
   z-index: 1;
   font-weight: 800;
   border-radius: 100%;
-  color: black;
   transform: translateY(-100%);
 
   &::before {
@@ -85,8 +89,11 @@ img {
     opacity: 0.6;
     padding: 15px 6px;
     border-radius: 100%;
-    background-color: white;
-    box-shadow: 2px 2px 2px 1px $shadow-scoff;
+    background-color: $background-color;
+    box-shadow: 0px 0px 0px 0.7px $shadow-scoff;
     transform: translate(-10%, -30%);
   }
+}
+px-type-card:last-child {
+  margin-bottom: 20px;
 }
