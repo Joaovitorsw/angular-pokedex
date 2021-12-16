@@ -6,7 +6,6 @@ a:first-child {
   ng-particles.#{$name} {
     ::ng-deep.tsparticles-canvas-el {
       background-color: $color !important;
-      animation: fadeIn 0.5s ease-in-out;
     }
   }
 }
@@ -55,5 +54,6 @@ h1 {
 }
 ng-particles {
   position: absolute;
+  animation: fadeIn 0.5s ease-in-out;
   z-index: -3;
 }

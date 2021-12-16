@@ -18,6 +18,7 @@ px-pokemon-card {
 }
 
 ng-particles {
+  animation: fadeIn 0.5s ease-in-out;
   z-index: -1;
   ::ng-deep.tsparticles-canvas-el {
     background-image: linear-gradient(
