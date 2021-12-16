@@ -4,6 +4,7 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getStorage, provideStorage } from '@angular/fire/storage';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgParticlesModule } from 'ng-particles';
@@ -14,6 +15,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PokemonCardComponent } from './components/pokemon-card/pokemon-card.component';
 import { TypeCardComponent } from './components/type-card/type-card.component';
+import { ColorProgressBarDirective } from './directives/color-progress-bar/color-progress-bar.directive';
 import { AboutPage } from './pages/about/about.page';
 import { HomePage } from './pages/home/home.page';
 import { HeightPipe } from './pipes/height/height.pipe';
@@ -36,13 +38,15 @@ import { WeightPipe } from './pipes/weight/weight.pipe';
     TypeCardComponent,
     WeightPipe,
     HeightPipe,
+    ColorProgressBarDirective,
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     NgParticlesModule,
     HttpClientModule,
-    BrowserAnimationsModule,
     InfiniteScrollModule,
+    MatProgressBarModule,
     AppRoutingModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),

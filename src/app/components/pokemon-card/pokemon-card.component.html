@@ -7,6 +7,14 @@
     *ngFor="let slot of pokemon?.types"
   ></px-type-card>
 </div>
+<p class="overall" *ngIf="total">
+  overall {{ total * 10 | number: "1.0-0" }}
+  <mat-progress-bar
+    [pxColorProgressBar]="total"
+    [value]="total"
+    mode="determinate"
+  ></mat-progress-bar>
+</p>
 <p class="weight">{{ pokemon.weight | weight }}</p>
 <p class="height">{{ pokemon.height | height }}</p>
-<a [routerLink]="['/about/' + pokemon.name]"> </a>
+<a [routerLink]="['/about/' + pokemon.name]"></a>
