@@ -1,4 +1,4 @@
-<div class="about {{type}}" *ngIf="pokemon">
+<div class="about" *ngIf="pokemon">
   <a [routerLink]="['/']">Homepage</a>
   <p class="id">#{{ pokemon.id | padStart: 3:"0" }}</p>
   <img src="{{ pokemon | spritePath | async }}" />

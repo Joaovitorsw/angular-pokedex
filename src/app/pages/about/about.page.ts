@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Container, IOptions, RecursivePartial } from 'ng-particles';
 import { Pokemon } from 'pokedex-promise-v2';
@@ -11,9 +11,9 @@ import { particles, particlesAnimations } from 'src/assets/particles';
   styleUrls: ['./about.page.scss'],
 })
 export class AboutPage {
+  @HostBinding('attr.type') type: string;
   pokemon: Pokemon;
   id = 'about-page';
-  type: string;
   container: Container;
   particlesOptions: RecursivePartial<IOptions>;
 

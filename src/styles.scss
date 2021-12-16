@@ -1,9 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
-* {
-  -webkit-tap-highlight-color: transparent;
-}
-
+@import "reset.scss";
 html,
 body {
   height: 100%;

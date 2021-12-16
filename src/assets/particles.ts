@@ -43,8 +43,8 @@ const defaultOptions: any = {
   interactivity: {
     detect_on: 'canvas',
     events: {
-      onhover: { enable: true, mode: 'bubble' },
-      onclick: { enable: true, mode: 'repulse' },
+      onhover: { enable: false, mode: 'bubble' },
+      onclick: { enable: false, mode: 'repulse' },
       resize: true,
     },
     modes: {
@@ -139,7 +139,7 @@ export const particlesAnimations: any = {
             mode: 'repulse',
           },
           onclick: {
-            enable: true,
+            enable: false,
             mode: 'repulse',
           },
           resize: true,
@@ -423,8 +423,8 @@ export const particlesAnimations: any = {
       interactivity: {
         detect_on: 'canvas',
         events: {
-          onhover: { enable: true, mode: 'bubble' },
-          onclick: { enable: true, mode: 'push' },
+          onhover: { enable: false, mode: 'bubble' },
+          onclick: { enable: false, mode: 'push' },
           resize: true,
         },
         modes: {
@@ -495,8 +495,8 @@ export const particlesAnimations: any = {
       interactivity: {
         detect_on: 'canvas',
         events: {
-          onhover: { enable: true, mode: 'bubble' },
-          onclick: { enable: true, mode: 'repulse' },
+          onhover: { enable: false, mode: 'bubble' },
+          onclick: { enable: false, mode: 'repulse' },
           resize: true,
         },
         modes: {
