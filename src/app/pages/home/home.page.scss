@@ -13,19 +13,17 @@
 px-pokemon-card {
   margin-top: 25px;
   margin-bottom: 25px;
+  min-height: 210px;
+  animation: fadeIn 1s ease-in-out;
 }
 
-body {
-  color: white;
-  height: 100%;
-  background-image: linear-gradient(-225deg, #e3fdf5 0%, #ffe6fa 100%);
-  background-size: 400% 400%;
-  background-position: 0% 0%;
-  -webkit-animation: Gradient 15s ease infinite;
-  -moz-animation: Gradient 15s ease infinite;
-  animation: Gradient 15s ease infinite;
-  background-repeat: no-repeat;
-}
 ng-particles {
   z-index: -1;
+  ::ng-deep.tsparticles-canvas-el {
+    background-image: linear-gradient(
+      -225deg,
+      #e3fdf5 0%,
+      #ffe6fa 100%
+    ) !important;
+  }
 }

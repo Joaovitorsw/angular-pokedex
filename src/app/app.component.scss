@@ -35,7 +35,7 @@ $type-colors-light: (
   "fighting": #d67873,
   "normal": #c6c6a7,
   "ice": #748cc2,
-  "ghost": #a292bc,
+  "ghost": #7141bebd,
   "dark": #a29288,
   "steel": #d1d1e0,
 );
@@ -60,3 +60,25 @@ $type-colors-dark: (
   "steel": #787887,
 );
 $shadow-scoff: rgba(0, 0, 0, 0.459);
+$type-background: (
+  "fairy": #ea7eae,
+  "grass": #60ad39,
+  "ground": #c08d00,
+  "normal": #a8a878,
+  "poison": #8d008d,
+  "ghost": #705898,
+  "fire": #160001,
+  "water": #008db4,
+  "ice": #748cc2,
+  "bug": #c6d16e,
+  "electric": #d8ad00,
+);
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
