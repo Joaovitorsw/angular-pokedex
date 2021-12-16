@@ -1,14 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'px-type-card',
-  templateUrl: './type-card.component.html',
+  template: `
+    <div class="icon {{ type }}">
+      <img [src]="type | typeIconPath" [alt]="type" />
+    </div>
+    <p>{{ type }}</p>
+  `,
   styleUrls: ['./type-card.component.scss'],
 })
-export class TypeCardComponent implements OnInit {
+export class TypeCardComponent {
   @Input() type: string;
-
   constructor() {}
-
-  ngOnInit(): void {}
 }
