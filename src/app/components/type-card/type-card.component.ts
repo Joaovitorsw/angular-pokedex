@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostBinding, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'px-type-card',
@@ -10,7 +10,11 @@ import { Component, Input } from '@angular/core';
   `,
   styleUrls: ['./type-card.component.scss'],
 })
-export class TypeCardComponent {
+export class TypeCardComponent implements OnInit {
   @Input() type: string;
+  @HostBinding('class') typeValue: string;
   constructor() {}
+  ngOnInit(): void {
+    this.typeValue = this.type;
+  }
 }

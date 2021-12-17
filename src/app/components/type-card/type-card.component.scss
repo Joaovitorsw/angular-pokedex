@@ -12,7 +12,7 @@
   }
 }
 @each $name, $color in $type-colors {
-  :host[ng-reflect-type="#{$name}"] {
+  :host.#{$name} {
     background-color: $color;
     box-shadow: 0 0 2px 1px $shadow-scoff;
   }
@@ -30,6 +30,7 @@
     position: relative;
     width: 48px;
     margin-right: 10px;
+
     img {
       width: 24px;
       transform: scale(0.8);
