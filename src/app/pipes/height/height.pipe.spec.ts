@@ -14,6 +14,13 @@ describe('HeightPipe', () => {
     expect(result).toBe('0.0 cm');
   });
 
+  it('should return 30 cm if value is 3', () => {
+    const pipe = new HeightPipe();
+    const value = 3;
+    const result = pipe.transform(value);
+    expect(result).toBe('30 cm');
+  });
+
   it('should return 1.00 m if value is 10', () => {
     const pipe = new HeightPipe();
     const value = 10;

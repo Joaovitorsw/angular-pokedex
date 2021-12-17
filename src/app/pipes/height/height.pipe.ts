@@ -11,7 +11,7 @@ export class HeightPipe implements PipeTransform {
     const arr = [...string];
     const index = arr.length - 1;
 
-    if (index === 0) return `${arr[index]}0.0 cm`;
+    if (index === 0) return `${arr[index]}0 cm`;
 
     const metros = string.slice(0, index);
     const cm = arr[index];
