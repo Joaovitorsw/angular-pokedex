@@ -1,11 +1,10 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { FirebaseApp } from '@angular/fire/app';
-import { getDownloadURL, getStorage, ref } from '@firebase/storage';
-import { from, Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 
-export const enum SpriteStorageErrorTypeMessage {
-  NOT_FOUND = 'storage/object-not-found',
+export const enum SpriteStorageErrorCode {
+  NOT_FOUND = '404',
   QUOTA_EXCEEDED = 'storage/quota-exceeded',
 }
 export const enum SpriteStorageErrorMessage {
@@ -17,26 +16,21 @@ export const enum SpriteStorageErrorMessage {
   providedIn: 'root',
 })
 export class SpriteStorageService {
-  constructor(private readonly firestore: FirebaseApp) {}
+  constructor(private readonly http: HttpClient) {}
 
   getSpritePathByName(name: string): Observable<string> {
-    const storage = getStorage(this.firestore);
-    const spriteStorageRef = ref(
-      storage,
-      `pokemons-sprites/normal-sprites/${name}.gif`
-    );
-    const promise = getDownloadURL(spriteStorageRef);
-    return from(promise).pipe(
+    const url = `https://raw.githubusercontent.com/Joaovitorsw/poke-gifs/main/normal/${name}.gif`;
+
+    return this.http.get(url, { responseType: 'blob' }).pipe(
+      switchMap(({ size, type }: { size: number; type: string }) => {
+        if (type === 'image/gif') return of(url);
+        return of(SpriteStorageErrorMessage.QUOTA_EXCEEDED);
+      }),
       catchError((error: any) => {
         const options = [
           {
-            available: error.code === SpriteStorageErrorTypeMessage.NOT_FOUND,
+            available: error.status == SpriteStorageErrorCode.NOT_FOUND,
             message: SpriteStorageErrorMessage.NOT_FOUND,
-          },
-          {
-            available:
-              error.code === SpriteStorageErrorTypeMessage.QUOTA_EXCEEDED,
-            message: SpriteStorageErrorMessage.QUOTA_EXCEEDED,
           },
         ];
         const errorOptions = options.find((option) => option.available);

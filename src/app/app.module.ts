@@ -43,6 +43,7 @@ import { WeightPipe } from './pipes/weight/weight.pipe';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     NgParticlesModule,
     HttpClientModule,
     InfiniteScrollModule,

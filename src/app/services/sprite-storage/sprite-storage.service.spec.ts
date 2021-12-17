@@ -1,4 +1,4 @@
-import { FirebaseApp } from '@angular/fire/app';
+import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
 import { instance, mock } from 'ts-mockito';
 import {
@@ -8,11 +8,11 @@ import {
 
 describe('SpriteStorageService', () => {
   let service: SpriteStorageService;
-  let firebase: FirebaseApp;
+  let http: HttpClient;
   beforeEach(() => {
-    const firebaseApp = mock(FirebaseApp);
-    firebase = instance(firebaseApp);
-    service = new SpriteStorageService(firebaseApp);
+    const httpMock = mock(HttpClient);
+    http = instance(httpMock);
+    service = new SpriteStorageService(httpMock);
   });
 
   it('should be created', () => {
