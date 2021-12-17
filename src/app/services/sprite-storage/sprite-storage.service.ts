@@ -5,11 +5,9 @@ import { catchError, switchMap } from 'rxjs/operators';
 
 export const enum SpriteStorageErrorCode {
   NOT_FOUND = '404',
-  QUOTA_EXCEEDED = 'storage/quota-exceeded',
 }
 export const enum SpriteStorageErrorMessage {
   NOT_FOUND = 'Not Found.',
-  QUOTA_EXCEEDED = 'Quota Exceeded.',
 }
 
 @Injectable({
@@ -17,26 +15,21 @@ export const enum SpriteStorageErrorMessage {
 })
 export class SpriteStorageService {
   constructor(private readonly http: HttpClient) {}
+  readonly BASE_URL =
+    'https://raw.githubusercontent.com/Joaovitorsw/poke-gifs/main/normal/';
+  readonly EXTENSION = '.gif';
 
   getSpritePathByName(name: string): Observable<string> {
-    const url = `https://raw.githubusercontent.com/Joaovitorsw/poke-gifs/main/normal/${name}.gif`;
+    const url = `${this.BASE_URL}${name}${this.EXTENSION}`;
 
     return this.http.get(url, { responseType: 'blob' }).pipe(
-      switchMap(({ size, type }: { size: number; type: string }) => {
+      switchMap(({ type }: { type: string }) => {
         if (type === 'image/gif') return of(url);
-        return of(SpriteStorageErrorMessage.QUOTA_EXCEEDED);
+        return of(SpriteStorageErrorMessage.NOT_FOUND);
       }),
       catchError((error: any) => {
-        const options = [
-          {
-            available: error.status == SpriteStorageErrorCode.NOT_FOUND,
-            message: SpriteStorageErrorMessage.NOT_FOUND,
-          },
-        ];
-        const errorOptions = options.find((option) => option.available);
-
-        if (errorOptions?.available) return of(errorOptions.message);
-
+        if (SpriteStorageErrorCode.NOT_FOUND)
+          return of(SpriteStorageErrorMessage.NOT_FOUND);
         return of(error);
       })
     );

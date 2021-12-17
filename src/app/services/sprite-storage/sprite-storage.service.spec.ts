@@ -1,6 +1,8 @@
-import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
-import { instance, mock } from 'ts-mockito';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
 import {
   SpriteStorageErrorMessage,
   SpriteStorageService,
@@ -8,44 +10,46 @@ import {
 
 describe('SpriteStorageService', () => {
   let service: SpriteStorageService;
-  let http: HttpClient;
-  beforeEach(() => {
-    const httpMock = mock(HttpClient);
-    http = instance(httpMock);
-    service = new SpriteStorageService(httpMock);
+  let httpMock: HttpTestingController;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [SpriteStorageService],
+    });
+    service = TestBed.inject(SpriteStorageService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should be return the observable with gif path', (done) => {
-    const sample = 'bulbasaur';
-    const expected = 'bulbasaur.gif';
-    spyOn(service, 'getSpritePathByName').and.returnValue(of(expected));
-    service.getSpritePathByName(sample).subscribe((result) => {
-      expect(result).toBe(expected);
+  it('should return a sprite path', (done) => {
+    const spriteName = 'bulbasaur';
+    const spritePath = `${service.BASE_URL}${spriteName}${service.EXTENSION}`;
+    service.getSpritePathByName(spriteName).subscribe((path) => {
+      expect(path).toBe(spritePath);
       done();
     });
+    const req = httpMock.expectOne(spritePath);
+    expect(req.request.method).toEqual('GET');
+    const response = new Blob([], { type: 'image/gif' });
+
+    req.flush(response);
   });
 
-  it('should be return the observable with quota exceeded', (done) => {
-    const sample = 'bulbasaur';
-    const expected = SpriteStorageErrorMessage.QUOTA_EXCEEDED;
-    spyOn(service, 'getSpritePathByName').and.returnValue(of(expected));
-    service.getSpritePathByName(sample).subscribe((result) => {
-      expect(result).toBe(expected);
+  it('should return not found when there is no image ', (done) => {
+    const spriteName = 'bulbasaur';
+    const spritePath = `${service.BASE_URL}${spriteName}${service.EXTENSION}`;
+    service.getSpritePathByName(spriteName).subscribe((error) => {
+      expect(error).toBe(SpriteStorageErrorMessage.NOT_FOUND);
       done();
     });
-  });
+    const req = httpMock.expectOne(spritePath);
+    expect(req.request.method).toEqual('GET');
+    const response = new Blob();
 
-  it('should be return the observable with not found path ', (done) => {
-    const sample = 'bulbasaur';
-    const expected = SpriteStorageErrorMessage.NOT_FOUND;
-    spyOn(service, 'getSpritePathByName').and.returnValue(of(expected));
-    service.getSpritePathByName(sample).subscribe((result) => {
-      expect(result).toBe(expected);
-      done();
-    });
+    req.flush(response, { status: 404, statusText: 'Not Found' });
   });
 });
