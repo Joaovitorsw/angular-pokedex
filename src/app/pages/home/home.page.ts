@@ -15,15 +15,13 @@ export class HomePage {
   particlesOptions: RecursivePartial<IOptions>;
   start$;
   id = 'home-page';
-  private pokeBallPath =
-    'https://joaovitorsw-pokedex.netlify.app/search-bar-icon.a8e8adbe.svg';
 
   constructor(private pokeAPI: PokeAPIService) {
     const pokemons$ = this.pokeAPI.getPokemonsByRange(1, 24);
     this.start$ = pokemons$.subscribe((pokemons) => {
       this.pokemons$$ = new BehaviorSubject(pokemons);
     });
-    particlesAnimations.homePage(this.pokeBallPath);
+    particlesAnimations.homePage();
     this.particlesOptions = particles;
   }
 

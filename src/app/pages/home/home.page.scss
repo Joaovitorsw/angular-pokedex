@@ -7,13 +7,16 @@
 }
 
 .pokemons-content {
+  margin-top: 20px;
   width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-gap: 20px;
 }
 
 px-pokemon-card {
-  margin-top: 25px;
-  margin-bottom: 25px;
   min-height: 210px;
+  width: 100%;
   animation: fadeIn 1s ease-in-out;
 }
 
@@ -26,5 +29,10 @@ ng-particles {
       #e3fdf5 0%,
       #ffe6fa 100%
     ) !important;
+  }
+}
+@media screen and (max-width: 280px) {
+  :host {
+    padding: 0;
   }
 }
