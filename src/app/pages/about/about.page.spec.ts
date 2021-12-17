@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { RouterTestingModule } from '@angular/router/testing';
+import PokeAPI from 'pokedex-promise-v2';
 import { AboutPage } from './about.page';
 
 describe('AboutPage', () => {
@@ -8,9 +9,10 @@ describe('AboutPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AboutPage ]
-    })
-    .compileComponents();
+      declarations: [AboutPage],
+      imports: [RouterTestingModule],
+      providers: [{ provide: PokeAPI, useValue: new PokeAPI() }],
+    }).compileComponents();
   });
 
   beforeEach(() => {
