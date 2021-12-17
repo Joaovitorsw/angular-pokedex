@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "reset.scss";
+
 html,
 body {
   height: 100%;
@@ -10,11 +11,17 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-html,
-body {
-  height: 100%;
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
 }
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.144);
+  border-radius: 85px;
+}
+
+::-webkit-scrollbar-track {
+  border: 5px solid rgba(0, 0, 0, 0.055);
+  border-radius: 80px;
 }
