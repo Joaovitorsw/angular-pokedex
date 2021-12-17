@@ -1,20 +1,23 @@
-<p class="id">#{{ pokemon.id | padStart: 3:"0" }}</p>
-<img src="{{ pokemon | spritePath | async }}" />
-<h1>{{ pokemon.name | pokemonTitleCase }}</h1>
-<div class="type-container">
-  <px-type-card
-    [type]="slot.type.name"
-    *ngFor="let slot of pokemon?.types"
-  ></px-type-card>
-</div>
-<p class="overall" *ngIf="total">
-  overall {{ total * 10 | number: "1.0-0" }}
-  <mat-progress-bar
-    [pxColorProgressBar]="total"
-    [value]="total"
-    mode="determinate"
-  ></mat-progress-bar>
-</p>
-<p class="weight">{{ pokemon.weight | weight }}</p>
-<p class="height">{{ pokemon.height | height }}</p>
-<a [routerLink]="['/about/' + pokemon.name]"></a>
+<a [routerLink]="['/about/' + pokemon.name]">
+  <p class="id">#{{ pokemon.id | padStart: 3:"0" }}</p>
+  <div class="poke-image">
+    <img src="{{ pokemon | spritePath | async }}" />
+  </div>
+  <h1>{{ pokemon.name | pokemonTitleCase }}</h1>
+  <div class="type-container">
+    <px-type-card
+      [type]="slot.type.name"
+      *ngFor="let slot of pokemon?.types"
+    ></px-type-card>
+  </div>
+  <p class="overall">
+    overall {{ total | number: "1.0-0" }}
+    <mat-progress-bar
+      [pxColorProgressBar]="total * overallConversion"
+      [value]="total * overallConversion"
+      mode="determinate"
+    ></mat-progress-bar>
+  </p>
+  <p class="weight">{{ pokemon.weight | weight }}</p>
+  <p class="height">{{ pokemon.height | height }}</p>
+</a>
