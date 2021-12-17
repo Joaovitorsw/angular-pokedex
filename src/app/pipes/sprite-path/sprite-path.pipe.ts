@@ -15,10 +15,8 @@ export class SpritePathPipe implements PipeTransform {
     return this.spriteStorage.getSpritePathByName(name).pipe(
       map((spritePath) => {
         const NOT_FOUND = spritePath === SpriteStorageErrorMessage.NOT_FOUND;
-        const QUOTA_EXCEEDED =
-          spritePath === SpriteStorageErrorMessage.QUOTA_EXCEEDED;
 
-        if (!NOT_FOUND && !QUOTA_EXCEEDED) return spritePath;
+        if (!NOT_FOUND) return spritePath;
 
         const spriteVersionUrl =
           (sprites.versions['generation-vi']['omegaruby-alphasapphire']

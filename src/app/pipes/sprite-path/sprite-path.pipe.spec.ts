@@ -101,33 +101,6 @@ describe('SpritePathPipe', () => {
     });
   });
 
-  it('should return the front_default path when generation-vi does no exist and storage return quota exceed', (done) => {
-    when(spriteStorageMock.getSpritePathByName('bulbasaur')).thenReturn(
-      of(SpriteStorageErrorMessage.QUOTA_EXCEEDED)
-    );
-
-    const samplePokemon = {
-      name: 'bulbasaur',
-      sprites: {
-        front_default: 'bulbasaur.png',
-        versions: {
-          'generation-vi': {
-            'omegaruby-alphasapphire': { front_default: null },
-          },
-        },
-      },
-    };
-
-    const expectedSprite = 'bulbasaur.png';
-
-    const result = pipe.transform(samplePokemon as unknown as PokeAPI.Pokemon);
-
-    result.subscribe((spritePath) => {
-      expect(spritePath).toBe(expectedSprite);
-      done();
-    });
-  });
-
   it('should return the gif path ', (done) => {
     when(spriteStorageMock.getSpritePathByName('bulbasaur')).thenReturn(
       of('bulbasaur.gif')
