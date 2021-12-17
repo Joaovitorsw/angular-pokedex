@@ -23,7 +23,7 @@ export class ColorProgressBarDirective implements OnInit {
   ngOnInit(): void {
     const rounding = this.value.toPrecision(2);
     const value = parseInt(rounding);
-    this.color = this.percentageToHexColor(value, 100, 0);
+    this.color = this.percentageToHexColor(value);
     const $style = document.createElement('style');
     $style.innerText = `
     mat-progress-bar[color="${this.color}"] .mat-progress-bar-fill::after {
@@ -33,7 +33,7 @@ export class ColorProgressBarDirective implements OnInit {
     this.$hostElement.nativeElement.appendChild($style);
   }
 
-  percentageToHexColor(value: number, max: number, min: number): string {
+  percentageToHexColor(value: number): string {
     const redConversion = Math.round(510 - 5.1 * value);
     const greenConversion = Math.round(4.5 * value);
     const maxValue = 255;
