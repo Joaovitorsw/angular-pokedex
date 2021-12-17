@@ -4,7 +4,7 @@ export let particles: IParticlesProps;
 
 const defaultOptions: any = {
   particles: {
-    number: { value: 160, density: { enable: true, value_area: 800 } },
+    number: { value: 120, density: { enable: true, value_area: 800 } },
     color: { value: '#FFFFFF' },
     shape: {
       type: 'circle',
@@ -18,7 +18,7 @@ const defaultOptions: any = {
       anim: { enable: true, speed: 1, opacity_min: 0, sync: false },
     },
     size: {
-      value: 3,
+      value: 8,
       random: true,
       anim: { enable: false, speed: 4, size_min: 0.3, sync: false },
     },
@@ -61,11 +61,11 @@ const defaultOptions: any = {
 particles = defaultOptions;
 
 export const particlesAnimations: any = {
-  homePage(url: string) {
+  homePage() {
     particles = {
       particles: {
         number: {
-          value: 15,
+          value: 8,
           density: {
             enable: true,
             value_area: 800,
@@ -77,14 +77,14 @@ export const particlesAnimations: any = {
         shape: {
           type: 'image',
           stroke: {
-            width: 1.5,
+            width: 0,
             color: '#000000',
           },
           polygon: {
             nb_sides: 3,
           },
           image: {
-            src: url,
+            src: 'https://joaovitorsw-pokedex.netlify.app/search-bar-icon.a8e8adbe.svg',
             width: 45,
             height: 45,
           },
@@ -259,7 +259,7 @@ export const particlesAnimations: any = {
           type: 'circle',
         },
         opacity: {
-          value: 0.7,
+          value: 0.3,
           random: true,
           anim: {
             enable: false,
@@ -536,7 +536,7 @@ export const particlesAnimations: any = {
 
   ground() {
     const options = { ...defaultOptions };
-    options.particles.color.value = '#979702';
+    options.particles.color.value = '#743108';
     particles = options as any;
   },
 
@@ -610,6 +610,160 @@ export const particlesAnimations: any = {
   fairy() {
     const options = { ...defaultOptions };
     options.particles.color.value = '#e03a83';
+    particles = options as any;
+  },
+  psychic() {
+    particles = {
+      fpsLimit: 60,
+      particles: {
+        number: {
+          value: 5,
+          density: {
+            enable: true,
+            value_area: 800,
+          },
+        },
+        color: {
+          value: '#fa92b2',
+          animation: {
+            enable: false,
+            speed: 20,
+            sync: true,
+          },
+        },
+        shape: {
+          type: 'circle',
+          stroke: {
+            width: 0,
+            color: '#000000',
+          },
+          polygon: {
+            nb_sides: 5,
+          },
+          image: {
+            src: 'https://cdn.matteobruni.it/images/particles/github.svg',
+            width: 100,
+            height: 100,
+          },
+        },
+        opacity: {
+          value: 0.5,
+          random: false,
+          anim: {
+            enable: false,
+            speed: 3,
+            opacity_min: 0.1,
+            sync: false,
+          },
+        },
+        size: {
+          value: 3,
+          random: true,
+          anim: {
+            enable: false,
+            speed: 20,
+            size_min: 0.1,
+            sync: false,
+          },
+        },
+        line_linked: {
+          enable: true,
+          distance: 400,
+          color: 'random',
+          opacity: 0.4,
+          width: 1,
+          triangles: {
+            enable: true,
+            color: '#ffffff',
+            opacity: 0.1,
+          },
+        },
+        move: {
+          enable: true,
+          speed: 6,
+          direction: 'none',
+          random: false,
+          straight: false,
+          out_mode: 'out',
+          attract: {
+            enable: true,
+            rotateX: 600,
+            rotateY: 1200,
+          },
+        },
+      },
+      interactivity: {
+        detect_on: 'canvas',
+        events: {
+          onhover: {
+            enable: false,
+            mode: 'repulse',
+          },
+          onclick: {
+            enable: false,
+            mode: 'push',
+          },
+          resize: true,
+        },
+        modes: {
+          grab: {
+            distance: 400,
+            line_linked: {
+              opacity: 1,
+            },
+          },
+          bubble: {
+            distance: 400,
+            size: 40,
+            duration: 2,
+            opacity: 0.8,
+          },
+          repulse: {
+            distance: 200,
+          },
+          push: {
+            particles_nb: 4,
+          },
+          remove: {
+            particles_nb: 2,
+          },
+        },
+      },
+      retina_detect: true,
+      background: {
+        color: '#000000',
+        image: '',
+        position: '50% 50%',
+        repeat: 'no-repeat',
+        size: 'cover',
+      },
+    };
+  },
+
+  fighting() {
+    const options = { ...defaultOptions };
+    options.particles.color.value = '#f335008c';
+    particles = options as any;
+  },
+  rock() {
+    const options = { ...defaultOptions };
+    options.particles.color.value = '#49392f';
+    particles = options as any;
+  },
+
+  dark() {
+    const options = { ...defaultOptions };
+    options.particles.color.value = '#000000';
+    particles = options as any;
+  },
+  steel() {
+    const options = { ...defaultOptions };
+    options.particles.color.value = '#FFFFFF';
+    particles = options as any;
+  },
+  dragon() {
+    const options = { ...defaultOptions };
+    options.particles.color.value = '#1a0252ad';
     particles = options as any;
   },
 };

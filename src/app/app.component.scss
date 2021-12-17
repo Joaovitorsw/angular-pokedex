@@ -20,7 +20,7 @@ $type-colors: (
 );
 
 $type-colors-light: (
-  "fire": #b38361e0,
+  "fire": #fd9b54e0,
   "grass": #a7db8d,
   "electric": #fae078,
   "water": #94dbee,
@@ -61,17 +61,23 @@ $type-colors-dark: (
 );
 $shadow-scoff: rgba(0, 0, 0, 0.459);
 $type-background: (
-  "fairy": #ea7eae,
+  "dragon": #7038f8,
+  "fairy": #ac004d,
   "grass": #60ad39,
   "ground": #c08d00,
   "normal": #a8a878,
   "poison": #8d008d,
   "ghost": #705898,
   "fire": #160001,
+  "rock": #aa8b00,
+  "dark": #49392f,
   "water": #008db4,
-  "ice": #748cc2,
+  "ice": #016b6b,
   "bug": #c6d16e,
   "electric": #d8ad00,
+  "fighting": #f335008c,
+  "psychic": #800d2f,
+  "steel": #787887,
 );
 
 @keyframes fadeIn {
@@ -80,5 +86,18 @@ $type-background: (
   }
   100% {
     opacity: 1;
+  }
+}
+@keyframes breathe {
+  0% {
+    transform: scale(0.96);
+  }
+
+  50% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(0.96);
   }
 }
