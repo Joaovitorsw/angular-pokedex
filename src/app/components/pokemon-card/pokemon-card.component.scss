@@ -14,17 +14,7 @@ $id-color: rgba(128, 128, 128, 0.452);
     }
   }
 }
-a[ng-reflect-router-link] {
-  position: absolute;
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-}
 
-px-type-card {
-  position: relative;
-  z-index: 2;
-}
 :host {
   background-color: $background-color;
   box-shadow: 0px 0px 0px 0.5px $shadow-scoff;
@@ -35,86 +25,102 @@ px-type-card {
   justify-content: center;
   border-radius: 5px;
   font-family: "Bebas Neue", cursive;
-}
-.overall {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  width: 80%;
-  margin-bottom: 25px;
-}
 
-.id {
-  font-family: "Montserrat", sans-serif;
-  font-weight: 800;
-  font-size: 15vh;
-  color: $id-color;
-  opacity: 1;
-  position: absolute;
-  z-index: 1;
-  top: 0;
-}
-h1 {
-  font-size: 4vh;
-  font-weight: 800;
-  color: $text-color;
-  position: relative;
-  z-index: 2;
-}
-img {
-  margin-bottom: 25px;
-  position: relative;
-  z-index: 1;
-}
-.type-container {
-  display: flex;
-}
-
-.weight {
-  top: 0;
-  right: 0;
-}
-.height {
-  top: 0;
-  left: 0;
-}
-
-.height,
-.weight {
-  text-align: center;
-  width: 40px;
-  height: 20px;
-  color: $text-color;
-  position: absolute;
-  z-index: 1;
-  font-weight: 800;
-  border-radius: 100%;
-
-  &::before {
-    content: "";
-    z-index: -1;
+  .id {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 800;
+    font-size: 15vh;
+    color: $id-color;
+    opacity: 1;
     position: absolute;
+    z-index: 1;
+    top: 0;
+  }
+
+  img {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 25px;
+  }
+
+  h1 {
+    font-size: 4vh;
+    font-weight: 800;
+    color: $text-color;
+    position: relative;
+    z-index: 2;
+  }
+
+  px-type-card {
+    min-width: 100px;
+    margin: 5px;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+  }
+
+  .type-container {
+    height: 24px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .overall {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    width: 80%;
+    margin-bottom: 25px;
+  }
+
+  mat-progress-bar {
+    padding: 5px;
+  }
+
+  .weight {
+    top: 0;
+    right: 0;
+  }
+  .height {
     top: 0;
     left: 0;
+  }
+
+  .height,
+  .weight {
+    text-align: center;
+    width: 40px;
+    height: 20px;
+    color: $text-color;
+    position: absolute;
+    z-index: 1;
+    font-weight: 800;
+    border-radius: 100%;
+
+    &::before {
+      content: "";
+      z-index: -1;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.5;
+      padding: 15px 6px;
+      border-radius: 100%;
+      background-color: $background-color;
+      box-shadow: 0px 0px 0px 0.7px $shadow-scoff;
+      transform: translate(-10%, -30%);
+    }
+  }
+
+  a[ng-reflect-router-link] {
+    position: absolute;
+    z-index: 2;
     width: 100%;
     height: 100%;
-    opacity: 0.6;
-    padding: 15px 6px;
-    border-radius: 100%;
-    background-color: $background-color;
-    box-shadow: 0px 0px 0px 0.7px $shadow-scoff;
-    transform: translate(-10%, -30%);
-  }
-}
-
-mat-progress-bar {
-  padding: 5px;
-}
-
-px-type-card {
-  &:last-child {
-    margin-bottom: 15px;
   }
 }
