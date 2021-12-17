@@ -1,5 +1,6 @@
-<div class="about" *ngIf="pokemon">
+<div class="pokemon-card" *ngIf="pokemon">
   <a [routerLink]="['/']">Homepage</a>
+
   <p class="id">#{{ pokemon.id | padStart: 3:"0" }}</p>
   <img src="{{ pokemon | spritePath | async }}" />
   <h1>{{ pokemon.name | pokemonTitleCase }}</h1>
@@ -13,21 +14,20 @@
     ></px-type-card>
   </div>
 
-  <div class="stats-container">
-    <p class="stats" *ngFor="let stats of pokemon.stats">
-      {{ stats.stat.name | pokemonTitleCase }}: {{ stats.base_stat }}
-      <mat-progress-bar
-        [pxColorProgressBar]="stats.base_stat / 1.5"
-        [value]="stats.base_stat / 1.5"
-        mode="determinate"
-      ></mat-progress-bar>
-    </p>
+  <div class="stats-container" *ngFor="let stats of pokemon.stats">
+    <p class="name">{{ stats.stat.name}}</p>
+    <p class="value">{{ stats.base_stat}}</p>
+    <mat-progress-bar
+      [pxColorProgressBar]="stats.base_stat / stats_conversion"
+      [value]="stats.base_stat / stats_conversion"
+      mode="determinate"
+    ></mat-progress-bar>
   </div>
 
   <ng-particles
+    *ngIf="hasChanged"
     [id]="id"
     [options]="particlesOptions"
-    (particlesLoaded)="particlesLoaded($event)"
-    class="{{ pokemon.types[0].type.name }}"
+    class="{{ type }}"
   ></ng-particles>
 </div>
