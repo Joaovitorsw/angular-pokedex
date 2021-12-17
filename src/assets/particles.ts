@@ -246,7 +246,7 @@ export const particlesAnimations: any = {
     particles = {
       particles: {
         number: {
-          value: 160,
+          value: 40,
           density: {
             enable: true,
             value_area: 800,
@@ -260,7 +260,7 @@ export const particlesAnimations: any = {
         },
         opacity: {
           value: 0.3,
-          random: true,
+          random: false,
           anim: {
             enable: false,
           },
@@ -614,7 +614,7 @@ export const particlesAnimations: any = {
   },
   psychic() {
     particles = {
-      fpsLimit: 60,
+      fpsLimit: 144,
       particles: {
         number: {
           value: 5,
