@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IOptions, RecursivePartial } from 'ng-particles';
+import { Container, IOptions, RecursivePartial } from 'ng-particles';
 import PokeAPI from 'pokedex-promise-v2';
 import { BehaviorSubject } from 'rxjs';
 import { PokeAPIService } from 'src/app/services/poke-api/poke-api.service';
@@ -13,12 +13,12 @@ import { particles, particlesAnimations } from 'src/assets/particles';
 export class HomePage {
   pokemons$$: BehaviorSubject<PokeAPI.Pokemon[]>;
   particlesOptions: RecursivePartial<IOptions>;
-  start$;
+  container: Container;
   id = 'home-page';
 
   constructor(private pokeAPI: PokeAPIService) {
     const pokemons$ = this.pokeAPI.getPokemonsByRange(1, 24);
-    this.start$ = pokemons$.subscribe((pokemons) => {
+    pokemons$.subscribe((pokemons) => {
       this.pokemons$$ = new BehaviorSubject(pokemons);
     });
     particlesAnimations.homePage();
@@ -32,10 +32,16 @@ export class HomePage {
   }
 
   addPokemons(previous: number, next: number): void {
+    this.container.pause();
     this.pokeAPI.getPokemonsByRange(previous, next).subscribe((pokemons) => {
       const previousPokemons = this.pokemons$$.value;
       this.pokemons$$.next([...previousPokemons, ...pokemons]);
+      this.container.play();
     });
+  }
+
+  particlesLoaded(container: Container) {
+    this.container = container;
   }
 
   trackByFn(index: number, item: any) {

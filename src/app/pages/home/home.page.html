@@ -10,4 +10,9 @@
   >
   </px-pokemon-card>
 </div>
-<ng-particles [id]="id" [options]="particlesOptions"> </ng-particles>
+<ng-particles
+  [id]="id"
+  [options]="particlesOptions"
+  (particlesLoaded)="particlesLoaded($event)"
+>
+</ng-particles>
