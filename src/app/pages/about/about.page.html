@@ -1,4 +1,4 @@
-<div class="pokemon-card" *ngIf="pokemon">
+<div class="pokemon-card" *ngIf="pokemon$ | async let pokemon">
   <a [routerLink]="['/']">Homepage</a>
 
   <p class="id">#{{ pokemon.id | padStart: 3:"0" }}</p>
@@ -22,6 +22,21 @@
       [value]="stats.base_stat / stats_conversion"
       mode="determinate"
     ></mat-progress-bar>
+  </div>
+  <mat-spinner
+    class="{{ type }}"
+    *ngIf="!(pokeAPI.request$$ | async ) "
+  ></mat-spinner>
+  <div class="evolution" *ngIf="pokemonDetails$ | async let pokemonForms">
+    <px-pokemon-card
+      [pokemon]="pokemon"
+      *ngFor="let pokemon of pokemonForms?.evolutions"
+    ></px-pokemon-card>
+
+    <px-pokemon-card
+      [pokemon]="pokemon"
+      *ngFor="let pokemon of pokemonForms?.variatesPokemons"
+    ></px-pokemon-card>
   </div>
 
   <ng-particles
