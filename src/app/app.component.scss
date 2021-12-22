@@ -61,6 +61,7 @@ $type-colors-dark: (
 );
 $shadow-scoff: rgba(0, 0, 0, 0.459);
 $type-background: (
+  "flying": #371895,
   "dragon": #7038f8,
   "fairy": #ac004d,
   "grass": #60ad39,
@@ -70,7 +71,7 @@ $type-background: (
   "ghost": #705898,
   "fire": #160001,
   "rock": #aa8b00,
-  "dark": #49392f,
+  "dark": #000000,
   "water": #008db4,
   "ice": #016b6b,
   "bug": #c6d16e,
@@ -99,5 +100,13 @@ $type-background: (
 
   100% {
     transform: scale(0.96);
+  }
+}
+@keyframes hurricane {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
