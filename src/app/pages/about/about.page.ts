@@ -1,35 +1,63 @@
-import { Component, HostBinding, HostListener } from '@angular/core';
+import { Component, HostBinding, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IOptions, RecursivePartial } from 'ng-particles';
-import { Pokemon } from 'pokedex-promise-v2';
-import { PokeAPIService } from 'src/app/services/poke-api/poke-api.service';
-import { particles, particlesAnimations } from 'src/assets/particles';
+import PokeAPI from 'pokedex-promise-v2';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/internal/operators/tap';
+import {
+  PokeAPIService,
+  PokemonEvolutions,
+} from 'src/app/services/poke-api/poke-api.service';
+import {
+  particles,
+  particlesAnimations,
+} from 'src/app/shared/ts-particles/particles.options';
+
 @Component({
   selector: 'px-about',
   templateUrl: './about.page.html',
   styleUrls: ['./about.page.scss'],
 })
-export class AboutPage {
+export class AboutPage implements OnInit {
   @HostListener('window:hashchange', ['$event'])
   hashChangeHandler(): void {
     this.hasChanged = false;
   }
   @HostBinding('attr.type') type: string;
-  pokemon: Pokemon;
+  @HostBinding('class.has-evolution') hasEvolution = false;
+  pokemon$: Observable<PokeAPI.Pokemon>;
+  pokemonDetails$: Observable<PokemonEvolutions>;
+  stats_conversion = 2;
   id = 'about-page';
   particlesOptions: RecursivePartial<IOptions>;
-  stats_conversion = 2;
   hasChanged: boolean;
 
-  constructor(private route: ActivatedRoute, private api: PokeAPIService) {
+  constructor(private route: ActivatedRoute, public pokeAPI: PokeAPIService) {}
+
+  ngOnInit(): void {
     this.route.params.forEach(({ pokemonName }) => {
-      this.api.getPokemonByNameOrID(pokemonName).subscribe((pokemon) => {
-        this.pokemon = pokemon;
-        this.type = pokemon.types[0].type.name;
-        particlesAnimations[this.type]();
-        this.particlesOptions = particles;
-        this.hasChanged = true;
-      });
+      this.pokemon$ = this.pokeAPI.getPokemonByNameOrID(pokemonName).pipe(
+        tap(async (pokemon) => {
+          this.type = pokemon.types[0].type.name;
+          this.getAnimation();
+          const $evolution = await this.pokeAPI.getPokemonEvolutions(
+            pokemon.name
+          );
+          this.pokemonDetails$ = $evolution.pipe(
+            tap(
+              (evolutions) =>
+                (this.hasEvolution = evolutions.evolutions.length > 0)
+            )
+          );
+        })
+      );
+      window.scrollTo(0, 0);
     });
+  }
+
+  getAnimation() {
+    particlesAnimations[this.type]();
+    this.particlesOptions = particles;
+    this.hasChanged = true;
   }
 }
