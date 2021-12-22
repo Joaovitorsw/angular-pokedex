@@ -1,4 +1,6 @@
-export const pokemonsMock = [
+import { Pokemon } from 'pokedex-promise-v2';
+
+export const pokemonsMock: Pokemon[] = [
   {
     abilities: [
       {
