@@ -1,14 +1,20 @@
 @import "../../app.component.scss";
 
-$max-width: 600px;
+$max-width: 620px;
 
 @each $name, $color in $type-background {
+  :host[type="#{$name}"] {
+    &::after {
+      background-color: $color;
+    }
+  }
   ng-particles.#{$name} {
     ::ng-deep.tsparticles-canvas-el {
-      background-color: $color !important;
+      background-color: $color;
     }
   }
 }
+
 @each $name, $color in $type-colors-light {
   :host[type="#{$name}"] {
     &::before {
@@ -17,19 +23,50 @@ $max-width: 600px;
       opacity: 0.7;
       border-radius: 15px;
       width: 100%;
-      height: 100%;
+      min-height: $max-width;
       background-color: $color;
       max-width: $max-width + 40px;
     }
   }
 }
+
+@each $name, $color in $type-colors-dark {
+  mat-spinner.#{$name} {
+    margin-top: 20px;
+    ::ng-deep circle {
+      stroke: $color !important;
+    }
+  }
+}
+
 :host {
   display: flex;
   position: relative;
   flex-direction: column;
   align-items: center;
   width: 100%;
+  height: 100%;
+  min-height: 100vh;
   padding: 20px;
+
+  ::ng-deep px-pokemon-card .id {
+    font-size: calc(3em + 0.5vw) !important;
+  }
+
+  &.has-evolution {
+    &::before {
+      height: calc(100% - 30px);
+    }
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+  }
 }
 .pokemon-card {
   font-size: 26px;
@@ -76,8 +113,8 @@ $max-width: 600px;
   }
   ng-particles {
     position: absolute;
-    animation: fadeIn 0.5s ease-in-out;
-    z-index: -3;
+    animation: fadeIn 1s ease-in-out;
+    z-index: -1;
   }
   .type-container {
     height: 24px;
@@ -89,4 +126,9 @@ $max-width: 600px;
   px-type-card:last-child {
     margin-left: 5px;
   }
+}
+.evolution {
+  margin-top: 20px;
+  width: 100%;
+  max-width: $max-width;
 }
