@@ -4,13 +4,17 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getStorage, provideStorage } from '@angular/fire/storage';
+import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgParticlesModule } from 'ng-particles';
+import { NgxIndexedDBModule } from 'ngx-indexed-db';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import PokeAPI from 'pokedex-promise-v2';
-import { environment } from '../environments/environment';
+import { environment } from '../environments/environment.prod';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PokemonCardComponent } from './components/pokemon-card/pokemon-card.component';
@@ -42,6 +46,10 @@ import { WeightPipe } from './pipes/weight/weight.pipe';
   ],
   imports: [
     BrowserModule,
+    MatButtonModule,
+    MatSidenavModule,
+    NgxIndexedDBModule.forRoot(environment.dbConfig),
+    MatProgressSpinnerModule,
     BrowserAnimationsModule,
     HttpClientModule,
     NgParticlesModule,
