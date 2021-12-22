@@ -15,7 +15,6 @@ export class SpritePathPipe implements PipeTransform {
     return this.spriteStorage.getSpritePathByName(name).pipe(
       map((spritePath) => {
         const NOT_FOUND = spritePath === SpriteStorageErrorMessage.NOT_FOUND;
-
         if (!NOT_FOUND) return spritePath;
 
         const spriteVersionUrl =
