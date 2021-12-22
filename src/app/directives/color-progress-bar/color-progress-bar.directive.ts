@@ -11,7 +11,6 @@ import {
 })
 export class ColorProgressBarDirective implements OnInit {
   @Input('pxColorProgressBar') value: number;
-
   @HostBinding('attr.color') color: string;
 
   constructor(private $hostElement: ElementRef) {}
