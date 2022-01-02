@@ -3,7 +3,7 @@ import { IParticlesProps } from 'ng-particles';
 export const FAIRY: IParticlesProps = {
   particles: {
     number: {
-      value: 29,
+      value: 40,
       density: {
         enable: true,
         value_area: 800,
@@ -13,13 +13,13 @@ export const FAIRY: IParticlesProps = {
       value: '#e03a83',
     },
     shape: {
-      type: 'circle',
+      type: 'star',
       stroke: {
         width: 1,
         color: '#fa92b2',
       },
       polygon: {
-        nb_sides: 3,
+        nb_sides: 5,
       },
       image: {
         src: 'img/github.svg',
@@ -28,7 +28,7 @@ export const FAIRY: IParticlesProps = {
       },
     },
     opacity: {
-      value: 0.5287289198936227,
+      value: 1,
       random: false,
       anim: {
         enable: true,
@@ -38,18 +38,18 @@ export const FAIRY: IParticlesProps = {
       },
     },
     size: {
-      value: 8.017060304327615,
-      random: false,
+      value: 8,
+      random: true,
       anim: {
         enable: true,
         speed: 10,
-        size_min: 40,
+        size_min: 4,
         sync: false,
       },
     },
     line_linked: {
       enable: false,
-      distance: 96.20472365193136,
+      distance: 100,
       color: '#ea7eae',
       opacity: 1,
       width: 0,
@@ -60,7 +60,7 @@ export const FAIRY: IParticlesProps = {
       direction: 'bottom-right',
       random: true,
       straight: true,
-      out_mode: 'bounce',
+      out_mode: 'out',
       bounce: false,
       attract: {
         enable: false,

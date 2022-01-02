@@ -3,7 +3,7 @@ import { IParticlesProps } from 'ng-particles';
 export const ELECTRIC: IParticlesProps = {
   particles: {
     number: {
-      value: 298,
+      value: 90,
       density: { enable: true, value_area: 7181.257706535142 },
     },
     color: { value: '#ffffff' },

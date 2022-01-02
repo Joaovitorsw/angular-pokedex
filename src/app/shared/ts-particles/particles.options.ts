@@ -1,8 +1,10 @@
 import { IParticlesProps } from 'ng-particles';
 import { BUG } from './types/bug';
 import { DARK } from './types/dark';
+import { DRAGON } from './types/dragon';
 import { ELECTRIC } from './types/electric';
 import { FAIRY } from './types/fairy';
+import { FIGHTING } from './types/fighting';
 import { FIRE } from './types/fire';
 import { FLYING } from './types/flying';
 import { GHOST } from './types/ghost';
@@ -78,9 +80,7 @@ export const particlesAnimations: any = {
   },
 
   fighting() {
-    const options: any = { ...DEFAULT };
-    options.particles.color.value = '#f335008c';
-    particles = options;
+    particles = FIGHTING;
   },
   rock() {
     particles = ROCK;
@@ -95,8 +95,6 @@ export const particlesAnimations: any = {
     particles = options;
   },
   dragon() {
-    const options: any = { ...DEFAULT };
-    options.particles.color.value = '#1a0252ad';
-    particles = options;
+    particles = DRAGON;
   },
 };
