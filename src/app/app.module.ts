@@ -20,7 +20,6 @@ import PokeAPI from 'pokedex-promise-v2';
 import { environment } from '../environments/environment.prod';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginComponent } from './components/login/login.component';
 import { PokemonCardComponent } from './components/pokemon-card/pokemon-card.component';
 import { SlideOptionComponent } from './components/slide-option/slide-option.component';
 import { TypeCardComponent } from './components/type-card/type-card.component';
@@ -49,7 +48,6 @@ import { WeightPipe } from './pipes/weight/weight.pipe';
     HeightPipe,
     ColorProgressBarDirective,
     SlideOptionComponent,
-    LoginComponent,
   ],
   imports: [
     BrowserModule,
