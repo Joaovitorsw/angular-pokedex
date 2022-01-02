@@ -33,6 +33,7 @@ export class ColorProgressBarDirective implements OnInit {
   }
 
   percentageToHexColor(value: number): string {
+    if (value > 100) value = 100;
     const redConversion = Math.round(510 - 5.1 * value);
     const greenConversion = Math.round(4.5 * value);
     const maxValue = 255;
