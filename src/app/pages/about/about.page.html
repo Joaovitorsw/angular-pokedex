@@ -18,8 +18,8 @@
     <p class="name">{{ stats.stat.name}}</p>
     <p class="value">{{ stats.base_stat}}</p>
     <mat-progress-bar
-      [pxColorProgressBar]="stats.base_stat / stats_conversion"
-      [value]="stats.base_stat / stats_conversion"
+      [pxColorProgressBar]="stats.base_stat * stats_conversion"
+      [value]="stats.base_stat * stats_conversion"
       mode="determinate"
     ></mat-progress-bar>
   </div>
@@ -43,6 +43,7 @@
     *ngIf="hasChanged"
     [id]="id"
     [options]="particlesOptions"
+    (particlesLoaded)="particlesLoaded($event)"
     class="{{ type }}"
   ></ng-particles>
 </div>
