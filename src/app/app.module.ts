@@ -4,10 +4,13 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getStorage, provideStorage } from '@angular/fire/storage';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgParticlesModule } from 'ng-particles';
@@ -17,7 +20,9 @@ import PokeAPI from 'pokedex-promise-v2';
 import { environment } from '../environments/environment.prod';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { LoginComponent } from './components/login/login.component';
 import { PokemonCardComponent } from './components/pokemon-card/pokemon-card.component';
+import { SlideOptionComponent } from './components/slide-option/slide-option.component';
 import { TypeCardComponent } from './components/type-card/type-card.component';
 import { ColorProgressBarDirective } from './directives/color-progress-bar/color-progress-bar.directive';
 import { AboutPage } from './pages/about/about.page';
@@ -43,10 +48,15 @@ import { WeightPipe } from './pipes/weight/weight.pipe';
     WeightPipe,
     HeightPipe,
     ColorProgressBarDirective,
+    SlideOptionComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
     MatButtonModule,
+    ReactiveFormsModule,
+    MatSlideToggleModule,
+    MatIconModule,
     MatSidenavModule,
     NgxIndexedDBModule.forRoot(environment.dbConfig),
     MatProgressSpinnerModule,
