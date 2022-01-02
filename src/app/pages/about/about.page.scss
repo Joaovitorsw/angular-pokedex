@@ -23,7 +23,7 @@ $max-width: 620px;
       opacity: 0.7;
       border-radius: 15px;
       width: 100%;
-      min-height: $max-width;
+      min-height: 560px;
       background-color: $color;
       max-width: $max-width + 40px;
     }
@@ -56,6 +56,10 @@ $max-width: 620px;
   &.has-evolution {
     &::before {
       height: calc(100% - 30px);
+    }
+
+    &.ng-animating ng-particles {
+      opacity: 0;
     }
   }
 
@@ -114,6 +118,7 @@ $max-width: 620px;
   ng-particles {
     position: absolute;
     animation: fadeIn 1s ease-in-out;
+    transition: opacity 0.5s;
     z-index: -1;
   }
   .type-container {

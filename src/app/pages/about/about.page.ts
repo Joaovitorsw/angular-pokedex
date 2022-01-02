@@ -1,6 +1,12 @@
-import { Component, HostBinding, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  OnInit,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IOptions, RecursivePartial } from 'ng-particles';
+import { Container, IOptions, RecursivePartial } from 'ng-particles';
 import PokeAPI from 'pokedex-promise-v2';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/internal/operators/tap';
@@ -19,15 +25,19 @@ import {
   styleUrls: ['./about.page.scss'],
 })
 export class AboutPage implements OnInit {
+  container: Container;
   @HostListener('window:hashchange', ['$event'])
   hashChangeHandler(): void {
     this.hasChanged = false;
   }
+  particlesEvent: EventEmitter<Container> = new EventEmitter();
+
   @HostBinding('attr.type') type: string;
   @HostBinding('class.has-evolution') hasEvolution = false;
+
   pokemon$: Observable<PokeAPI.Pokemon>;
   pokemonDetails$: Observable<PokemonEvolutions>;
-  stats_conversion = 2;
+  stats_conversion = 0.393;
   id = 'about-page';
   particlesOptions: RecursivePartial<IOptions>;
   hasChanged: boolean;
@@ -53,6 +63,11 @@ export class AboutPage implements OnInit {
       );
       window.scrollTo(0, 0);
     });
+  }
+
+  particlesLoaded(container: Container) {
+    this.container = container;
+    this.particlesEvent.emit(container);
   }
 
   getAnimation() {
