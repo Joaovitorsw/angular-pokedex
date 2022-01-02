@@ -1,71 +1,71 @@
 import { IParticlesProps } from 'ng-particles';
 
-export const GROUND: IParticlesProps = {
+export const DRAGON: IParticlesProps = {
   particles: {
     number: {
-      value: 30,
+      value: 10,
       density: {
         enable: true,
-        value_area: 800,
+        value_area: 600,
       },
     },
     color: {
-      value: '#e0c068',
+      value: '#1a0252ad',
     },
     shape: {
-      type: 'polygon',
+      type: 'image',
       stroke: {
-        width: 1,
-        color: '#e0c068',
+        width: 0,
+        color: '#000000',
       },
       polygon: {
-        nb_sides: 6,
+        nb_sides: 3,
       },
       image: {
-        src: 'img/github.svg',
-        width: 100,
-        height: 100,
+        src: 'https://www.clipartmax.com/png/full/26-261436_clipart-dragon-silhouette-png.png',
+        width: 120,
+        height: 120,
       },
     },
     opacity: {
       value: 1,
       random: true,
       anim: {
-        enable: true,
-        speed: 0,
-        opacity_min: 0.34919320128957837,
-        sync: true,
+        enable: false,
+        speed: 4.5,
+        opacity_min: 0.5,
+        sync: false,
       },
     },
     size: {
-      value: 4,
+      value: 45,
       random: false,
       anim: {
-        enable: false,
-        speed: 10,
-        size_min: 40,
+        enable: true,
+        speed: 20,
+        size_min: 0,
         sync: false,
       },
     },
     line_linked: {
       enable: false,
-      distance: 80,
-      color: '#ebd69d',
-      opacity: 0.5,
+      distance: 20,
+      color: '#ffffff',
+      opacity: 1,
       width: 1,
     },
     move: {
       enable: true,
-      speed: 45,
-      direction: 'right',
+      speed: 3.5,
+      direction: 'top-left',
       random: false,
-      straight: false,
+      straight: true,
       out_mode: 'out',
       bounce: false,
       attract: {
-        enable: true,
-        rotateX: 10000,
-        rotateY: 10000,
+        enable: false,
+        rotateX: 600,
+        rotateY: 1200,
       },
     },
   },
@@ -74,11 +74,11 @@ export const GROUND: IParticlesProps = {
     events: {
       onhover: {
         enable: false,
-        mode: 'grab',
+        mode: 'repulse',
       },
       onclick: {
         enable: false,
-        mode: 'push',
+        mode: 'repulse',
       },
       resize: true,
     },
@@ -96,7 +96,7 @@ export const GROUND: IParticlesProps = {
         opacity: 8,
       },
       repulse: {
-        distance: 200,
+        distance: 50,
         duration: 0.4,
       },
       push: {

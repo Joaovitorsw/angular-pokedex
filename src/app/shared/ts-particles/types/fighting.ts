@@ -1,30 +1,30 @@
 import { IParticlesProps } from 'ng-particles';
 
-export const GROUND: IParticlesProps = {
+export const FIGHTING: IParticlesProps = {
   particles: {
     number: {
-      value: 30,
+      value: 9,
       density: {
         enable: true,
         value_area: 800,
       },
     },
     color: {
-      value: '#e0c068',
+      value: '#f335008c',
     },
     shape: {
-      type: 'polygon',
+      type: 'image',
       stroke: {
-        width: 1,
-        color: '#e0c068',
+        width: 0,
+        color: '#000000',
       },
       polygon: {
-        nb_sides: 6,
+        nb_sides: 5,
       },
       image: {
-        src: 'img/github.svg',
-        width: 100,
-        height: 100,
+        src: 'https://www.pngkit.com/png/full/20-205558_one-punch-man-fist-one-punch-man-fist.png',
+        width: 60,
+        height: 60,
       },
     },
     opacity: {
@@ -32,49 +32,49 @@ export const GROUND: IParticlesProps = {
       random: true,
       anim: {
         enable: true,
-        speed: 0,
-        opacity_min: 0.34919320128957837,
+        speed: 1,
+        opacity_min: 0.1,
         sync: true,
       },
     },
     size: {
-      value: 4,
-      random: false,
+      value: 30,
+      random: true,
       anim: {
-        enable: false,
-        speed: 10,
-        size_min: 40,
+        enable: true,
+        speed: 20,
+        size_min: 20,
         sync: false,
       },
     },
     line_linked: {
       enable: false,
-      distance: 80,
-      color: '#ebd69d',
-      opacity: 0.5,
-      width: 1,
+      distance: 150,
+      color: '#ffffff',
+      opacity: 0.1183721462448409,
+      width: 0,
     },
     move: {
       enable: true,
-      speed: 45,
-      direction: 'right',
+      speed: 0.5,
+      direction: 'none',
       random: false,
       straight: false,
       out_mode: 'out',
       bounce: false,
       attract: {
-        enable: true,
-        rotateX: 10000,
-        rotateY: 10000,
+        enable: false,
+        rotateX: 0,
+        rotateY: 0,
       },
     },
   },
   interactivity: {
-    detect_on: 'canvas',
+    detect_on: 'window',
     events: {
       onhover: {
         enable: false,
-        mode: 'grab',
+        mode: 'repulse',
       },
       onclick: {
         enable: false,

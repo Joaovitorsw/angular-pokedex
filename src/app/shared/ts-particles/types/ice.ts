@@ -2,14 +2,14 @@ import { IParticlesProps } from 'ng-particles';
 
 export const ICE: IParticlesProps = {
   particles: {
-    number: { value: 400, density: { enable: true, value_area: 800 } },
+    number: { value: 80, density: { enable: true, value_area: 800 } },
     color: { value: '#fff' },
     shape: {
       type: 'image',
       stroke: { width: 0, color: '#000000' },
       polygon: { nb_sides: 5 },
       image: {
-        src: 'https://cdn.discordapp.com/emojis/780357370999341078.png?size=96',
+        src: 'https://www.freeiconspng.com/uploads/blue-snow-icon-8.png',
         width: 100,
         height: 100,
       },

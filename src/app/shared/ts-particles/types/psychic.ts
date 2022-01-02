@@ -1,10 +1,9 @@
 import { IParticlesProps } from 'ng-particles';
 
 export const PSYCHIC: IParticlesProps = {
-  fpsLimit: 144,
   particles: {
     number: {
-      value: 5,
+      value: 4,
       density: {
         enable: true,
         value_area: 800,

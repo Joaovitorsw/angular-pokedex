@@ -2,7 +2,7 @@ import { IParticlesProps } from 'ng-particles';
 
 export const FIRE: IParticlesProps = {
   particles: {
-    number: { value: 400, density: { enable: true, value_area: 3000 } },
+    number: { value: 250, density: { enable: true, value_area: 3000 } },
     color: { value: '#fc0000' },
     shape: {
       type: 'circle',
