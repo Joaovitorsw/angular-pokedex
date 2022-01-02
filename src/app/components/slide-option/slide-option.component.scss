@@ -1,0 +1,18 @@
+mat-slide-toggle {
+  margin-right: 8px;
+}
+span {
+  margin-right: 12px;
+}
+
+mat-icon {
+  margin-top: 5px;
+}
+
+:host {
+  width: min-content;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  border: 1px solid black;
+}
