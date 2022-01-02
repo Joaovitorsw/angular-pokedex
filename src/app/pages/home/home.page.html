@@ -1,27 +1,21 @@
-<mat-drawer-container autosize>
-  <mat-drawer #drawer mode="push"></mat-drawer>
-  <div
-    class="pokemons-content"
-    infiniteScroll
-    [infiniteScrollDistance]="2.5"
-    (scrolled)="endScroll()"
-  >
-    <px-pokemon-card
-      [pokemon]="pokemon"
-      *ngFor="let pokemon of pokeAPI.pokemons$$ | async; trackBy: trackByFn"
-    >
-    </px-pokemon-card>
-  </div>
-  <div class="spinner" *ngIf="!(pokeAPI.request$$ | async)">
-    <mat-spinner></mat-spinner>
-  </div>
-</mat-drawer-container>
-<ng-particles
-  [id]="id"
-  [options]="particlesOptions"
-  (particlesLoaded)="particlesLoaded($event)"
+<div
+  class="pokemons-content"
+  infiniteScroll
+  [infiniteScrollDistance]="3.5"
+  (scrolled)="endScroll()"
 >
-</ng-particles>
-<div class="poke-options" (click)="drawer.toggle()">
-  <img src="../assets/images/pokemon-engine.png" alt="pokemon-engine" />
+  <px-pokemon-card
+    [pokemon]="pokemon"
+    *ngFor="let pokemon of pokeAPI.pokemons$$ | async; trackBy: trackByFn"
+  >
+  </px-pokemon-card>
+  <ng-particles
+    [id]="id"
+    [options]="particlesOptions"
+    (particlesLoaded)="particlesLoaded($event)"
+  >
+  </ng-particles>
+</div>
+<div class="spinner" *ngIf="!(pokeAPI.request$$ | async)">
+  <mat-spinner></mat-spinner>
 </div>
