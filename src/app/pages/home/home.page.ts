@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { Container, IOptions, RecursivePartial } from 'ng-particles';
 import { PokeAPIService } from 'src/app/services/poke-api/poke-api.service';
 import {
@@ -15,7 +15,7 @@ export class HomePage implements OnInit {
   particlesOptions: RecursivePartial<IOptions>;
   container: Container;
   id = 'home-page';
-
+  particlesEvent: EventEmitter<Container> = new EventEmitter();
   constructor(public pokeAPI: PokeAPIService) {}
 
   ngOnInit(): void {
@@ -32,6 +32,7 @@ export class HomePage implements OnInit {
 
   particlesLoaded(container: Container) {
     this.container = container;
+    this.particlesEvent.emit(container);
   }
 
   trackByFn(index: number, item: any) {
