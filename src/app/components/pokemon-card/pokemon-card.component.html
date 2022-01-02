@@ -11,10 +11,10 @@
     ></px-type-card>
   </div>
   <p class="overall">
-    overall {{ total | number: "1.0-0" }}
+    overall {{ stats_total | number: "1.0-0" }}
     <mat-progress-bar
-      [pxColorProgressBar]="total * overallConversion"
-      [value]="total * overallConversion"
+      [pxColorProgressBar]="stats_total * stats_overall"
+      [value]="stats_total * stats_overall"
       mode="determinate"
     ></mat-progress-bar>
   </p>

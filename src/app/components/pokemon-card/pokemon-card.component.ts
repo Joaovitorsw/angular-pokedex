@@ -9,14 +9,14 @@ import PokeAPI from 'pokedex-promise-v2';
 export class PokemonCardComponent implements OnInit {
   @Input() pokemon: PokeAPI.Pokemon;
   @HostBinding('attr.type') type: string;
-  total: number;
-  overallConversion = 0.1;
+  stats_total: number;
+  stats_overall = 0.1;
   color: string;
   constructor() {}
 
   ngOnInit(): void {
     this.type = this.pokemon.types[0].type.name;
-    this.total = this.pokemon.stats.reduce(
+    this.stats_total = this.pokemon.stats.reduce(
       (acc, cur) => acc + cur.base_stat,
       0
     );
