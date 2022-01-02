@@ -38,8 +38,6 @@ mat-spinner {
 
 ng-particles {
   z-index: -1;
-  animation: fadeIn 1s ease-in-out;
-  transition: opacity 0.5s;
 }
 @media screen and (max-width: 280px) {
   :host {
