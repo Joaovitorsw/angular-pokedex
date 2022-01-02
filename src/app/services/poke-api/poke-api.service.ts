@@ -21,15 +21,18 @@ export enum eIndexDBKeys {
 })
 export class PokeAPIService {
   constructor(private PokeAPI: PokeAPI, private indexDB: IndexedDbService) {}
+
   request$$: Subject<boolean> = new Subject();
   pokemons$$: BehaviorSubject<PokeAPI.Pokemon[]>;
   pokemons: PokeAPI.Pokemon[];
   hasEvolution: boolean;
+
   getPokemonByNameOrID(name: string | number): Observable<PokeAPI.Pokemon> {
     return defer(
       async () => (await this.PokeAPI.getPokemonByName(name)) as PokeAPI.Pokemon
     );
   }
+
   getPokemonsByList(
     list: Array<string | number>
   ): Observable<PokeAPI.Pokemon[]> {
@@ -38,11 +41,11 @@ export class PokeAPIService {
         (await this.PokeAPI.getPokemonByName(list)) as PokeAPI.Pokemon[]
     );
   }
+
   getPokemonsByRange(...args: Array<number>): Observable<PokeAPI.Pokemon[]> {
     const [start, end] = args;
     const myRange = Array.from({ length: end }, (_, i) => i + start);
 
-    this.PokeAPI.getPokedexList().then((data) => console.log(data));
     return defer(
       async () =>
         (await this.PokeAPI.getPokemonByName(myRange)) as PokeAPI.Pokemon[]
@@ -155,6 +158,8 @@ export class PokeAPIService {
   }
 
   nextPokemonsRange(previous: number, next: number): void {
+    this.request$$.next(false);
+
     if (previous + next >= 898) next = 899 - previous;
 
     this.indexDB
