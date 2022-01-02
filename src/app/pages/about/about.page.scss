@@ -2,11 +2,6 @@
 $max-width: 620px;
 
 @each $name, $color in $type-background {
-  :host[type="#{$name}"] {
-    &::after {
-      background-color: $color;
-    }
-  }
   ng-particles.#{$name} {
     ::ng-deep.tsparticles-canvas-el {
       background-color: $color;
@@ -41,6 +36,7 @@ $max-width: 620px;
 :host {
   display: flex;
   flex-direction: column;
+  background-color: transparent;
   align-items: center;
   padding-bottom: 30px;
   &.ng-animating > .pokemon-card {
@@ -98,12 +94,7 @@ $max-width: 620px;
   h1 {
     text-align: center;
   }
-  ng-particles {
-    position: absolute;
-    animation: fadeIn 1s ease-in-out;
-    transition: opacity 0.5s;
-    z-index: -1;
-  }
+
   .type-container {
     height: 24px;
     margin-top: 5px;
@@ -123,7 +114,5 @@ $max-width: 620px;
 
 ng-particles {
   position: absolute;
-  animation: fadeIn 1s ease-in-out;
-  transition: opacity 0.5s;
   z-index: -1;
 }
