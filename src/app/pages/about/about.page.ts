@@ -25,21 +25,20 @@ import {
   styleUrls: ['./about.page.scss'],
 })
 export class AboutPage implements OnInit {
-  container: Container;
   @HostListener('window:hashchange', ['$event'])
   hashChangeHandler(): void {
     this.hasChanged = false;
   }
-  particlesEvent: EventEmitter<Container> = new EventEmitter();
 
   @HostBinding('attr.type') type: string;
-  @HostBinding('class.has-evolution') hasEvolution = false;
 
+  particlesEvent: EventEmitter<Container> = new EventEmitter();
+  container: Container;
   pokemon$: Observable<PokeAPI.Pokemon>;
   pokemonDetails$: Observable<PokemonEvolutions>;
+  particlesOptions: RecursivePartial<IOptions>;
   stats_conversion = 0.393;
   id = 'about-page';
-  particlesOptions: RecursivePartial<IOptions>;
   hasChanged: boolean;
 
   constructor(private route: ActivatedRoute, public pokeAPI: PokeAPIService) {}
@@ -50,18 +49,12 @@ export class AboutPage implements OnInit {
         tap(async (pokemon) => {
           this.type = pokemon.types[0].type.name;
           this.getAnimation();
-          const $evolution = await this.pokeAPI.getPokemonEvolutions(
+          this.pokemonDetails$ = await this.pokeAPI.getPokemonEvolutions(
             pokemon.name
           );
-          this.pokemonDetails$ = $evolution.pipe(
-            tap(
-              (evolutions) =>
-                (this.hasEvolution = evolutions.evolutions.length > 0)
-            )
-          );
+          window.scrollTo(0, 0);
         })
       );
-      window.scrollTo(0, 0);
     });
   }
 

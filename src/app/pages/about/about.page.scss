@@ -1,5 +1,4 @@
 @import "../../app.component.scss";
-
 $max-width: 620px;
 
 @each $name, $color in $type-background {
@@ -14,18 +13,18 @@ $max-width: 620px;
     }
   }
 }
-
 @each $name, $color in $type-colors-light {
   :host[type="#{$name}"] {
-    &::before {
+    .pokemon-card::after {
       content: "";
-      position: absolute;
-      opacity: 0.7;
+      z-index: -1;
+      opacity: 0.5;
       border-radius: 15px;
+
+      position: absolute;
       width: 100%;
-      min-height: 560px;
+      height: 100%;
       background-color: $color;
-      max-width: $max-width + 40px;
     }
   }
 }
@@ -41,38 +40,22 @@ $max-width: 620px;
 
 :host {
   display: flex;
-  position: relative;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  height: 100%;
-  min-height: 100vh;
-  padding: 20px;
+  padding-bottom: 30px;
+  &.ng-animating > .pokemon-card {
+    opacity: 0;
+  }
 
   ::ng-deep px-pokemon-card .id {
     font-size: calc(3em + 0.5vw) !important;
   }
-
-  &.has-evolution {
-    &::before {
-      height: calc(100% - 30px);
-    }
-
-    &.ng-animating ng-particles {
-      opacity: 0;
-    }
-  }
-
-  &::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    z-index: -2;
-    width: 100%;
-    height: 100%;
-  }
 }
 .pokemon-card {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  position: relative;
+  padding: 20px;
   font-size: 26px;
   width: 100%;
   display: flex;
@@ -81,7 +64,7 @@ $max-width: 620px;
   justify-content: center;
   border-radius: 15px;
   font-family: "Bebas Neue", cursive;
-  position: relative;
+  transition: opacity 0.2s;
   max-width: $max-width;
 
   a:first-child {
@@ -136,4 +119,11 @@ $max-width: 620px;
   margin-top: 20px;
   width: 100%;
   max-width: $max-width;
+}
+
+ng-particles {
+  position: absolute;
+  animation: fadeIn 1s ease-in-out;
+  transition: opacity 0.5s;
+  z-index: -1;
 }
