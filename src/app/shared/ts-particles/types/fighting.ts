@@ -6,7 +6,7 @@ export const FIGHTING: IParticlesProps = {
       value: 9,
       density: {
         enable: true,
-        value_area: 800,
+        value_area: 400,
       },
     },
     color: {
@@ -31,10 +31,10 @@ export const FIGHTING: IParticlesProps = {
       value: 1,
       random: true,
       anim: {
-        enable: true,
-        speed: 1,
+        enable: false,
+        speed: 0.5,
         opacity_min: 0.1,
-        sync: true,
+        sync: false,
       },
     },
     size: {
@@ -43,7 +43,7 @@ export const FIGHTING: IParticlesProps = {
       anim: {
         enable: true,
         speed: 20,
-        size_min: 20,
+        size_min: 30,
         sync: false,
       },
     },
