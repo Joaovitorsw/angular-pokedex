@@ -57,7 +57,11 @@ export class PokeAPIService {
   ): Promise<Observable<PokemonEvolutions>> {
     this.request$$.next(false);
 
-    const pokeName = pokemonName.replace(/-mega/g, '').replace(/-alola/g, '');
+    const pokeName = pokemonName
+      .replace(/-mega/g, '')
+      .replace(/-alola/g, '')
+      .replace(/-y/g, '')
+      .replace(/-x/g, '');
 
     const species: PokeAPI.PokemonSpecies = await this.getSpeciesByName(
       pokeName
