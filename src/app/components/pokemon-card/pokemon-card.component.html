@@ -1,7 +1,13 @@
 <a [routerLink]="['/about/' + pokemon.name]">
   <p class="id">#{{ pokemon.id | padStart: 3:"0" }}</p>
+
   <div class="poke-image">
-    <img src="{{ pokemon | spritePath | async }}" />
+    <img
+      #pokemonImage
+      src="{{ image }}"
+      *ngIf="pokemon | spritePath | async; let image"
+    />
+    <mat-spinner class="{{ type }}" *ngIf="!pokemonImage"></mat-spinner>
   </div>
   <h1>{{ pokemon.name | pokemonTitleCase }}</h1>
   <div class="type-container">
