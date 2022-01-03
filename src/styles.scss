@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import "reset.scss";
+@import "reset";
+@import "colors";
 
 html {
   scroll-behavior: smooth;
@@ -15,17 +16,43 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-::-webkit-scrollbar {
+body::-webkit-scrollbar {
   height: 8px;
   width: 8px;
 }
 
-::-webkit-scrollbar-thumb {
+body::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.144);
   border-radius: 85px;
 }
 
-::-webkit-scrollbar-track {
+body::-webkit-scrollbar-track {
   border: 5px solid rgba(0, 0, 0, 0.055);
-  border-radius: 80px;
+}
+
+mat-drawer {
+  position: fixed !important;
+  width: 100%;
+  height: 100%;
+}
+
+mat-drawer-container {
+  background-color: transparent;
+}
+.poke-options {
+  box-shadow: 0px 0px 0px 0.5px $shadow-scoff;
+  padding: 5px;
+  background-color: rgba(255, 255, 255, 0.686);
+  border-radius: 50%;
+  z-index: 3;
+  border: 1 px solid black;
+  position: fixed !important;
+  bottom: 50px !important;
+  right: 10px !important;
+
+  img {
+    animation: hurricane 2.5s linear infinite;
+    width: 48px;
+    height: 48px;
+  }
 }
