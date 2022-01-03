@@ -1,4 +1,4 @@
-@import "../../app.component.scss";
+@import "colors";
 
 @each $name, $color in $type-colors-dark {
   :host {
