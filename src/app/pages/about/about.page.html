@@ -1,3 +1,4 @@
+<mat-spinner *ngIf="request$$ | async "></mat-spinner>
 <div class="pokemon-card" *ngIf="pokemon$ | async let pokemon">
   <a [routerLink]="['/']">Homepage</a>
 
@@ -38,12 +39,11 @@
       *ngFor="let pokemon of pokemonForms?.variatesPokemons"
     ></px-pokemon-card>
   </div>
-
-  <ng-particles
-    *ngIf="hasChanged"
-    [id]="id"
-    [options]="particlesOptions"
-    (particlesLoaded)="particlesLoaded($event)"
-    class="{{ type }}"
-  ></ng-particles>
 </div>
+<ng-particles
+  *ngIf="hasChanged"
+  [id]="id"
+  [options]="particlesOptions"
+  (particlesLoaded)="particlesLoaded($event)"
+  class="{{ type }}"
+></ng-particles>
