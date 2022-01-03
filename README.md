@@ -113,7 +113,6 @@ $ yarn start
 
 | :globe_with_meridians: FrontEnd |
 | :-----------------------------: |
-
 | [Angular 13](https://angular.io/) |
 | [Angular Material 13](https://material.angular.io/) |
 | [Karma 6.3](https://www.npmjs.com/package/karma) |
