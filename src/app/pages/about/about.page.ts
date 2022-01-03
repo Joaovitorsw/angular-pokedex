@@ -2,13 +2,13 @@ import {
   Component,
   EventEmitter,
   HostBinding,
-  HostListener,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Container, IOptions, RecursivePartial } from 'ng-particles';
 import PokeAPI from 'pokedex-promise-v2';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/internal/operators/tap';
 import {
   PokeAPIService,
@@ -24,18 +24,13 @@ import {
   templateUrl: './about.page.html',
   styleUrls: ['./about.page.scss'],
 })
-export class AboutPage implements OnInit {
-  @HostListener('window:hashchange', ['$event'])
-  hashChangeHandler(): void {
-    this.hasChanged = false;
-  }
-
+export class AboutPage implements OnInit, OnDestroy {
   @HostBinding('attr.type') type: string;
-
   particlesEvent: EventEmitter<Container> = new EventEmitter();
   container: Container;
   pokemon$: Observable<PokeAPI.Pokemon>;
   pokemonDetails$: Observable<PokemonEvolutions>;
+  request$$ = new BehaviorSubject<boolean>(true);
   particlesOptions: RecursivePartial<IOptions>;
   stats_conversion = 0.393;
   id = 'about-page';
@@ -45,9 +40,14 @@ export class AboutPage implements OnInit {
 
   ngOnInit(): void {
     this.route.params.forEach(({ pokemonName }) => {
+      this.hasChanged = false;
       this.pokemon$ = this.pokeAPI.getPokemonByNameOrID(pokemonName).pipe(
         tap(async (pokemon) => {
+          this.request$$.next(false);
+          const $body = document.body;
+          $body.classList.remove(this.type);
           this.type = pokemon.types[0].type.name;
+          $body.classList.add(this.type);
           this.getAnimation();
           this.pokemonDetails$ = await this.pokeAPI.getPokemonEvolutions(
             pokemon.name
@@ -56,6 +56,11 @@ export class AboutPage implements OnInit {
         })
       );
     });
+  }
+
+  ngOnDestroy(): void {
+    const $body = document.body;
+    $body.classList.remove(this.type);
   }
 
   particlesLoaded(container: Container) {

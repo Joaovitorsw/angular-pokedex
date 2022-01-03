@@ -1,5 +1,5 @@
-@import "../../app.component.scss";
-$max-width: 620px;
+@import "colors";
+@import "variables";
 
 @each $name, $color in $type-background {
   ng-particles.#{$name} {
@@ -15,12 +15,15 @@ $max-width: 620px;
       z-index: -1;
       opacity: 0.5;
       border-radius: 15px;
-
       position: absolute;
       width: 100%;
       height: 100%;
       background-color: $color;
     }
+  }
+
+  ::ng-deep body.#{$name}::-webkit-scrollbar-thumb {
+    background-color: $color;
   }
 }
 
@@ -31,15 +34,29 @@ $max-width: 620px;
       stroke: $color !important;
     }
   }
+
+  ::ng-deep body.#{$name}::-webkit-scrollbar-track {
+    background: $color;
+  }
 }
 
 :host {
+  min-width: 100vw;
+  min-height: 100vh;
+  width: 100%;
+  height: 100%;
+  position: relative;
   display: flex;
   flex-direction: column;
-  background-color: transparent;
   align-items: center;
   padding-bottom: 30px;
-  &.ng-animating > .pokemon-card {
+
+  mat-spinner:nth-child(1) {
+    transform: translateY(100%);
+  }
+
+  &.ng-animating > .pokemon-card,
+  &.ng-animating > ng-particles {
     opacity: 0;
   }
 
@@ -55,6 +72,7 @@ $max-width: 620px;
   font-size: 26px;
   width: 100%;
   display: flex;
+  z-index: 2;
   flex-direction: column;
   align-items: center;
   justify-content: center;
