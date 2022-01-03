@@ -1,4 +1,10 @@
-import { Component, HostBinding, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  HostBinding,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import PokeAPI from 'pokedex-promise-v2';
 
 @Component({
@@ -9,6 +15,7 @@ import PokeAPI from 'pokedex-promise-v2';
 export class PokemonCardComponent implements OnInit {
   @Input() pokemon: PokeAPI.Pokemon;
   @HostBinding('attr.type') type: string;
+  @ViewChild('pokemonImage') pokemonImage: HTMLImageElement;
   stats_total: number;
   stats_overall = 0.1;
   color: string;
