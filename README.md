@@ -11,7 +11,7 @@
 </div>
 
 <p align="center">
-  <img alt="poke-app" src=".github/poke-app.png" width="350px" height="180px"/>
+  <img alt="poke-app" src=".github/angular-poke-app.png" width="350px" height="180px"/>
 </p>
 
 <p align="center"> 
