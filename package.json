@@ -6,6 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
+    "barrel": "barrelsby -e .spec.ts --delete -l all -d ./src/app",
     "test": "ng test"
   },
   "private": true,
@@ -22,6 +23,7 @@
     "@angular/platform-browser-dynamic": "~13.0.2",
     "@angular/router": "~13.0.2",
     "axios": "^0.24.0",
+    "barrelsby": "^2.3.1",
     "firebase": "^9.4.0",
     "ng-particles": "^2.20.5",
     "ngx-indexed-db": "^9.4.2",
