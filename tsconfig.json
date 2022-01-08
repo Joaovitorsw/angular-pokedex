@@ -2,12 +2,22 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": "src",
     "outDir": "./dist/out-tsc",
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
     "strictPropertyInitialization": false,
     "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@pokedex/components": ["app/components"],
+      "@pokedex/shared": ["app/shared"],
+      "@pokedex/directives": ["app/directives"],
+      "@pokedex/mocks": ["app/mocks"],
+      "@pokedex/models": ["app/models"],
+      "@pokedex/pages": ["app/pages"],
+      "@pokedex/pipes": ["app/pipes"],
+      "@pokedex/services": ["app/services"]
+    },
     "strict": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
