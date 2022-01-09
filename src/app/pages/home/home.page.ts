@@ -1,10 +1,8 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, EventEmitter, HostBinding, OnInit } from '@angular/core';
+import { PokeAPIService } from '@pokedex/services';
+import { particles, particlesAnimations } from '@pokedex/shared';
 import { Container, IOptions, RecursivePartial } from 'ng-particles';
-import { PokeAPIService } from 'src/app/services/poke-api/poke-api.service';
-import {
-  particles,
-  particlesAnimations,
-} from 'src/app/shared/ts-particles/particles.options';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'px-home',
@@ -12,6 +10,7 @@ import {
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
+  @HostBinding('class.loading') hasLoading = true;
   particlesOptions: RecursivePartial<IOptions>;
   container: Container;
   id = 'home-page';
@@ -22,6 +21,9 @@ export class HomePage implements OnInit {
     particlesAnimations.homePage();
     this.particlesOptions = particles;
     this.pokeAPI.getPokemonsFirstRange();
+    this.pokeAPI.request$$.pipe(take(1)).subscribe((request) => {
+      this.hasLoading = !request;
+    });
   }
 
   endScroll() {
