@@ -1,11 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import PokeAPI from 'pokedex-promise-v2';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import {
   SpriteStorageErrorMessage,
   SpriteStorageService,
-} from 'src/app/services/sprite-storage/sprite-storage.service';
+} from '@pokedex/services';
+import PokeAPI from 'pokedex-promise-v2';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 @Pipe({
   name: 'spritePath',
 })
