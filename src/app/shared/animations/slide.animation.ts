@@ -7,7 +7,7 @@ import {
   trigger,
 } from '@angular/animations';
 
-export const slideInAnimation = trigger('routeAnimations', [
+export const SLIDE_IN_ANIMATION = trigger('routeAnimations', [
   transition('HomePage <=> AboutPage', [
     style({ position: 'relative' }),
     query(':enter, :leave', [
@@ -20,8 +20,8 @@ export const slideInAnimation = trigger('routeAnimations', [
     ]),
     query(':enter', [style({ left: '-100%' })]),
     group([
-      query(':leave', [animate('300ms ease-out', style({ left: '100%' }))]),
-      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))]),
+      query(':leave', [animate('500ms ease-out', style({ left: '100%' }))]),
+      query(':enter', [animate('500ms ease-out', style({ left: '0%' }))]),
     ]),
   ]),
 ]);
