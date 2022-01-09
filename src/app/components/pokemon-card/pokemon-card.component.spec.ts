@@ -1,65 +1,107 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { pokemonsMock } from 'src/app/mocks/pokemon-mocks';
-import { PadStartPipe } from 'src/app/pipes/pad-start/pad-start.pipe';
-import { PokemonTitleCasePipe } from 'src/app/pipes/pokemon-title-case/pokemon-title-case.pipe';
-import { PokemonCardComponent } from './pokemon-card.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ColorProgressBarDirective } from '@pokedex/directives';
+import { MEGA_CHARIZARD_X } from '@pokedex/mocks';
+import {
+  HeightPipe,
+  PadStartPipe,
+  PokemonTitleCasePipe,
+  SpritePathPipe,
+  TypeIconPathPipe,
+  WeightPipe,
+} from '@pokedex/pipes';
+import { render } from '@testing-library/angular';
+import { screen } from '@testing-library/dom';
+import { PokemonCardComponent } from '.';
+import { TypeCardComponent } from '../type-card/type-card.component';
 
-const componentTemplateTest = ` 
-<h1>{{ pokemon.name | pokemonTitleCase }}</h1>
-<p>{{ pokemon.id | padStart: 3:"0" }}</p>
-<p>{{ pokemon.weight }}</p>
-<p>{{ pokemon.height }}</p>
-`;
+const DEFAULT_DECLARATIONS = [
+  PokemonCardComponent,
+  TypeCardComponent,
+  SpritePathPipe,
+  TypeIconPathPipe,
+  PokemonTitleCasePipe,
+  ColorProgressBarDirective,
+  PadStartPipe,
+  WeightPipe,
+  HeightPipe,
+];
+
+const DEFAULT_IMPORTS = [
+  MatProgressSpinnerModule,
+  MatProgressBarModule,
+  RouterTestingModule,
+  HttpClientTestingModule,
+];
 
 describe('PokemonCardComponent', () => {
-  let component: PokemonCardComponent;
-  let fixture: ComponentFixture<PokemonCardComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [PokemonCardComponent, PokemonTitleCasePipe, PadStartPipe],
-    })
-      .overrideTemplate(PokemonCardComponent, componentTemplateTest)
-      .compileComponents();
+  it(`should render spinner pokemon image`, async () => {
+    await render(PokemonCardComponent, {
+      declarations: DEFAULT_DECLARATIONS,
+      imports: DEFAULT_IMPORTS,
+      componentProperties: {
+        pokemon: MEGA_CHARIZARD_X,
+      },
+    });
+    const $spinner = screen.getByTestId('pokemon-spinner-image');
+    expect($spinner).toBeTruthy();
   });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(PokemonCardComponent);
-    component = fixture.componentInstance;
-    component.pokemon = pokemonsMock[1];
-    fixture.detectChanges();
+  it('should render pokemon name', async () => {
+    await render(PokemonCardComponent, {
+      declarations: DEFAULT_DECLARATIONS,
+      imports: DEFAULT_IMPORTS,
+      componentProperties: {
+        pokemon: MEGA_CHARIZARD_X,
+      },
+    });
+    const $name = screen.getByTestId('pokemon-name');
+    const expected = new PokemonTitleCasePipe().transform(
+      MEGA_CHARIZARD_X.name
+    ) as string;
+    expect($name.textContent).toEqual(expected);
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-  it(`should have as pokemon`, () => {
-    expect(component.pokemon).toEqual(pokemonsMock[1]);
-  });
-
-  it('should render pokemon name', () => {
-    const pipe = new PokemonTitleCasePipe();
-    const sample = fixture.nativeElement.querySelector('h1')?.textContent;
-    const expected = pipe.transform(component.pokemon.name);
-    expect(sample).toContain(`${expected}`);
-  });
-
-  it('should render pokemon id', () => {
-    const pipe = new PadStartPipe();
-    const sample = fixture.nativeElement.querySelectorAll('p')[0].textContent;
-    const expected = pipe.transform(component.pokemon.id, 3, '0');
-    expect(sample).toContain(`${expected}`);
+  it('should render pokemon id', async () => {
+    await render(PokemonCardComponent, {
+      declarations: DEFAULT_DECLARATIONS,
+      imports: DEFAULT_IMPORTS,
+      componentProperties: {
+        pokemon: MEGA_CHARIZARD_X,
+      },
+    });
+    const $id = screen.getByTestId('pokemon-id');
+    const expected = `#${
+      new PadStartPipe().transform(MEGA_CHARIZARD_X.id, 3, '0') as string
+    }`;
+    expect($id.textContent).toEqual(expected);
   });
 
-  it('should render pokemon weight', () => {
-    const sample = fixture.nativeElement.querySelectorAll('p')[1].textContent;
-    const expected = component.pokemon.weight;
-    expect(sample).toContain(`${expected}`);
+  it('should render pokemon weight', async () => {
+    await render(PokemonCardComponent, {
+      declarations: DEFAULT_DECLARATIONS,
+      imports: DEFAULT_IMPORTS,
+      componentProperties: {
+        pokemon: MEGA_CHARIZARD_X,
+      },
+    });
+    const $weight = screen.getByTestId('pokemon-weight');
+    const expected = new WeightPipe().transform(MEGA_CHARIZARD_X.weight);
+    expect($weight.textContent?.trim()).toEqual(expected);
   });
 
-  it('should render pokemon height', () => {
-    const sample = fixture.nativeElement.querySelectorAll('p')[2].textContent;
-    const expected = component.pokemon.height;
-    expect(sample).toContain(`${expected}`);
+  it('should render pokemon height', async () => {
+    await render(PokemonCardComponent, {
+      declarations: DEFAULT_DECLARATIONS,
+      imports: DEFAULT_IMPORTS,
+      componentProperties: {
+        pokemon: MEGA_CHARIZARD_X,
+      },
+    });
+    const $height = screen.getByTestId('pokemon-height');
+    const expected = new HeightPipe().transform(MEGA_CHARIZARD_X.height);
+    expect($height.textContent?.trim()).toEqual(expected);
   });
 });
