@@ -1,35 +1,20 @@
-import {
-  Directive,
-  ElementRef,
-  HostBinding,
-  Input,
-  OnInit,
-} from '@angular/core';
+import { Directive, HostBinding, OnInit } from '@angular/core';
+import { MatProgressBar } from '@angular/material/progress-bar';
 
 @Directive({
-  selector: '[pxColorProgressBar]',
+  selector: 'mat-progress-bar.pxColorProgressBar',
 })
 export class ColorProgressBarDirective implements OnInit {
-  @Input('pxColorProgressBar') value: number;
-  @HostBinding('attr.color') color: string;
-
-  constructor(private $hostElement: ElementRef) {}
+  constructor(private matProgressBar: MatProgressBar) {}
+  @HostBinding('style.--color')
+  color: string;
   private red: number;
   private green: number;
   private blue = 0;
   private hexadecimal: number | string;
 
   ngOnInit(): void {
-    const rounding = this.value.toPrecision(2);
-    const value = parseInt(rounding);
-    this.color = this.percentageToHexColor(value);
-    const $style = document.createElement('style');
-    $style.innerText = `
-    mat-progress-bar[color="${this.color}"] .mat-progress-bar-fill::after {
-      background-color: ${this.color} !important;
-    }
-    `;
-    this.$hostElement.nativeElement.appendChild($style);
+    this.color = this.percentageToHexColor(this.matProgressBar.value);
   }
 
   percentageToHexColor(value: number): string {
