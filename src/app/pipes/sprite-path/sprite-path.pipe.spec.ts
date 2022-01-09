@@ -1,26 +1,17 @@
-import PokeAPI from 'pokedex-promise-v2';
-import { of } from 'rxjs';
 import {
   SpriteStorageErrorMessage,
   SpriteStorageService,
-} from 'src/app/services/sprite-storage/sprite-storage.service';
+} from '@pokedex/services';
+import PokeAPI from 'pokedex-promise-v2';
+import { of } from 'rxjs';
 import { instance, mock, when } from 'ts-mockito';
 import { SpritePathPipe } from './sprite-path.pipe';
 
+const spriteStorageMock = mock(SpriteStorageService);
+const spriteStorageMockInstance = instance(spriteStorageMock);
+const PIPE = new SpritePathPipe(spriteStorageMockInstance);
+
 describe('SpritePathPipe', () => {
-  let pipe: SpritePathPipe;
-  let spriteStorageMock: SpriteStorageService;
-
-  beforeEach(() => {
-    spriteStorageMock = mock(SpriteStorageService);
-    const spriteStorageMockInstance = instance(spriteStorageMock);
-    pipe = new SpritePathPipe(spriteStorageMockInstance);
-  });
-
-  it('create an instance', () => {
-    expect(pipe).toBeTruthy();
-  });
-
   it('should return the gif path when exists on storage', (done) => {
     when(spriteStorageMock.getSpritePathByName('bulbasaur')).thenReturn(
       of('bulbasaur.gif')
@@ -39,7 +30,7 @@ describe('SpritePathPipe', () => {
 
     const expectedSprite = 'bulbasaur.gif';
 
-    const result = pipe.transform(samplePokemon as unknown as PokeAPI.Pokemon);
+    const result = PIPE.transform(samplePokemon as unknown as PokeAPI.Pokemon);
 
     result.subscribe((spritePath) => {
       expect(spritePath).toBe(expectedSprite);
@@ -66,7 +57,7 @@ describe('SpritePathPipe', () => {
 
     const expectedSprite = 'bulbasaur-vi.png';
 
-    const result = pipe.transform(samplePokemon as unknown as PokeAPI.Pokemon);
+    const result = PIPE.transform(samplePokemon as unknown as PokeAPI.Pokemon);
 
     result.subscribe((spritePath) => {
       expect(spritePath).toBe(expectedSprite);
@@ -93,7 +84,7 @@ describe('SpritePathPipe', () => {
 
     const expectedSprite = 'bulbasaur.png';
 
-    const result = pipe.transform(samplePokemon as unknown as PokeAPI.Pokemon);
+    const result = PIPE.transform(samplePokemon as unknown as PokeAPI.Pokemon);
 
     result.subscribe((spritePath) => {
       expect(spritePath).toBe(expectedSprite);
@@ -112,7 +103,7 @@ describe('SpritePathPipe', () => {
 
     const expectedSprite = 'bulbasaur.gif';
 
-    const result = pipe.transform(samplePokemon as unknown as PokeAPI.Pokemon);
+    const result = PIPE.transform(samplePokemon as unknown as PokeAPI.Pokemon);
 
     result.subscribe((spritePath) => {
       expect(spritePath).toBe(expectedSprite);
