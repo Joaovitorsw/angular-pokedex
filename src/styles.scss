@@ -2,6 +2,8 @@
 
 @import "reset";
 @import "colors";
+@import "material-overrides";
+@import "app.component";
 
 html {
   scroll-behavior: smooth;
@@ -9,11 +11,16 @@ html {
 
 html,
 body {
+  width: 100%;
   height: 100%;
 }
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-image: url("/assets/images/about-loading.gif");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #181b1d;
 }
 
 body::-webkit-scrollbar {
@@ -22,37 +29,10 @@ body::-webkit-scrollbar {
 }
 
 body::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.144);
+  background: rgba(128, 128, 128, 0.474);
   border-radius: 85px;
 }
 
 body::-webkit-scrollbar-track {
-  border: 5px solid rgba(0, 0, 0, 0.055);
-}
-
-mat-drawer {
-  position: fixed !important;
-  width: 100%;
-  height: 100%;
-}
-
-mat-drawer-container {
-  background-color: transparent;
-}
-.poke-options {
-  box-shadow: 0px 0px 0px 0.5px $shadow-scoff;
-  padding: 5px;
-  background-color: rgba(255, 255, 255, 0.686);
-  border-radius: 50%;
-  z-index: 3;
-  border: 1 px solid black;
-  position: fixed !important;
-  bottom: 50px !important;
-  right: 10px !important;
-
-  img {
-    animation: hurricane 2.5s linear infinite;
-    width: 48px;
-    height: 48px;
-  }
+  border: 5px solid rgb(208, 208, 208);
 }
