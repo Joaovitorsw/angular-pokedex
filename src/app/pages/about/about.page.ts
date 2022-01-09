@@ -6,18 +6,12 @@ import {
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { PokeAPIService, PokemonEvolutions } from '@pokedex/services';
+import { particles, particlesAnimations } from '@pokedex/shared';
 import { Container, IOptions, RecursivePartial } from 'ng-particles';
 import PokeAPI from 'pokedex-promise-v2';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/internal/operators/tap';
-import {
-  PokeAPIService,
-  PokemonEvolutions,
-} from 'src/app/services/poke-api/poke-api.service';
-import {
-  particles,
-  particlesAnimations,
-} from 'src/app/shared/ts-particles/particles.options';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'px-about',
