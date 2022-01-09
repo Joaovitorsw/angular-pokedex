@@ -1,7 +1,8 @@
+import { TypeIconPathPipe } from '@pokedex/pipes';
 import { render, screen } from '@testing-library/angular';
 import { TypeCardComponent } from './type-card.component';
 
-const DEFAULT_DECLARATIONS = [TypeCardComponent];
+const DEFAULT_DECLARATIONS = [TypeIconPathPipe];
 const DEFAULT_PROPERTY_VALUES = {
   type: 'fire',
 };
