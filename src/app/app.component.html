@@ -2,7 +2,7 @@
   <mat-drawer #drawer mode="push">
     <px-slide-option
       [option]="'Animation'"
-      [status]="true"
+      [status]="animationStatus"
       [icon]="'movie_creation'"
       (change)="slideStatus($event)"
     ></px-slide-option>
@@ -14,6 +14,6 @@
     ></router-outlet>
   </div>
 </mat-drawer-container>
-<div class="poke-options" (click)="drawer.toggle()">
-  <img src="../assets/images/pokemon-engine.png" alt="pokemon-engine" />
+<div class="pokemon-engine" (click)="drawer.toggle()">
+  <img src="/assets/images/pokemon-engine.png" alt="pokemon-engine" />
 </div>
