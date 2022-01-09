@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
+import { environment } from 'environments/environment';
 import { NgxIndexedDBModule } from 'ngx-indexed-db';
 import PokeAPI from 'pokedex-promise-v2';
-import { environment } from 'src/environments/environment';
 import { PokeAPIService } from './poke-api.service';
 
 describe('PokeAPIService', () => {
@@ -13,10 +13,6 @@ describe('PokeAPIService', () => {
       providers: [{ provide: PokeAPI, useValue: new PokeAPI() }],
     });
     service = TestBed.inject(PokeAPIService);
-  });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
   });
 
   it('should return a pokemon by name or id', (done) => {
