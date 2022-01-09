@@ -3,7 +3,7 @@ import { IParticlesProps } from 'ng-particles';
 export const ROCK: IParticlesProps = {
   particles: {
     number: {
-      value: 10,
+      value: 15,
       density: {
         enable: true,
         value_area: 800,
@@ -13,7 +13,7 @@ export const ROCK: IParticlesProps = {
       value: '#b8a038',
     },
     shape: {
-      type: 'polygon',
+      type: 'image',
       stroke: {
         width: 1,
         color: '#e0c068',
@@ -22,7 +22,7 @@ export const ROCK: IParticlesProps = {
         nb_sides: 5,
       },
       image: {
-        src: 'img/github.svg',
+        src: 'https://img.icons8.com/external-icongeek26-flat-icongeek26/344/external-stone-geography-icongeek26-flat-icongeek26.png',
         width: 100,
         height: 100,
       },
@@ -38,8 +38,8 @@ export const ROCK: IParticlesProps = {
       },
     },
     size: {
-      value: 8.017060304327615,
-      random: false,
+      value: 25,
+      random: true,
       anim: {
         enable: false,
         speed: 10,
@@ -56,9 +56,9 @@ export const ROCK: IParticlesProps = {
     },
     move: {
       enable: true,
-      speed: 17.637532669520752,
-      direction: 'none',
-      random: true,
+      speed: 5,
+      direction: 'topLeft',
+      random: false,
       straight: false,
       out_mode: 'out',
       bounce: false,
