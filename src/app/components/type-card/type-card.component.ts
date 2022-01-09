@@ -1,20 +1,20 @@
-import { Component, HostBinding, Input, OnInit } from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 
 @Component({
   selector: 'px-type-card',
   template: `
-    <div class="icon {{ type }}">
-      <img [src]="type | typeIconPath" [alt]="type" />
+    <div class="icon {{ pokemonType }}">
+      <img [src]="pokemonType | typeIconPath" [alt]="pokemonType" />
     </div>
-    <p>{{ type }}</p>
+    <p>{{ pokemonType }}</p>
   `,
   styleUrls: ['./type-card.component.scss'],
 })
-export class TypeCardComponent implements OnInit {
-  @Input() type: string;
-  @HostBinding('class') typeValue: string;
-  constructor() {}
-  ngOnInit(): void {
-    this.typeValue = this.type;
+export class TypeCardComponent {
+  @HostBinding('attr.data-testid') testid = 'type-card';
+  @HostBinding('class')
+  pokemonType: string;
+  @Input() set type(type: string) {
+    this.pokemonType = type;
   }
 }
