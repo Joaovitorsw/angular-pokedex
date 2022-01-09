@@ -1,4 +1,5 @@
 <div
+  *ngIf="!hasLoading "
   class="pokemons-content"
   infiniteScroll
   [infiniteScrollDistance]="3.5"
@@ -15,7 +16,4 @@
     (particlesLoaded)="particlesLoaded($event)"
   >
   </ng-particles>
-</div>
-<div class="spinner" *ngIf="!(pokeAPI.request$$ | async)">
-  <mat-spinner></mat-spinner>
 </div>
