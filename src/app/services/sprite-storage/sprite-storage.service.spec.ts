@@ -21,10 +21,6 @@ describe('SpriteStorageService', () => {
     httpMock = TestBed.inject(HttpTestingController);
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-
   it('should return a sprite path', (done) => {
     const spriteName = 'bulbasaur';
     const spritePath = `${service.BASE_URL}${spriteName}${service.EXTENSION}`;
