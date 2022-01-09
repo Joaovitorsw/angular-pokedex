@@ -22,6 +22,7 @@
     "@angular/platform-browser": "~13.0.2",
     "@angular/platform-browser-dynamic": "~13.0.2",
     "@angular/router": "~13.0.2",
+    "@ngneat/until-destroy": "^9.0.0",
     "axios": "^0.24.0",
     "barrelsby": "^2.3.1",
     "firebase": "^9.4.0",
