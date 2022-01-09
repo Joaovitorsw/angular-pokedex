@@ -10,12 +10,13 @@ import { FLYING } from './types/flying';
 import { GHOST } from './types/ghost';
 import { GRASS } from './types/grass';
 import { GROUND } from './types/ground';
-import { home as HOME } from './types/home';
+import { HOME } from './types/home';
 import { ICE } from './types/ice';
 import { NORMAL } from './types/normal';
 import { POISON } from './types/poison';
 import { PSYCHIC } from './types/psychic';
 import { ROCK } from './types/rock';
+import { STEEL } from './types/steel';
 import { DEFAULT } from './types/template';
 import { WATER } from './types/water';
 
@@ -90,9 +91,7 @@ export const particlesAnimations: any = {
     particles = DARK;
   },
   steel() {
-    const options: any = { ...DEFAULT };
-    options.particles.color.value = '#FFFFFF';
-    particles = options;
+    particles = STEEL;
   },
   dragon() {
     particles = DRAGON;

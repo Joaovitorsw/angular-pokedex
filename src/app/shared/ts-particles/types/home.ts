@@ -1,6 +1,6 @@
 import { IParticlesProps } from 'ng-particles';
 
-export const home: IParticlesProps = {
+export const HOME: IParticlesProps = {
   particles: {
     number: {
       value: 4,

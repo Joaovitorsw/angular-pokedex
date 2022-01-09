@@ -33,7 +33,7 @@ export const FIGHTING: IParticlesProps = {
       anim: {
         enable: false,
         speed: 0.5,
-        opacity_min: 0.1,
+        opacity_min: 0.5,
         sync: false,
       },
     },
@@ -58,9 +58,9 @@ export const FIGHTING: IParticlesProps = {
       enable: true,
       speed: 0.5,
       direction: 'none',
-      random: false,
+      random: true,
       straight: false,
-      out_mode: 'out',
+      out_mode: 'destroy',
       bounce: false,
       attract: {
         enable: false,
