@@ -1,8 +1,7 @@
-import dotenv from "dotenv";
-import fs from "fs";
-import { argv } from "yargs";
+const { writeFile } = require("fs");
+const { argv } = require("yargs");
 
-dotenv.config();
+require("dotenv").config();
 
 const environment = argv.environment;
 const isProduction = environment === "prod";
@@ -48,7 +47,7 @@ const environmentFileContent = `export const environment = {
 };
 `;
 
-fs.writeFile(targetPath, environmentFileContent, (err) => {
+writeFile(targetPath, environmentFileContent, function (err) {
   if (err) {
     console.log(err);
   }
