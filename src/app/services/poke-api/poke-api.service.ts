@@ -1,54 +1,146 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import PokeAPI, { Pokemon, PokemonSpecies } from 'pokedex-promise-v2';
-import { BehaviorSubject, defer, Observable, Subject } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import {
+  CachedPokemon,
+  EvolutionChain,
+  Pokemon,
+  PokemonEvolutions,
+  PokemonSpecies,
+  Variety,
+} from 'poke-api-models';
+import { BehaviorSubject, defer, Observable, of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { eIndexDBKeys } from '..';
 import { IndexedDbService } from '../indexed-db/indexed-db.service';
-
-export interface PokemonEvolutions {
-  species: PokemonSpecies;
-  evolutions: Pokemon[];
-  variatesPokemons: Pokemon[];
-}
-
-export enum eIndexDBKeys {
-  STORE = 'cached-pokemons',
-  START = '1',
-  CACHE = '2',
-}
 
 @Injectable({
   providedIn: 'root',
 })
+@UntilDestroy()
 export class PokeAPIService {
-  constructor(private PokeAPI: PokeAPI, private indexDB: IndexedDbService) {}
-
-  request$$: Subject<boolean> = new Subject();
-  pokemons$$: BehaviorSubject<PokeAPI.Pokemon[]>;
-  pokemons: PokeAPI.Pokemon[];
+  constructor(private http: HttpClient, private indexDB: IndexedDbService) {}
+  readonly BASE_URL = 'https://pokeapi.co/api/v2/';
+  readonly POKEMON_SPECIES_EXTENSION = 'pokemon-species/';
+  readonly POKEMON_EXTENSION = 'pokemon/';
+  readonly EVOLUTION_CHAIN_EXTENSION = 'evolution-chain/';
+  request$$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  pokemons$$ = new BehaviorSubject<Pokemon[]>([]);
+  pokemons: Pokemon[];
+  requestProgress: number = 0.5;
   hasEvolution: boolean;
 
-  getPokemonByNameOrID(name: string | number): Observable<PokeAPI.Pokemon> {
-    return defer(
-      async () => (await this.PokeAPI.getPokemonByName(name)) as PokeAPI.Pokemon
-    );
+  getPokemonByNameOrID(name: string | number): Observable<Pokemon> {
+    return this.http
+      .get<Pokemon>(`${this.BASE_URL}${this.POKEMON_EXTENSION}${name}`)
+      .pipe(untilDestroyed(this));
   }
 
   getPokemonsByList(
-    list: Array<string | number>
-  ): Observable<PokeAPI.Pokemon[]> {
-    return defer(
-      async () =>
-        (await this.PokeAPI.getPokemonByName(list)) as PokeAPI.Pokemon[]
+    pokemonsList: Array<string | number>
+  ): Observable<Pokemon[]> {
+    const pokemonsPromiseList = pokemonsList.map((pokemon: string | number) => {
+      return this.http
+        .get<Pokemon>(`${this.BASE_URL}${this.POKEMON_EXTENSION}${pokemon}`)
+
+        .toPromise();
+    });
+    return defer(async () => Promise.all(pokemonsPromiseList)).pipe(
+      untilDestroyed(this)
     );
   }
 
-  getPokemonsByRange(...args: Array<number>): Observable<PokeAPI.Pokemon[]> {
+  getPokemonsByCustomRange(...args: Array<number>): Observable<Pokemon[]> {
     const [start, end] = args;
     const myRange = Array.from({ length: end }, (_, i) => i + start);
 
-    return defer(
-      async () =>
-        (await this.PokeAPI.getPokemonByName(myRange)) as PokeAPI.Pokemon[]
+    return this.getPokemonsByList(myRange);
+  }
+
+  getSpeciesByName(name: string): Promise<PokemonSpecies> {
+    return this.http
+      .get<PokemonSpecies>(
+        `${this.BASE_URL}${this.POKEMON_SPECIES_EXTENSION}${name}`
+      )
+      .pipe(untilDestroyed(this))
+      .toPromise();
+  }
+
+  getEvolutionChainById(id: number): Promise<EvolutionChain> {
+    return this.http
+      .get<EvolutionChain>(
+        `${this.BASE_URL}${this.EVOLUTION_CHAIN_EXTENSION}${id}`
+      )
+      .pipe(untilDestroyed(this))
+      .toPromise();
+  }
+
+  nextPokemonsRange(previous: number, next: number): Observable<Pokemon[]> {
+    return this.getCachedPokemonsByRange(previous, next).pipe(
+      untilDestroyed(this),
+      catchError(() => this.addPokemonsRangeInCache())
+    );
+  }
+
+  addPokemonsRangeInCache(): Observable<Pokemon[]> {
+    return this.getPokemonsByCustomRange(1, 898).pipe(
+      untilDestroyed(this),
+      tap((pokemons: Pokemon[]) => {
+        this.pokemons = pokemons;
+        this.indexDB
+          .update(eIndexDBKeys.POKEMONS, {
+            pokemon: pokemons,
+            id: eIndexDBKeys.POKEMONS,
+          })
+          .subscribe();
+      })
+    );
+  }
+
+  getCachedPokemonsByRange(
+    previous: number,
+    next: number
+  ): Observable<Pokemon[]> {
+    const arrayLength = next + 1 - previous;
+    const myRange = Array.from(
+      { length: arrayLength },
+      (_, index) => index + previous
+    );
+
+    if (this.pokemons?.length >= 898) {
+      this.request$$.next(true);
+      const pokemons = this.pokemons.filter((pokemon: Pokemon) =>
+        myRange.includes(pokemon.id)
+      );
+
+      return of(pokemons).pipe(untilDestroyed(this));
+    }
+
+    return this.indexDB.getAll(eIndexDBKeys.POKEMONS).pipe(
+      map((data: CachedPokemon[]) => {
+        const noPokemons = data[0].pokemon.length === 0;
+
+        if (noPokemons) throw new Error('No Pokemons');
+
+        const pokemons = data[0].pokemon;
+
+        this.request$$.next(true);
+
+        return pokemons.filter((pokemon: Pokemon) =>
+          myRange.includes(pokemon.id)
+        );
+      })
+    );
+  }
+
+  searchPokemons(search: string): Observable<Pokemon[]> {
+    return this.getCachedPokemonsByRange(0, 898).pipe(
+      untilDestroyed(this),
+      map((pokemons: Pokemon[]) => {
+        return pokemons.filter((pokemon: Pokemon) =>
+          pokemon.name.includes(search)
+        );
+      })
     );
   }
 
@@ -56,157 +148,119 @@ export class PokeAPIService {
     pokemonName: string
   ): Promise<Observable<PokemonEvolutions>> {
     this.request$$.next(false);
+    const excludeNames =
+      /-gmax|-mega|-alola|-galar|-y|-x |-amped |-ice |-hero|-single-strike|-standard/g;
+    const pokeName = pokemonName.replace(excludeNames, '');
 
-    const pokeName = pokemonName
-      .replace(/-mega/g, '')
-      .replace(/-alola/g, '')
-      .replace(/-y/g, '')
-      .replace(/-x/g, '');
+    let species: PokemonSpecies = await this.getSpeciesByName(pokeName);
 
-    const species: PokeAPI.PokemonSpecies = await this.getSpeciesByName(
-      pokeName
-    );
     const url = species.evolution_chain.url;
     const chainPath = url.split('/')[6];
     const id = parseInt(chainPath);
     const { chain } = await this.getEvolutionChainById(id);
 
-    let forms: Array<string> = chain.evolves_to.map(
-      (species) => species.species.name
+    let forms: Array<string | number> = chain.evolves_to.map(
+      (pokemon) => pokemon.species.name
     );
 
-    if (chain.evolves_to.length === 1) {
-      const firstForm = chain.species.name;
-      const secondForm = chain.evolves_to[0]?.species.name;
-      const thirdForm = chain.evolves_to[0]?.evolves_to[0]?.species.name;
+    if (chain.evolves_to.length === 0) {
+      forms = [chain.species.name];
+    }
+    const hasEvolutions = chain.evolves_to.length === 1;
+
+    if (hasEvolutions) {
+      const firstForm = chain.species.url.split('/')[6];
+      const secondForm = chain.evolves_to[0]?.species.url.split('/')[6];
+      const thirdForm =
+        chain.evolves_to[0]?.evolves_to[0]?.species.url.split('/')[6];
       forms = [firstForm, secondForm, thirdForm].filter((form) => form);
     }
+
     const evolutions$ = this.getPokemonsByList(forms).pipe(
+      untilDestroyed(this),
       switchMap(async (pokemons) => {
         const otherSpecies = pokemons.map((pokemon) =>
-          this.getSpeciesByName(pokemon.name)
+          this.getSpeciesByName(pokemon.name.replace(excludeNames, ''))
         );
 
-        const allSpecies: PokeAPI.PokemonSpecies[] = await Promise.all(
+        const evolutionsSpecies: PokemonSpecies[] = await Promise.all(
           otherSpecies
         );
-
-        const variatesPokemons: PokeAPI.Variety[] = allSpecies.flatMap(
-          (species: PokeAPI.PokemonSpecies) => {
-            const variantesPredicate = (varieties: PokeAPI.Variety) => {
-              const hasMega = varieties.pokemon.name.includes('mega');
-              const hasAlola =
-                varieties.pokemon.name.includes(`${species.name}-alola`) &&
-                !varieties.pokemon.name.includes('cap');
-              return (
-                (!varieties.is_default && hasMega) ||
-                (!varieties.is_default && hasAlola)
-              );
-            };
-
-            const hasVariantes: PokeAPI.Variety[] =
-              species.varieties.filter(variantesPredicate);
-            return hasVariantes;
-          }
+        const allSpecies = [species, ...evolutionsSpecies];
+        const filteredSpecies = allSpecies.filter((element) =>
+          allSpecies.indexOf(element)
         );
-        const listVariantes: Array<string> = variatesPokemons.map(
-          (variant: PokeAPI.Variety) => variant.pokemon.name
-        );
-
-        const variables: Pokemon[] = await this.getPokemonsByList(
-          listVariantes
-        ).toPromise();
+        const variables = await this.getPokemonVariates(filteredSpecies);
 
         const evolution: PokemonEvolutions = {
           species: species,
           evolutions: pokemons,
-          variatesPokemons: variables,
+          varietiesPokemon: variables,
         };
 
         this.request$$.next(true);
 
         return evolution;
       }),
-      catchError(() => {
+      catchError(async () => {
         this.request$$.next(true);
-        return [];
+
+        const evolution = await this.getPokemonVariates([species]).then(
+          (variates) => {
+            const evolution: PokemonEvolutions = {
+              species: species,
+              evolutions: [],
+              varietiesPokemon: variates,
+            };
+
+            return evolution;
+          }
+        );
+
+        return evolution;
       })
     );
+
     return evolutions$;
   }
 
-  getPokemonsFirstRange() {
-    this.request$$.next(false);
-    this.indexDB
-      .getByKey(eIndexDBKeys.STORE, eIndexDBKeys.START)
-      .subscribe((data) => {
-        if (data?.id === 1) {
-          this.pokemons = data.pokemons;
-          this.pokemons$$ = new BehaviorSubject<PokeAPI.Pokemon[]>(
-            data.pokemons
-          );
-          this.request$$.next(true);
-          return;
-        }
-        this.getPokemonsByRange(1, 24).subscribe(
-          (pokemons: PokeAPI.Pokemon[]) => {
-            this.indexDB.add(eIndexDBKeys.STORE, {
-              pokemons: pokemons,
-              id: eIndexDBKeys.START,
-            });
-            this.request$$.next(true);
-            this.pokemons$$ = new BehaviorSubject<PokeAPI.Pokemon[]>(pokemons);
-          }
-        );
-      });
-  }
+  async getPokemonVariates(allSpecies: PokemonSpecies[]): Promise<Pokemon[]> {
+    const variatesPokemons: Variety[] = allSpecies.flatMap(
+      (species: PokemonSpecies) => {
+        const variantesPredicate = (varieties: Variety) => {
+          const hasAlola =
+            varieties.pokemon.name.includes(`${species.name}-alola`) &&
+            !varieties.pokemon.name.includes('cap');
 
-  nextPokemonsRange(previous: number, next: number): void {
-    this.request$$.next(false);
+          const miscellanies =
+            !varieties.is_default &&
+            !varieties.pokemon.name.includes('cap') &&
+            !varieties.pokemon.name.includes('rock-star') &&
+            !varieties.pokemon.name.includes('pop-star') &&
+            !varieties.pokemon.name.includes('totem') &&
+            !varieties.pokemon.name.includes('belle') &&
+            !varieties.pokemon.name.includes('libre') &&
+            !varieties.pokemon.name.includes('cosplay') &&
+            !varieties.pokemon.name.includes('phd');
 
-    if (previous + next >= 898) next = 899 - previous;
+          return miscellanies || hasAlola;
+        };
 
-    this.indexDB
-      .getByKey(eIndexDBKeys.STORE, eIndexDBKeys.CACHE)
-      .subscribe((data) => {
-        const pokemonsLength = data?.pokemons.length;
-        const hasCache = pokemonsLength - this.pokemons$$.value.length > 0;
-        const nextCache = previous + next - 1;
+        const hasVariantes: Variety[] =
+          species.varieties.filter(variantesPredicate);
 
-        if (hasCache && pokemonsLength >= nextCache) {
-          this.pokemons = data.pokemons;
-          const previousPokemons = this.pokemons$$.value;
-          const pokes = data.pokemons.slice(previous - 1, nextCache);
-          const nextPokemons = [...previousPokemons, ...pokes];
-          this.request$$.next(true);
-          this.pokemons$$.next(nextPokemons);
-          return;
-        }
+        return hasVariantes;
+      }
+    );
 
-        this.getPokemonsByRange(previous, next).subscribe(
-          (pokemons: PokeAPI.Pokemon[]) => {
-            const previousPokemons = this.pokemons$$.value;
-            const nextPokemons = [...previousPokemons, ...pokemons];
-            this.request$$.next(true);
-            this.indexDB.update(eIndexDBKeys.STORE, {
-              pokemons: nextPokemons,
-              id: eIndexDBKeys.CACHE,
-            });
-            this.pokemons$$.next(nextPokemons);
-          }
-        );
-      });
-  }
+    const listVariantes: Array<string> = variatesPokemons.map(
+      (variant: Variety) => variant.pokemon.name
+    );
 
-  getSpeciesByName(name: string): Promise<PokeAPI.PokemonSpecies> {
-    return this.PokeAPI.getPokemonSpeciesByName(
-      name
-    ) as Promise<PokeAPI.PokemonSpecies>;
-  }
+    const variables: Pokemon[] = await this.getPokemonsByList(
+      listVariantes
+    ).toPromise();
 
-  getEvolutionChainById(id: number): Promise<PokeAPI.EvolutionChain> {
-    return this.PokeAPI.getEvolutionChainById(
-      id
-    ) as Promise<PokeAPI.EvolutionChain>;
+    return variables;
   }
 }
