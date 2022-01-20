@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { RouterOutlet } from '@angular/router';
 import { Container } from 'ng-particles';
+import { catchError } from 'rxjs/operators';
 import { AboutPage } from './pages/about/about.page';
 import { HomePage } from './pages/home/home.page';
+import { IndexedDbService } from './services';
 import { SLIDE_IN_ANIMATION } from './shared/animations/slide.animation';
 
 @Component({
@@ -15,6 +17,9 @@ import { SLIDE_IN_ANIMATION } from './shared/animations/slide.animation';
 export class AppComponent {
   private container: Container;
   animationStatus = true;
+  resetStatus = false;
+
+  constructor(private indexDB: IndexedDbService) {}
 
   prepareRoute(outlet: RouterOutlet) {
     return outlet?.activatedRouteData?.['animation'];
@@ -26,6 +31,16 @@ export class AppComponent {
       this.container = container;
       this.particlesStatus(this.animationStatus);
     });
+  }
+
+  resetCache(event: MatSlideToggleChange) {
+    this.resetStatus = event.checked;
+    this.indexDB
+      .clearAll()
+      .pipe(catchError(() => this.indexDB.clearAll()))
+      .subscribe(() => {
+        window.location.reload();
+      });
   }
 
   slideStatus(event: MatSlideToggleChange) {

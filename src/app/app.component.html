@@ -6,6 +6,12 @@
       [icon]="'movie_creation'"
       (change)="slideStatus($event)"
     ></px-slide-option>
+    <px-slide-option
+      [option]="'Reset Cache'"
+      [status]="resetStatus"
+      [icon]="'restart_alt'"
+      (change)="resetCache($event)"
+    ></px-slide-option>
   </mat-drawer>
   <div [@routeAnimations]="prepareRoute(outlet)">
     <router-outlet
