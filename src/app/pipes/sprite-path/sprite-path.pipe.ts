@@ -16,7 +16,9 @@ export class SpritePathPipe implements PipeTransform {
     private readonly spriteStorage: SpriteStorageService,
     private indexDB: IndexedDbService
   ) {}
+  private cache: string;
   transform({ name, sprites, id }: Pokemon): Observable<string> {
+    if (this.cache) return of(this.cache);
     return this.indexDB.getByKey(eIndexDBKeys.SPRITE_PATH, id).pipe(
       switchMap((image) => {
         if (image?.id === id) return of(image.spritePath);
@@ -33,6 +35,7 @@ export class SpritePathPipe implements PipeTransform {
             return spriteVersionUrl;
           }),
           tap((spritePath) => {
+            this.cache = spritePath;
             this.indexDB
               .add(eIndexDBKeys.SPRITE_PATH, {
                 id: id,

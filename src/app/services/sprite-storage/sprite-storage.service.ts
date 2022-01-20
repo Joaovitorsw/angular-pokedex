@@ -23,8 +23,17 @@ export class SpriteStorageService {
     const url = `${this.BASE_URL}${name}${this.EXTENSION}`;
 
     return this.http.get(url, { responseType: 'blob' }).pipe(
-      switchMap(({ type }: { type: string }) => {
-        if (type === 'image/gif') return of(url);
+      switchMap((blob: Blob) => {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(blob);
+
+        if (blob.type === 'image/gif')
+          return new Observable<string>((observer) => {
+            fileReader.onload = () => {
+              observer.next(fileReader.result as string);
+              observer.complete();
+            };
+          });
         return of(SpriteStorageErrorMessage.NOT_FOUND);
       }),
       catchError((error: any) => {
