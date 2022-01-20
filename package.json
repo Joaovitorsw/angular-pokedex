@@ -36,6 +36,7 @@
     "pokedex-promise-v2": "^4.0.0",
     "rxfire": "^6.0.0",
     "rxjs": "~6.6.0",
+    "ts-node": "^10.4.0",
     "tslib": "^2.3.1",
     "tsparticles": "^1.38.0",
     "types": "file:../../../../../../parse",
