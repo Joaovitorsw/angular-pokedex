@@ -32,6 +32,11 @@ const environmentFileContent = `export const environment = {
         storeSchema: [],
       },
       {
+        store: 'pokemons-images',
+        storeConfig: { keyPath: 'id', autoIncrement: true },
+        storeSchema: [],
+      },
+      {
         store: 'user',
         storeConfig: {
           keyPath: 'uid',
