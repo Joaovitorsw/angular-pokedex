@@ -14,6 +14,8 @@ import {
 } from '@pokedex/pipes';
 import { render } from '@testing-library/angular';
 import { screen } from '@testing-library/dom';
+import { environment } from 'environments/environment';
+import { NgxIndexedDBModule } from 'ngx-indexed-db';
 import { PokemonCardComponent } from '.';
 import { TypeCardComponent } from '../type-card/type-card.component';
 
@@ -33,6 +35,7 @@ const DEFAULT_IMPORTS = [
   MatProgressSpinnerModule,
   MatProgressBarModule,
   RouterTestingModule,
+  NgxIndexedDBModule.forRoot(environment.dbConfig),
   HttpClientTestingModule,
 ];
 
