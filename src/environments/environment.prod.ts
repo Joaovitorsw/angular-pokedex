@@ -9,5 +9,17 @@ export const environment = {
     messagingSenderId: '921154066276',
     measurementId: 'G-LHMLWP7B4K',
   },
-  production: true
+
+  dbConfig: {
+    name: 'pokedex',
+    version: 1,
+    objectStoresMeta: [
+      {
+        store: 'cached-pokemons',
+        storeConfig: { keyPath: 'id', autoIncrement: true },
+        storeSchema: [],
+      },
+    ],
+  },
+  production: false,
 };
