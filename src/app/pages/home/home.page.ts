@@ -213,6 +213,9 @@ export class HomePage implements OnInit, OnDestroy {
 
     const generationSelected = event.value as keyof typeof GENERATIONS;
     const { from, to } = GENERATIONS[generationSelected];
+    this.user.generation.selected = generationSelected;
+    this.user.generation.from = from;
+    this.user.generation.to = to;
     this.updateFormValueNoEmit(from, to);
     this.InfinityScroll = false;
     this.InfinityScrollOption = false;
