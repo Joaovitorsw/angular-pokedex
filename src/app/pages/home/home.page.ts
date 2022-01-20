@@ -235,17 +235,25 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   endScroll() {
-    if (!this.InfinityScroll || this.pokeAPI.pokemons$$.value.length >= 898)
+    const maxPokemons = 898;
+    if (
+      !this.InfinityScroll ||
+      this.pokeAPI.pokemons$$.value.length >= maxPokemons ||
+      this.user.generation.to >= maxPokemons
+    )
       return;
 
+    const { from, to } = this.user.generation;
     const pokemonsLength = this.pokeAPI.pokemons$$.value.length;
-    const previous = 1;
-    let next = pokemonsLength + 24;
+    const nextPokemons = pokemonsLength === to - from + 1;
 
-    if (next >= 898) next = 898;
-
-    this.pokeAPI.request$$.next(false);
-    this.updateForm(previous, next);
+    if (nextPokemons) {
+      this.pokeAPI.request$$.next(false);
+      const nextValue =
+        this.user.generation.to + 24 >= maxPokemons ? maxPokemons : to + 24;
+      this.user.generation.to = nextValue;
+      this.updateForm(this.user.generation.from, this.user.generation.to);
+    }
   }
 
   particlesLoaded(container: Container) {
