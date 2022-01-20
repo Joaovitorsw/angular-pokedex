@@ -2,7 +2,7 @@
   <a [routerLink]="['/']">Homepage</a>
 
   <p class="id">#{{ pokemon.id | padStart: 3:"0" }}</p>
-  <img src="{{ pokemon | spritePath | async }}" />
+  <img src="{{ pokemon | spritePath  | async }}" />
   <h1>{{ pokemon.name | pokemonTitleCase }}</h1>
   <p class="weight">{{ pokemon.weight | weight }}</p>
   <p class="height">{{ pokemon.height | height }}</p>
@@ -35,7 +35,7 @@
 
     <px-pokemon-card
       [pokemon]="pokemon"
-      *ngFor="let pokemon of pokemonForms?.variatesPokemons"
+      *ngFor="let pokemon of pokemonForms?.varietiesPokemon"
     ></px-pokemon-card>
   </div>
 </div>

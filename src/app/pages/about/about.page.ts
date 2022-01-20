@@ -6,10 +6,10 @@ import {
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PokeAPIService, PokemonEvolutions } from '@pokedex/services';
+import { PokeAPIService } from '@pokedex/services';
 import { particles, particlesAnimations } from '@pokedex/shared';
 import { Container, IOptions, RecursivePartial } from 'ng-particles';
-import PokeAPI from 'pokedex-promise-v2';
+import PokeAPI, { Pokemon, PokemonEvolutions } from 'poke-api-models';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -36,10 +36,7 @@ export class AboutPage implements OnInit, OnDestroy {
       this.hasChanged = false;
       this.pokemon$ = this.pokeAPI.getPokemonByNameOrID(pokemonName).pipe(
         tap(async (pokemon) => {
-          const $body = document.body;
-          $body.classList.remove(this.type);
-          this.type = pokemon.types[0].type.name;
-          $body.classList.add(this.type);
+          this.setBodyClass(pokemon);
           this.getAnimation();
           this.pokemonDetails$ = await this.pokeAPI.getPokemonEvolutions(
             pokemon.name
@@ -53,6 +50,13 @@ export class AboutPage implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     const $body = document.body;
     $body.classList.remove(this.type);
+  }
+
+  setBodyClass(pokemon: Pokemon) {
+    const $body = document.body;
+    $body.classList.remove(this.type);
+    this.type = pokemon.types[0].type.name;
+    $body.classList.add(this.type);
   }
 
   particlesLoaded(container: Container) {
