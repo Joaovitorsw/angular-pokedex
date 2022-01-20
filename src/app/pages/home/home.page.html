@@ -1,8 +1,86 @@
+<div class="loading-progress" *ngIf="hasLoading"></div>
+
+<div class="filters">
+  <mat-form-field appearance="outline" class="search-input">
+    <mat-label>Search your Pokemon!</mat-label>
+    <input
+      matInput
+      type="text"
+      placeholder="Ex : Pikachu"
+      [formControl]="searchControl"
+      [errorStateMatcher]="matcher"
+    />
+  </mat-form-field>
+  <form class="range-option" [formGroup]="rangeControl">
+    <div class="range-input">
+      <mat-form-field appearance="outline">
+        <mat-label>Select an range</mat-label>
+        <mat-select
+          #matSelect
+          [value]="user.generation.selected"
+          (selectionChange)="pokemonRange($event)"
+        >
+          <mat-option value="generation-1">Generation I</mat-option>
+          <mat-option value="generation-2">Generation II</mat-option>
+          <mat-option value="generation-3">Generation III</mat-option>
+          <mat-option value="generation-4">Generation IV</mat-option>
+          <mat-option value="generation-5">Generation V</mat-option>
+          <mat-option value="generation-6">Generation VI</mat-option>
+          <mat-option value="generation-7">Generation VII</mat-option>
+          <mat-option value="generation-8">Generation VIII</mat-option>
+          <mat-option value="custom">Custom Range</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <ng-container *ngIf="matSelect.value === 'custom'">
+        <div class="custom-range">
+          <div>
+            From
+            <mat-form-field appearance="fill" class="custom-range">
+              <input
+                matInput
+                type="number"
+                min="1"
+                max="898"
+                formControlName="from"
+              />
+            </mat-form-field>
+            To
+            <mat-form-field appearance="fill" class="custom-range">
+              <input
+                matInput
+                type="number"
+                min="1"
+                max="898"
+                formControlName="to"
+              />
+            </mat-form-field>
+          </div>
+          <ng-container
+            *ngIf="rangeControl.controls.from.invalid; else toMatError"
+          >
+            <mat-error [pxShowValidationError]="'from'"></mat-error>
+          </ng-container>
+          <ng-template #toMatError>
+            <mat-error [pxShowValidationError]="'to'"></mat-error>
+          </ng-template>
+        </div>
+      </ng-container>
+    </div>
+    <mat-slide-toggle
+      [disabled]="!InfinityScrollOption"
+      (change)="updateInfinityScroll($event)"
+      [checked]="InfinityScroll"
+    >
+      Infinity Scroll</mat-slide-toggle
+    >
+  </form>
+</div>
+
 <div
-  *ngIf="!hasLoading "
   class="pokemons-content"
   infiniteScroll
-  [infiniteScrollDistance]="3.5"
+  [infiniteScrollDistance]="1"
   (scrolled)="endScroll()"
 >
   <px-pokemon-card
@@ -10,6 +88,10 @@
     *ngFor="let pokemon of pokeAPI.pokemons$$ | async; trackBy: trackByFn"
   >
   </px-pokemon-card>
+  <div class="spinner" *ngIf="!(pokeAPI.request$$ | async) let request">
+    <mat-spinner></mat-spinner>
+  </div>
+
   <ng-particles
     [id]="id"
     [options]="particlesOptions"
