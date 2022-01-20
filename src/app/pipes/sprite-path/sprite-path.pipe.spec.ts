@@ -2,7 +2,7 @@ import {
   SpriteStorageErrorMessage,
   SpriteStorageService,
 } from '@pokedex/services';
-import PokeAPI from 'pokedex-promise-v2';
+import PokeAPI from 'poke-api-models';
 import { of } from 'rxjs';
 import { instance, mock, when } from 'ts-mockito';
 import { SpritePathPipe } from './sprite-path.pipe';

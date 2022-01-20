@@ -3,7 +3,7 @@ import {
   SpriteStorageErrorMessage,
   SpriteStorageService,
 } from '@pokedex/services';
-import PokeAPI from 'pokedex-promise-v2';
+import PokeAPI from 'poke-api-models';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 @Pipe({

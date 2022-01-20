@@ -1,5 +1,5 @@
 import { Component, HostBinding, Input, ViewChild } from '@angular/core';
-import PokeAPI from 'pokedex-promise-v2';
+import { Pokemon } from 'poke-api-models';
 
 @Component({
   selector: 'px-pokemon-card',
@@ -7,7 +7,7 @@ import PokeAPI from 'pokedex-promise-v2';
   styleUrls: ['./pokemon-card.component.scss'],
 })
 export class PokemonCardComponent {
-  @Input() pokemon: PokeAPI.Pokemon;
+  @Input() pokemon: Pokemon;
   @ViewChild('pokemonImage') pokemonImage: HTMLImageElement;
   @HostBinding('attr.type') get type(): string {
     return this.pokemon.types[0].type.name;
