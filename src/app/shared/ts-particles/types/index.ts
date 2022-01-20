@@ -19,5 +19,6 @@ export * from "./normal";
 export * from "./poison";
 export * from "./psychic";
 export * from "./rock";
+export * from "./steel";
 export * from "./template";
 export * from "./water";

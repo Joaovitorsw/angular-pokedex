@@ -3,7 +3,7 @@ import { IParticlesProps } from 'ng-particles';
 export const BUG: IParticlesProps = {
   particles: {
     number: {
-      value: 67,
+      value: 30,
       density: {
         enable: true,
         value_area: 800,
