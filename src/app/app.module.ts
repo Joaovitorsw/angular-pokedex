@@ -19,7 +19,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgParticlesModule } from 'ng-particles';
 import { NgxIndexedDBModule } from 'ngx-indexed-db';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { environment } from '../environments/environment.prod';
+import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PokemonCardComponent } from './components/pokemon-card/pokemon-card.component';

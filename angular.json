@@ -60,6 +60,12 @@
               "outputHashing": "all"
             },
             "development": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ],
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,
@@ -76,6 +82,7 @@
             "production": {
               "browserTarget": "angular-pokedex:build:production"
             },
+
             "development": {
               "browserTarget": "angular-pokedex:build:development"
             }

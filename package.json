@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "config": "ts-node ./setenv.js",
-    "start": "npm run config -- --environment=dev && ng serve",
+    "start": "npm run config -- --environment=dev && ng s -o",
     "build": "npm run config -- --environment=prod && ng build",
     "watch": "ng build --watch --configuration development",
     "barrel": "barrelsby -e .spec.ts --delete -l all -d ./src/app",
