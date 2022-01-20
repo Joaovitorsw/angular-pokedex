@@ -20,7 +20,7 @@ import { particles, particlesAnimations } from '@pokedex/shared';
 import { Container, IOptions, RecursivePartial } from 'ng-particles';
 import { Pokemon } from 'poke-api-models';
 import { of, Subscription } from 'rxjs';
-import { debounceTime, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, map, switchMap, tap } from 'rxjs/operators';
 import { CustomValidators } from '../../../../validators';
 
 const GENERATIONS = {
@@ -41,6 +41,7 @@ interface DefaultUser {
     to: number;
   };
   scroll: number;
+  infinityScroll: boolean;
 }
 
 const userGeneration: DefaultUser = {
@@ -50,6 +51,7 @@ const userGeneration: DefaultUser = {
     to: 151,
   },
   scroll: 0,
+  infinityScroll: false,
 };
 @Component({
   selector: 'px-home',
@@ -91,19 +93,22 @@ export class HomePage implements OnInit, OnDestroy {
           switchMap(([user]) => {
             if (user) {
               return of(user).pipe(
-                tap((user) => {
+                map((user) => {
                   this.user = user;
-                  const { generation, scroll } = this.user;
+                  const { generation, scroll, infinityScroll } = this.user;
                   const { selected, from, to } = generation;
-                  if (selected === 'custom') this.InfinityScrollOption = true;
+                  this.InfinityScroll = infinityScroll;
+
+                  if (selected === 'custom') {
+                    this.InfinityScrollOption = true;
+                  }
+
                   this.pokeAPI
                     .nextPokemonsRange(from, to)
                     .subscribe((pokemons) => {
-                      this.pokeAPI.pokemons$$.next(
-                        pokemons.slice(from - 1, to)
-                      );
+                      this.pokeAPI.pokemons$$.next(pokemons);
                       this.updateFormValueNoEmit(from, to);
-                      scrollTo(0, scroll);
+                      this.scrollAfterLoading(0, scroll);
                       this.hasLoading = false;
                     });
                 })
@@ -116,7 +121,7 @@ export class HomePage implements OnInit, OnDestroy {
                 this.pokeAPI.pokemons$$.next(pokemons.slice(from - 1, to));
                 this.updateFormValueNoEmit(from, to);
 
-                scrollTo(0, scroll);
+                this.scrollAfterLoading(0, scroll);
                 this.hasLoading = false;
               })
             );
@@ -124,6 +129,12 @@ export class HomePage implements OnInit, OnDestroy {
         );
       })
     );
+  }
+
+  scrollAfterLoading(scrollX: number, scrollY: number) {
+    setTimeout(() => {
+      scrollTo(scrollX, scrollY);
+    }, 500);
   }
 
   createRangeForm() {
@@ -202,20 +213,11 @@ export class HomePage implements OnInit, OnDestroy {
 
     const generationSelected = event.value as keyof typeof GENERATIONS;
     const { from, to } = GENERATIONS[generationSelected];
-    this.user = {
-      generation: {
-        selected: generationSelected,
-        from: from,
-        to: to,
-      },
-      scroll: scrollY,
-    };
     this.updateFormValueNoEmit(from, to);
     this.InfinityScroll = false;
     this.InfinityScrollOption = false;
     this.pokeAPI.pokemons$$.next([]);
     this.pokeAPI.request$$.next(false);
-    scrollTo(0, 0);
     this.updateForm(from, to);
   }
 
@@ -261,6 +263,7 @@ export class HomePage implements OnInit, OnDestroy {
       uid: eIndexDBKeys.USER,
       generation,
       scroll: scrollY,
+      infinityScroll: this.InfinityScroll,
     });
   }
   ngOnDestroy(): void {
