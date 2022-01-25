@@ -2,19 +2,16 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Observable, of } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, switchMap, timeout } from 'rxjs/operators';
 import { IndexedDbService } from '../indexed-db';
 
 export const enum SpriteStorageErrorCode {
   NOT_FOUND = '404',
+  TIME_OUT = '408',
 }
 export const enum SpriteStorageErrorMessage {
   NOT_FOUND = 'Not Found.',
-}
-
-interface SpriteData {
-  id: string | number;
-  data: string[];
+  TIME_OUT = 'Timeout has occurred',
 }
 
 @Injectable({
@@ -33,6 +30,7 @@ export class SpriteStorageService {
   getSpritePathByName(name: string): Observable<string> {
     const url = `${this.BASE_URL}${name}${this.EXTENSION}`;
     return this.http.get(url, { responseType: 'blob' }).pipe(
+      timeout(2000),
       untilDestroyed(this),
       switchMap((blob) => {
         const fileReader = new FileReader();
