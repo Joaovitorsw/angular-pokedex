@@ -26,7 +26,7 @@ export class SpriteStorageService {
   getSpritePathByName(name: string): Observable<string> {
     const url = `${this.BASE_URL}${name}${this.EXTENSION}`;
     return this.http.get(url, { responseType: 'blob' }).pipe(
-      timeout(500),
+      timeout(2000),
       untilDestroyed(this),
       switchMap((blob) => {
         const fileReader = new FileReader();
