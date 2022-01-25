@@ -83,7 +83,9 @@ export class HomePage implements OnInit, OnDestroy {
     this.particlesOptions = particles;
     this.createRangeForm();
     this.createSearchForm();
-    this.createPokemons().subscribe();
+    this.createPokemons().subscribe(() => {
+      this.pokeAPI.request$$.next(true);
+    });
   }
 
   createPokemons() {
