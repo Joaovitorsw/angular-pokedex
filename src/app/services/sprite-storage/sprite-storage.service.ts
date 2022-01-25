@@ -41,7 +41,7 @@ export class SpriteStorageService {
       catchError((error) => {
         if (error.status === 404)
           return of(SpriteStorageErrorMessage.NOT_FOUND);
-        return of(error);
+        return of(error.message);
       })
     );
   }
