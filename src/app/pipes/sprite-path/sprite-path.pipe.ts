@@ -37,7 +37,7 @@ export class SpritePathPipe implements PipeTransform {
             return spriteVersionUrl;
           }),
           tap((spritePath) => {
-            const gif = spritePath?.includes('data');
+            const gif = spritePath.includes('data');
             if (gif) {
               this.indexDB
                 .update(eIndexDBKeys.SPRITE_PATH, {
