@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { POKEMONS } from 'app/mocks/pokemons-homepage';
 import {
-  CachedPokemon,
   EvolutionChain,
   Pokemon,
   PokemonEvolutions,
@@ -10,8 +10,7 @@ import {
   Variety,
 } from 'poke-api-models';
 import { BehaviorSubject, defer, Observable, of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { eIndexDBKeys } from '..';
+import { catchError, switchMap } from 'rxjs/operators';
 import { IndexedDbService } from '../indexed-db/indexed-db.service';
 
 @Injectable({
@@ -26,7 +25,7 @@ export class PokeAPIService {
   readonly EVOLUTION_CHAIN_EXTENSION = 'evolution-chain/';
   request$$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   pokemons$$ = new BehaviorSubject<Pokemon[]>([]);
-  pokemons: Pokemon[];
+  pokemons: Pokemon[] = POKEMONS;
   requestProgress: number = 0.5;
   hasEvolution: boolean;
 
@@ -76,72 +75,15 @@ export class PokeAPIService {
   }
 
   nextPokemonsRange(previous: number, next: number): Observable<Pokemon[]> {
-    return this.getCachedPokemonsByRange(previous, next).pipe(
-      untilDestroyed(this),
-      catchError(() => this.addPokemonsRangeInCache())
-    );
-  }
-
-  addPokemonsRangeInCache(): Observable<Pokemon[]> {
-    return this.getPokemonsByCustomRange(1, 898).pipe(
-      untilDestroyed(this),
-      tap((pokemons: Pokemon[]) => {
-        this.pokemons = pokemons;
-        this.indexDB
-          .update(eIndexDBKeys.POKEMONS, {
-            pokemon: pokemons,
-            id: eIndexDBKeys.POKEMONS,
-          })
-          .subscribe();
-      })
-    );
-  }
-
-  getCachedPokemonsByRange(
-    previous: number,
-    next: number
-  ): Observable<Pokemon[]> {
-    const arrayLength = next + 1 - previous;
-    const myRange = Array.from(
-      { length: arrayLength },
-      (_, index) => index + previous
-    );
-
-    if (this.pokemons?.length >= 898) {
-      this.request$$.next(true);
-      const pokemons = this.pokemons.filter((pokemon: Pokemon) =>
-        myRange.includes(pokemon.id)
-      );
-
-      return of(pokemons).pipe(untilDestroyed(this));
-    }
-
-    return this.indexDB.getAll(eIndexDBKeys.POKEMONS).pipe(
-      map((data: CachedPokemon[]) => {
-        const noPokemons = data[0].pokemon.length === 0;
-
-        if (noPokemons) throw new Error('No Pokemons');
-
-        const pokemons = data[0].pokemon;
-
-        this.request$$.next(true);
-
-        return pokemons.filter((pokemon: Pokemon) =>
-          myRange.includes(pokemon.id)
-        );
-      })
-    );
+    const pokemonsRange = this.pokemons.slice(previous - 1, next);
+    return of(pokemonsRange);
   }
 
   searchPokemons(search: string): Observable<Pokemon[]> {
-    return this.getCachedPokemonsByRange(0, 898).pipe(
-      untilDestroyed(this),
-      map((pokemons: Pokemon[]) => {
-        return pokemons.filter((pokemon: Pokemon) =>
-          pokemon.name.includes(search)
-        );
-      })
+    const searchedPokemons = this.pokemons.filter((pokemon: Pokemon) =>
+      pokemon.name.includes(search)
     );
+    return of(searchedPokemons);
   }
 
   async getPokemonEvolutions(
