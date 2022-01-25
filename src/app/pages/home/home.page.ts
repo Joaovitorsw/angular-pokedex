@@ -21,7 +21,7 @@ import { Container, IOptions, RecursivePartial } from 'ng-particles';
 import { Pokemon } from 'poke-api-models';
 import { of, Subscription } from 'rxjs';
 import { debounceTime, map, switchMap, tap } from 'rxjs/operators';
-import { CustomValidators } from '../../../../validators';
+import { CustomValidators } from '../../../validators';
 
 const GENERATIONS = {
   'generation-1': { from: 1, to: 151 },
