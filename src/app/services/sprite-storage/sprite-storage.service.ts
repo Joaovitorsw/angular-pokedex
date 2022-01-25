@@ -1,10 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { POKEMONS_NAMES } from 'app/mocks/pokemon-names.mock';
 import { Observable, of } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
-import { eIndexDBKeys, IndexedDbService } from '../indexed-db';
+import { catchError, map } from 'rxjs/operators';
 
 export const enum SpriteStorageErrorCode {
   NOT_FOUND = '404',
@@ -23,77 +21,20 @@ interface SpriteData {
 })
 @UntilDestroy()
 export class SpriteStorageService {
-  constructor(
-    private readonly http: HttpClient,
-    private indexDB: IndexedDbService
-  ) {
-    this.getAllSprites().subscribe((sprites) => {
-      this.GIFS = sprites;
-    });
-  }
+  constructor(private readonly http: HttpClient) {}
   readonly BASE_URL =
     'https://raw.githubusercontent.com/Joaovitorsw/poke-gifs/main/normal/';
   readonly EXTENSION = '.gif';
-  private GIFS: Array<string>;
-
-  async createCache() {
-    const GIFS = POKEMONS_NAMES.map((name) => {
-      const url = `${this.BASE_URL}${name}${this.EXTENSION}`;
-
-      return this.getPokemonImage(url)
-        .toPromise()
-        .catch(() => {
-          return SpriteStorageErrorCode.NOT_FOUND;
-        });
-    });
-
-    const GIFS_DATA = await Promise.all(GIFS);
-    const SPRITES: SpriteData = {
-      id: eIndexDBKeys.SPRITE_PATH,
-      data: GIFS_DATA,
-    };
-    this.indexDB.update(eIndexDBKeys.SPRITE_PATH, SPRITES).subscribe();
-
-    return SPRITES;
-  }
-
-  getAllSprites(): Observable<Array<string>> {
-    return this.indexDB
-      .getByKey(eIndexDBKeys.SPRITE_PATH, eIndexDBKeys.SPRITE_PATH)
-      .pipe(
-        switchMap(async (sprites) => {
-          if (!sprites) {
-            const sprites = await this.createCache();
-            return sprites.data;
-          }
-          return sprites.data;
-        })
-      );
-  }
 
   getSpritePathByName(name: string): Observable<string> {
-    const id = POKEMONS_NAMES.findIndex((pokemonName) => pokemonName === name);
-    const noServiceCache = !this.GIFS || !this.GIFS[id];
-    if (noServiceCache)
-      return this.getPokemonImage(`${this.BASE_URL}${name}${this.EXTENSION}`);
-
-    return of(this.GIFS[id]);
-  }
-  getPokemonImage(url: string): Observable<string> {
+    const url = `${this.BASE_URL}${name}${this.EXTENSION}`;
     return this.http.get(url, { responseType: 'blob' }).pipe(
       untilDestroyed(this),
-      switchMap((blob) => {
-        const fileReader = new FileReader();
-        fileReader.readAsDataURL(blob);
-        return new Observable<string>((observer) => {
-          fileReader.onload = () => {
-            observer.next(fileReader.result as string);
-            observer.complete();
-          };
-        });
-      }),
-      catchError(() => {
-        return of(SpriteStorageErrorMessage.NOT_FOUND);
+      map(() => url),
+      catchError((error) => {
+        if (error.status === 404)
+          return of(SpriteStorageErrorMessage.NOT_FOUND);
+        return of(error);
       })
     );
   }
