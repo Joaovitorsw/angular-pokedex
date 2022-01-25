@@ -73,7 +73,8 @@ export class SpriteStorageService {
 
   getSpritePathByName(name: string): Observable<string> {
     const id = POKEMONS_NAMES.findIndex((pokemonName) => pokemonName === name);
-    if (!this.GIFS)
+    const noServiceCache = !this.GIFS || !this.GIFS[id];
+    if (noServiceCache)
       return this.getPokemonImage(`${this.BASE_URL}${name}${this.EXTENSION}`);
 
     return of(this.GIFS[id]);
@@ -91,7 +92,7 @@ export class SpriteStorageService {
           };
         });
       }),
-      catchError((error) => {
+      catchError(() => {
         return of(SpriteStorageErrorMessage.NOT_FOUND);
       })
     );
