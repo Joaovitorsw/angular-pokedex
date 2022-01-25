@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Observable, of } from 'rxjs';
 import { catchError, switchMap, timeout } from 'rxjs/operators';
-import { IndexedDbService } from '../indexed-db';
 
 export const enum SpriteStorageErrorCode {
   NOT_FOUND = '404',
@@ -19,10 +18,7 @@ export const enum SpriteStorageErrorMessage {
 })
 @UntilDestroy()
 export class SpriteStorageService {
-  constructor(
-    private readonly http: HttpClient,
-    private indexDB: IndexedDbService
-  ) {}
+  constructor(private readonly http: HttpClient) {}
   readonly BASE_URL =
     'https://raw.githubusercontent.com/Joaovitorsw/poke-gifs/main/normal/';
   readonly EXTENSION = '.gif';
@@ -30,7 +26,7 @@ export class SpriteStorageService {
   getSpritePathByName(name: string): Observable<string> {
     const url = `${this.BASE_URL}${name}${this.EXTENSION}`;
     return this.http.get(url, { responseType: 'blob' }).pipe(
-      timeout(2000),
+      timeout(500),
       untilDestroyed(this),
       switchMap((blob) => {
         const fileReader = new FileReader();
