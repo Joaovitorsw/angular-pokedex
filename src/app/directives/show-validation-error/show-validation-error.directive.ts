@@ -1,4 +1,10 @@
-import { AfterContentInit, Directive, ElementRef, Input } from '@angular/core';
+import {
+  AfterContentInit,
+  Directive,
+  HostBinding,
+  Input,
+  Optional,
+} from '@angular/core';
 import { AbstractControl, ControlContainer, FormGroup } from '@angular/forms';
 import { startWith } from 'rxjs/operators';
 import { VALIDATIONS } from './validations';
@@ -7,13 +13,30 @@ import { VALIDATIONS } from './validations';
   selector: '[pxShowValidationError]',
 })
 export class ShowValidationErrorDirective implements AfterContentInit {
-  @Input('pxShowValidationError') controlName: string;
-  constructor(
-    private elementRef: ElementRef,
-    private container: ControlContainer
-  ) {}
+  @Input('pxShowValidationErrorControlName') controlName: string;
+  @Input('pxShowValidationErrorControl') control: AbstractControl;
+  @HostBinding('innerHTML')
+  innerHTML: string;
+  constructor(@Optional() private container: ControlContainer) {}
 
   ngAfterContentInit(): void {
+    if (this.controlName) return this.verifyFormGroupControls();
+    this.verifyFormControl();
+  }
+
+  private verifyFormControl() {
+    const formControl = this.control;
+    const validate = () => {
+      const errorMessage = this.getErrorMessage(formControl);
+      this.setInnerHTML(errorMessage);
+    };
+    const initialStatus = formControl.status;
+    formControl.statusChanges
+      .pipe(startWith(initialStatus))
+      .subscribe(validate);
+  }
+
+  private verifyFormGroupControls() {
     const formGroup = this.container.control as FormGroup;
 
     const formControl = formGroup.controls[this.controlName];
@@ -33,7 +56,7 @@ export class ShowValidationErrorDirective implements AfterContentInit {
   }
 
   private setInnerHTML(html: string): void {
-    this.elementRef.nativeElement.innerHTML = html;
+    this.innerHTML = html;
   }
 
   private getErrorMessage(control: AbstractControl): string {
