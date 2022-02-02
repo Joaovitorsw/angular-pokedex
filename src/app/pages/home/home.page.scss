@@ -140,8 +140,12 @@ mat-toolbar-row {
   top: -9px;
 
   p {
+    width: 100%;
+  }
+
+  & :last-child {
     position: relative;
-    left: -15px;
+    right: 50px;
   }
 }
 
@@ -203,9 +207,9 @@ input::-webkit-inner-spin-button {
   }
   .more-pokemons {
     position: unset;
-    p {
-      position: unset;
-      width: 100%;
+
+    & :last-child {
+      right: 10px;
     }
   }
 }
