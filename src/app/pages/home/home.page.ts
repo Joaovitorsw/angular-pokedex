@@ -88,11 +88,11 @@ export class HomePage implements OnInit, OnDestroy {
   ngOnInit(): void {
     particlesAnimations.homePage();
     this.particlesOptions = particles;
+    this.createPokemons();
     this.createRangeForm();
     this.createSearchForm();
     this.createUserFilters(this.user.filters);
     this.updateUserInfos();
-    this.createPokemons();
   }
 
   createPokemons() {
@@ -142,6 +142,7 @@ export class HomePage implements OnInit, OnDestroy {
         this.typeFilterOptions$.next(types);
 
         if (!selectedType && !selectedWeight && !selectedHeight) {
+          pokemons.sort(sortPredicate);
           const weightsOptions = this.weightsOptions(pokemons);
           const heightsOptions = this.heightsOptions(pokemons);
 
@@ -158,6 +159,8 @@ export class HomePage implements OnInit, OnDestroy {
         );
 
         pokemonsTypesFiltered.sort(sortPredicate);
+
+        console.log(pokemonsTypesFiltered);
 
         const weightsOptions = this.weightsOptions(pokemonsTypesFiltered);
 
@@ -268,6 +271,7 @@ export class HomePage implements OnInit, OnDestroy {
       selectedSort === eSort.ASCENDING
         ? sortAscendingPredicate
         : sortDescendingPredicate;
+
     return sortPredicate;
   }
 
@@ -427,7 +431,11 @@ export class HomePage implements OnInit, OnDestroy {
     };
 
     this.searchControl.valueChanges
-      .pipe(untilDestroyed(this), debounceTime(2000))
+      .pipe(
+        startWith(this.searchControl.value),
+        untilDestroyed(this),
+        debounceTime(2000)
+      )
       .subscribe(searchPredicate);
   }
 
