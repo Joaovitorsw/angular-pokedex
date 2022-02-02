@@ -2,15 +2,14 @@
   <p class="id" data-testid="pokemon-id">#{{ pokemon.id | padStart: 3:"0" }}</p>
 
   <div class="poke-image">
-    <ng-container
-      *ngIf="pokemon | spritePath | async; let image; else: spinnerTemplate"
-    >
-      <img [src]="image" class="lazyload" />
-    </ng-container>
-    <ng-template #spinnerTemplate>
-      <mat-spinner data-testid="pokemon-spinner-image" class="{{ type }}">
-      </mat-spinner>
-    </ng-template>
+    <img
+      [pxPokemonSpritePokemonName]="pokemon.name"
+      [pxPokemonSprite]="pokemon.id - 1"
+      (load)="hasImage = true"
+      [class.has-image]="hasImage"
+      class="lazyload"
+    />
+    <mat-spinner class="{{ type }}" *ngIf="!hasImage"></mat-spinner>
   </div>
   <h1 data-testid="pokemon-name">{{ pokemon.name | pokemonTitleCase }}</h1>
   <div class="type-container">
