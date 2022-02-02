@@ -33,6 +33,7 @@ mat-progress-bar.pxColorProgressBar .mat-progress-bar-fill::after {
     .mat-drawer-inner-container {
       display: flex;
       justify-content: center;
+      min-height: 300px;
       max-height: 500px;
       height: 100%;
       overflow-y: scroll;
