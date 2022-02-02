@@ -14,6 +14,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgParticlesModule } from 'ng-particles';
@@ -26,22 +27,22 @@ import { PokemonCardComponent } from './components/pokemon-card/pokemon-card.com
 import { SlideOptionComponent } from './components/slide-option/slide-option.component';
 import { TypeCardComponent } from './components/type-card/type-card.component';
 import { ColorProgressBarDirective } from './directives/color-progress-bar/color-progress-bar.directive';
+import { PokemonSpriteDirective } from './directives/pokemon-sprite/pokemon-sprite.directive';
 import { ShowValidationErrorDirective } from './directives/show-validation-error';
 import { AboutPage } from './pages/about/about.page';
 import { HomePage } from './pages/home/home.page';
 import { HeightPipe } from './pipes/height/height.pipe';
 import { PadStartPipe } from './pipes/pad-start/pad-start.pipe';
 import { PokemonTitleCasePipe } from './pipes/pokemon-title-case/pokemon-title-case.pipe';
-import { SpritePathPipe } from './pipes/sprite-path/sprite-path.pipe';
 import { TypeIconPathPipe } from './pipes/type-icon-path/type-icon-path.pipe';
 import { WeightPipe } from './pipes/weight/weight.pipe';
+
 @NgModule({
   declarations: [
     AppComponent,
     HomePage,
     AboutPage,
     PokemonCardComponent,
-    SpritePathPipe,
     TypeIconPathPipe,
     PokemonTitleCasePipe,
     PadStartPipe,
@@ -51,6 +52,7 @@ import { WeightPipe } from './pipes/weight/weight.pipe';
     ShowValidationErrorDirective,
     ColorProgressBarDirective,
     SlideOptionComponent,
+    PokemonSpriteDirective,
   ],
   imports: [
     BrowserModule,
@@ -71,6 +73,7 @@ import { WeightPipe } from './pipes/weight/weight.pipe';
     InfiniteScrollModule,
     MatProgressBarModule,
     AppRoutingModule,
+    MatToolbarModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
