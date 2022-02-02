@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { POKEMONS } from 'app/mocks/pokemons-homepage';
+import { POKEMONS } from '@pokedex/pages';
 import {
   EvolutionChain,
   Pokemon,
@@ -11,14 +11,13 @@ import {
 } from 'poke-api-models';
 import { BehaviorSubject, defer, Observable, of } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
-import { IndexedDbService } from '../indexed-db/indexed-db.service';
 
 @Injectable({
   providedIn: 'root',
 })
 @UntilDestroy()
 export class PokeAPIService {
-  constructor(private http: HttpClient, private indexDB: IndexedDbService) {}
+  constructor(private http: HttpClient) {}
   readonly BASE_URL = 'https://pokeapi.co/api/v2/';
   readonly POKEMON_SPECIES_EXTENSION = 'pokemon-species/';
   readonly POKEMON_EXTENSION = 'pokemon/';
@@ -26,8 +25,6 @@ export class PokeAPIService {
   request$$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   pokemons$$ = new BehaviorSubject<Pokemon[]>([]);
   pokemons: Pokemon[] = POKEMONS;
-  requestProgress: number = 0.5;
-  hasEvolution: boolean;
 
   getPokemonByNameOrID(name: string | number): Observable<Pokemon> {
     return this.http
@@ -41,7 +38,6 @@ export class PokeAPIService {
     const pokemonsPromiseList = pokemonsList.map((pokemon: string | number) => {
       return this.http
         .get<Pokemon>(`${this.BASE_URL}${this.POKEMON_EXTENSION}${pokemon}`)
-
         .toPromise();
     });
     return defer(async () => Promise.all(pokemonsPromiseList)).pipe(
@@ -56,22 +52,20 @@ export class PokeAPIService {
     return this.getPokemonsByList(myRange);
   }
 
-  getSpeciesByName(name: string): Promise<PokemonSpecies> {
+  getSpeciesByName(name: string): Observable<PokemonSpecies> {
     return this.http
       .get<PokemonSpecies>(
         `${this.BASE_URL}${this.POKEMON_SPECIES_EXTENSION}${name}`
       )
-      .pipe(untilDestroyed(this))
-      .toPromise();
+      .pipe(untilDestroyed(this));
   }
 
-  getEvolutionChainById(id: number): Promise<EvolutionChain> {
+  getEvolutionChainById(id: number): Observable<EvolutionChain> {
     return this.http
       .get<EvolutionChain>(
         `${this.BASE_URL}${this.EVOLUTION_CHAIN_EXTENSION}${id}`
       )
-      .pipe(untilDestroyed(this))
-      .toPromise();
+      .pipe(untilDestroyed(this));
   }
 
   nextPokemonsRange(previous: number, next: number): Observable<Pokemon[]> {
@@ -80,7 +74,7 @@ export class PokeAPIService {
   }
 
   searchPokemons(search: string): Observable<Pokemon[]> {
-    const searchedPokemons = this.pokemons.filter((pokemon: Pokemon) =>
+    const searchedPokemons = this.pokemons$$.value.filter((pokemon: Pokemon) =>
       pokemon.name.includes(search)
     );
     return of(searchedPokemons);
@@ -89,17 +83,19 @@ export class PokeAPIService {
   async getPokemonEvolutions(
     pokemonName: string
   ): Promise<Observable<PokemonEvolutions>> {
-    this.request$$.next(false);
+    this.request$$.next(true);
     const excludeNames =
       /-gmax|-mega|-alola|-galar|-y|-x |-amped |-ice |-hero|-single-strike|-standard/g;
     const pokeName = pokemonName.replace(excludeNames, '');
 
-    let species: PokemonSpecies = await this.getSpeciesByName(pokeName);
+    let species: PokemonSpecies = await this.getSpeciesByName(
+      pokeName
+    ).toPromise();
 
     const url = species.evolution_chain.url;
     const chainPath = url.split('/')[6];
     const id = parseInt(chainPath);
-    const { chain } = await this.getEvolutionChainById(id);
+    const { chain } = await this.getEvolutionChainById(id).toPromise();
 
     let forms: Array<string | number> = chain.evolves_to.map(
       (pokemon) => pokemon.species.name
@@ -122,7 +118,9 @@ export class PokeAPIService {
       untilDestroyed(this),
       switchMap(async (pokemons) => {
         const otherSpecies = pokemons.map((pokemon) =>
-          this.getSpeciesByName(pokemon.name.replace(excludeNames, ''))
+          this.getSpeciesByName(
+            pokemon.name.replace(excludeNames, '')
+          ).toPromise()
         );
 
         const evolutionsSpecies: PokemonSpecies[] = await Promise.all(
@@ -139,14 +137,11 @@ export class PokeAPIService {
           evolutions: pokemons,
           varietiesPokemon: variables,
         };
-
-        this.request$$.next(true);
+        this.request$$.next(false);
 
         return evolution;
       }),
       catchError(async () => {
-        this.request$$.next(true);
-
         const evolution = await this.getPokemonVariates([species]).then(
           (variates) => {
             const evolution: PokemonEvolutions = {
@@ -158,6 +153,7 @@ export class PokeAPIService {
             return evolution;
           }
         );
+        this.request$$.next(false);
 
         return evolution;
       })
