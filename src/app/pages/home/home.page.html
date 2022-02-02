@@ -1,5 +1,18 @@
 <div class="loading-progress" *ngIf="hasLoading"></div>
 
+<mat-toolbar>
+  <mat-toolbar-row>
+    <div class="logo">
+      <img src="/assets/images/3-stars-pokemon.png" alt="" />
+      <span>Pokedex</span>
+    </div>
+
+    <button mat-icon-button (click)="filterDrawer.toggle()">
+      <mat-icon>search</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
 <mat-drawer-container autosize clas="filters-content">
   <mat-drawer #filterDrawer mode="side" class="filters-options">
     <div class="filters" [formGroup]="filtersGroup">
@@ -167,19 +180,6 @@
     </div>
   </mat-drawer>
 </mat-drawer-container>
-
-<mat-toolbar>
-  <mat-toolbar-row>
-    <div class="logo">
-      <img src="/assets/images/3-stars-pokemon.png" alt="" />
-      <span>Pokedex</span>
-    </div>
-
-    <button mat-icon-button (click)="filterDrawer.toggle()">
-      <mat-icon>search</mat-icon>
-    </button>
-  </mat-toolbar-row>
-</mat-toolbar>
 
 <div
   class="pokemons-content"

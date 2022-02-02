@@ -5,6 +5,7 @@ mat-drawer {
 }
 
 mat-drawer.filters-options {
+  width: 100%;
   top: 75px;
   padding: 20px;
   border-radius: 0px 0px 15px 15px;
@@ -33,6 +34,7 @@ mat-progress-bar.pxColorProgressBar .mat-progress-bar-fill::after {
       display: flex;
       justify-content: center;
       max-height: 500px;
+      height: 100%;
       overflow-y: scroll;
     }
   }
