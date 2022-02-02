@@ -7,7 +7,6 @@ import {
   OnInit,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSelectChange } from '@angular/material/select';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
@@ -22,31 +21,19 @@ import { Pokemon } from 'poke-api-models';
 import {
   BehaviorSubject,
   combineLatest,
-  concat,
-  forkJoin,
-  merge,
   Observable,
   of,
   ReplaySubject,
-  Subject,
-  zip,
 } from 'rxjs';
-import {
-  concatMap,
-  debounceTime,
-  startWith,
-  switchMap,
-  take,
-  takeUntil,
-  tap,
-} from 'rxjs/operators';
-import { POKEMONS } from '.';
+import { debounceTime, startWith, switchMap } from 'rxjs/operators';
 import { CustomValidators } from '../../../validators';
 import {
   DefaultUser,
   eGenerations,
+  eSort,
   GENERATIONS,
   userGeneration,
+  UsersFilters,
 } from './home.page.models';
 
 @Component({
@@ -64,6 +51,7 @@ export class HomePage implements OnInit, OnDestroy {
   id = 'home-page';
 
   user: DefaultUser = userGeneration;
+
   pokemons$ = new BehaviorSubject<Pokemon[]>([]);
   filteredPokemons$ = new BehaviorSubject<Pokemon[]>([]);
 
@@ -81,9 +69,13 @@ export class HomePage implements OnInit, OnDestroy {
 
   morePokemons: BooleanInput = false;
   morePokemonsOption: Boolean = false;
+
   filtersGroup: FormGroup;
   searchControl: FormControl;
   rangeGroup: FormGroup;
+
+  eSort = eSort;
+
   matcher = new CustomErrorStateMatcher();
 
   constructor(
@@ -96,8 +88,231 @@ export class HomePage implements OnInit, OnDestroy {
     this.particlesOptions = particles;
     this.createRangeForm();
     this.createSearchForm();
+    this.createUserFilters(this.user.filters);
+    this.updateUserInfos();
     this.createPokemons();
-    this.createFilters();
+  }
+
+  createPokemons() {
+    combineLatest([
+      this.generationFilter$,
+      this.sortFilter$,
+      this.selectedTypeFilter$,
+      this.selectedWeightFilter$,
+      this.selectedHeightFilter$,
+    ]).subscribe(
+      ([
+        selectedGeneration,
+        selectedSort,
+        selectedType,
+        selectedWeight,
+        selectedHeight,
+      ]) => {
+        const sortPredicate = this.sortFunction(selectedSort);
+
+        const newGenerationOption =
+          this.user.generation.selected !== selectedGeneration;
+
+        if (newGenerationOption) {
+          const customGenerationOption =
+            selectedGeneration === eGenerations.CUSTOM_GENERATION;
+          if (customGenerationOption) return;
+          scrollTo(0, 0);
+        }
+
+        const { from, to } =
+          GENERATIONS[selectedGeneration] ?? this.user.generation;
+
+        this.updateUserGeneration(selectedGeneration, from, to);
+        this.rangeGroup.controls.from.setValue(from, { emitEvent: false });
+        this.rangeGroup.controls.to.setValue(to, { emitEvent: false });
+
+        const pokemons = this.pokeAPI.pokemons.slice(from - 1, to);
+
+        const customGenerations =
+          selectedGeneration === eGenerations.CUSTOM_GENERATION;
+
+        this.setMorePokemonsOptions(this.user.morePokemons, customGenerations);
+
+        const types = this.typesOptions(pokemons);
+        this.typeFilterOptions$.next(types);
+
+        if (!selectedType && !selectedWeight && !selectedHeight) {
+          const weightsOptions = this.weightsOptions(pokemons);
+          const heightsOptions = this.heightsOptions(pokemons);
+
+          this.heightFilterOptions$.next(heightsOptions);
+          this.weightFilterOptions$.next(weightsOptions);
+          this.filteredPokemons$.next(pokemons);
+          this.pokemons$.next(pokemons);
+          return;
+        }
+
+        const pokemonsTypesFiltered = this.pokemonsTypeFilter(
+          pokemons,
+          selectedType
+        );
+
+        pokemonsTypesFiltered.sort(sortPredicate);
+
+        const weightsOptions = this.weightsOptions(pokemonsTypesFiltered);
+
+        this.weightFilterOptions$.next(weightsOptions);
+
+        const hasWeightOption = weightsOptions.some(
+          (weight) => weight === selectedWeight
+        );
+
+        if (!hasWeightOption) selectedWeight = null;
+
+        const pokemonsWeightFiltered = this.pokemonsWeightFilter(
+          pokemonsTypesFiltered,
+          selectedWeight
+        );
+
+        const heightsOptions = this.heightsOptions(pokemonsWeightFiltered);
+
+        this.heightFilterOptions$.next(heightsOptions);
+
+        const hasHeightOption = heightsOptions.some(
+          (height) => height === selectedHeight
+        );
+
+        if (!hasHeightOption) selectedHeight = null;
+
+        const pokemonsHeightFiltered = this.pokemonsHeightFilter(
+          pokemonsWeightFiltered,
+          selectedHeight
+        );
+
+        this.filteredPokemons$.next(pokemonsHeightFiltered);
+        this.pokemons$.next(pokemonsHeightFiltered);
+
+        if (selectedHeight) {
+          const weights = this.weightsOptions(pokemonsHeightFiltered);
+          this.weightFilterOptions$.next(weights);
+        }
+
+        if (!selectedHeight) {
+          const valueHasRepete =
+            this.filtersGroup.controls.height.value !== null;
+          if (valueHasRepete) this.filtersGroup.controls.height.setValue(null);
+        }
+
+        if (!selectedWeight) {
+          const valueHasRepete =
+            this.filtersGroup.controls.weight.value !== null;
+          if (valueHasRepete) this.filtersGroup.controls.weight.setValue(null);
+        }
+      }
+    );
+  }
+  pokemonsHeightFilter(
+    pokemons: Pokemon[],
+    selectedHeight: number | null
+  ): Pokemon[] {
+    return pokemons.filter((pokemon) => {
+      if (!selectedHeight) return pokemon;
+      return pokemon.height === selectedHeight;
+    });
+  }
+  heightsOptions(pokemons: Pokemon[]): number[] {
+    const heights = pokemons
+      .map((pokemon) => pokemon.height)
+      .sort((a, b) => a - b);
+
+    const removeDuplicatedHeights = [...new Set(heights)];
+    return removeDuplicatedHeights;
+  }
+  pokemonsWeightFilter(
+    pokemons: Pokemon[],
+    selectedWeight: number | null
+  ): Pokemon[] {
+    return pokemons.filter((pokemon) => {
+      if (!selectedWeight) return pokemon;
+      return pokemon.weight === selectedWeight;
+    });
+  }
+
+  sortFunction(selectedSort: string): (a: Pokemon, b: Pokemon) => number {
+    const sortDescendingPredicate = (
+      firstPokemon: Pokemon,
+      secondPokemon: Pokemon
+    ) => secondPokemon.id - firstPokemon.id;
+
+    const sortAscendingPredicate = (
+      firstPokemon: Pokemon,
+      secondPokemon: Pokemon
+    ) => firstPokemon.id - secondPokemon.id;
+
+    const sortPredicate =
+      selectedSort === eSort.ASCENDING
+        ? sortAscendingPredicate
+        : sortDescendingPredicate;
+    return sortPredicate;
+  }
+
+  typesOptions(pokemons: Pokemon[]): string[] {
+    const types = pokemons
+      .map((pokemon) => pokemon.types)
+      .reduce((acc, curr) => acc.concat(curr), [])
+      .map((type) => type.type.name);
+
+    const removedDuplicatedTypes = [...new Set(types)];
+
+    return removedDuplicatedTypes;
+  }
+
+  pokemonsTypeFilter(pokemons: Pokemon[], selectedType: string): Pokemon[] {
+    return pokemons.filter((pokemon) => {
+      if (!selectedType) return pokemon;
+      const types = pokemon.types.map((type) => type.type.name);
+      return types.some((type) => type === selectedType);
+    });
+  }
+
+  weightsOptions(pokemons: Pokemon[]): number[] {
+    const weights = pokemons
+      .map((pokemon) => pokemon.weight)
+      .sort((a, b) => a - b);
+
+    const removeDuplicatedWeights = [...new Set(weights)];
+    return removeDuplicatedWeights;
+  }
+
+  particlesLoaded(container: Container) {
+    this.container = container;
+    this.particlesEvent.emit(container);
+  }
+
+  updateUserInfos() {
+    this.getUser().subscribe((user) => {
+      this.updateUserFilters(user.filters ?? {});
+      this.user = user;
+      this.rangeGroup.controls.selectedGeneration.setValue(
+        user.generation.selected
+      );
+      this.updateFromAndToControls(
+        this.user.generation.from,
+        this.user.generation.to
+      );
+      this.updateUserGeneration(
+        this.user.generation.selected,
+        this.user.generation.from,
+        this.user.generation.to
+      );
+      this.scrollAfterLoading(0, user.scroll);
+      this.searchControl.setValue(user.search ?? '');
+    });
+  }
+  createUserFilters({ sort, height, weight, type, weakness }: UsersFilters) {
+    this.filtersGroup = new FormGroup({
+      sort: new FormControl(sort),
+      type: new FormControl(height),
+      weight: new FormControl(weight),
+      height: new FormControl(type),
+      weakness: new FormControl(weakness),
+    });
 
     this.rangeGroup.controls.selectedGeneration.valueChanges
       .pipe(untilDestroyed(this), startWith(this.user.generation.selected))
@@ -130,162 +345,14 @@ export class HomePage implements OnInit, OnDestroy {
         startWith(this.filtersGroup.controls.height.value)
       )
       .subscribe(this.selectedHeightFilter$);
-
-    combineLatest([
-      this.generationFilter$,
-      this.sortFilter$,
-      this.selectedTypeFilter$,
-      this.selectedWeightFilter$,
-      this.selectedHeightFilter$,
-    ]).subscribe(
-      ([
-        selectedGeneration,
-        selectedSort,
-        selectedType,
-        selectedWeight,
-        selectedHeight,
-      ]) => {
-        const sortDescendingPredicate = (
-          firstPokemon: Pokemon,
-          secondPokemon: Pokemon
-        ) => secondPokemon.id - firstPokemon.id;
-
-        const sortAscendingPredicate = (
-          firstPokemon: Pokemon,
-          secondPokemon: Pokemon
-        ) => firstPokemon.id - secondPokemon.id;
-
-        const sortPredicate =
-          selectedSort === 'ascending'
-            ? sortAscendingPredicate
-            : sortDescendingPredicate;
-
-        if (this.user.generation.selected !== selectedGeneration) {
-          if (selectedGeneration === eGenerations.CUSTOM_GENERATION) return;
-          scrollTo(0, 0);
-        }
-
-        const { from, to } =
-          GENERATIONS[selectedGeneration] ?? this.user.generation;
-
-        this.updateUserGeneration(selectedGeneration, from, to);
-
-        this.rangeGroup.controls.from.setValue(from, { emitEvent: false });
-        this.rangeGroup.controls.to.setValue(to, { emitEvent: false });
-
-        const pokemons = this.pokeAPI.pokemons.slice(from - 1, to);
-
-        const customGenerations =
-          selectedGeneration === eGenerations.CUSTOM_GENERATION;
-        this.setMorePokemonsOptions(customGenerations, customGenerations);
-
-        const types = pokemons
-          .map((pokemon) => pokemon.types)
-          .reduce((acc, curr) => acc.concat(curr), [])
-          .map((type) => type.type.name);
-
-        this.typeFilterOptions$.next([...new Set(types)]);
-
-        const pokemonsTypesFiltered = pokemons.filter((pokemon) => {
-          if (!selectedType) return pokemon;
-          const types = pokemon.types.map((type) => type.type.name);
-          return types.some((type) => type === selectedType);
-        });
-
-        pokemonsTypesFiltered.sort(sortPredicate);
-
-        const weights = pokemonsTypesFiltered
-          .map((pokemon) => pokemon.weight)
-          .sort((a, b) => a - b);
-
-        const removeDuplicatedWeights = [...new Set(weights)];
-        this.weightFilterOptions$.next(removeDuplicatedWeights);
-
-        const hasWeightOption = removeDuplicatedWeights.some(
-          (weight) => weight === selectedWeight
-        );
-
-        if (!hasWeightOption) selectedWeight = null;
-
-        const pokemonsWeightFiltered = pokemonsTypesFiltered.filter(
-          (pokemon) => {
-            if (!selectedWeight) return pokemon;
-            return pokemon.weight === selectedWeight;
-          }
-        );
-
-        const heights = pokemonsWeightFiltered
-          .map((pokemon) => pokemon.height)
-          .sort((a, b) => a - b);
-
-        const removeDuplicatedHeights = [...new Set(heights)];
-
-        this.heightFilterOptions$.next(removeDuplicatedHeights);
-
-        const hasHeightOption = removeDuplicatedHeights.some(
-          (height) => height === selectedHeight
-        );
-
-        if (!hasHeightOption) selectedHeight = null;
-
-        const pokemonsHeightFiltered = pokemonsWeightFiltered.filter(
-          (pokemon) => {
-            if (!selectedHeight) return pokemon;
-            return pokemon.height === selectedHeight;
-          }
-        );
-
-        this.filteredPokemons$.next(pokemonsHeightFiltered);
-        this.pokemons$.next(pokemonsHeightFiltered);
-
-        if (!selectedHeight) {
-          if (this.filtersGroup.controls.height.value !== null)
-            this.filtersGroup.controls.height.setValue(null);
-        }
-
-        if (!selectedWeight) {
-          if (this.filtersGroup.controls.weight.value !== null)
-            this.filtersGroup.controls.weight.setValue(null);
-        }
-      }
-    );
   }
 
-  particlesLoaded(container: Container) {
-    this.container = container;
-    this.particlesEvent.emit(container);
-  }
-
-  createPokemons() {
-    this.getUser().subscribe((user) => {
-      this.user = user;
-      const customGeneration =
-        user.generation.selected === eGenerations.CUSTOM_GENERATION;
-      this.rangeGroup.controls.selectedGeneration.setValue(
-        user.generation.selected
-      );
-      this.updateFromAndToControls(
-        this.user.generation.from,
-        this.user.generation.to
-      );
-      this.updateUserGeneration(
-        this.user.generation.selected,
-        this.user.generation.from,
-        this.user.generation.to
-      );
-      this.setMorePokemonsOptions(this.user.morePokemons, customGeneration);
-      this.hasLoading = false;
-      this.scrollAfterLoading(0, user.scroll);
-    });
-  }
-  createFilters() {
-    this.filtersGroup = new FormGroup({
-      sort: new FormControl('ascending'),
-      type: new FormControl(undefined),
-      weight: new FormControl(undefined),
-      height: new FormControl(undefined),
-      weakness: new FormControl(undefined),
-    });
+  updateUserFilters({ sort, height, weight, type, weakness }: UsersFilters) {
+    this.filtersGroup.controls.type.setValue(type);
+    this.filtersGroup.controls.weight.setValue(weight);
+    this.filtersGroup.controls.height.setValue(height);
+    this.filtersGroup.controls.sort.setValue(sort);
+    this.filtersGroup.controls.weakness.setValue(weakness);
   }
 
   createRangeForm() {
@@ -333,6 +400,8 @@ export class HomePage implements OnInit, OnDestroy {
     ]);
 
     const searchPredicate = (search: string) => {
+      this.hasLoading = false;
+
       if (search === '') {
         const resetPokemons = this.pokemons$.value;
         this.filteredPokemons$.next(resetPokemons);
@@ -380,11 +449,16 @@ export class HomePage implements OnInit, OnDestroy {
 
   createUser() {
     const { generation } = this.user;
+    const { value } = this.filtersGroup;
     return this.indexDB.update(eIndexDBKeys.USER, {
       uid: eIndexDBKeys.USER,
+      search: this.searchControl.value,
       generation,
       scroll: scrollY,
       morePokemons: this.morePokemons,
+      filters: {
+        ...value,
+      },
     });
   }
 
