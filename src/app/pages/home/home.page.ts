@@ -46,7 +46,6 @@ import {
   DefaultUser,
   eGenerations,
   GENERATIONS,
-  TYPES,
   userGeneration,
 } from './home.page.models';
 
