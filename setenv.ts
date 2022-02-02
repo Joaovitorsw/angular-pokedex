@@ -27,8 +27,8 @@ const environmentFileContent = `export const environment = {
     version: 1,
     objectStoresMeta: [
       {
-        store: 'pokemons-images',
-        storeConfig: { keyPath: 'id', autoIncrement: true },
+        store: 'global-options',
+        storeConfig: { keyPath: 'id', autoIncrement: false },
         storeSchema: [],
       },
       {

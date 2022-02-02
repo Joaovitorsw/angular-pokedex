@@ -5,7 +5,7 @@ import { Container } from 'ng-particles';
 import { catchError } from 'rxjs/operators';
 import { AboutPage } from './pages/about/about.page';
 import { HomePage } from './pages/home/home.page';
-import { IndexedDbService } from './services';
+import { eIndexDBKeys, IndexedDbService } from './services';
 import { SLIDE_IN_ANIMATION } from './shared/animations/slide.animation';
 
 @Component({
@@ -21,6 +21,14 @@ export class AppComponent {
 
   constructor(private indexDB: IndexedDbService) {}
 
+  userPreferences() {
+    this.indexDB.getByKey(eIndexDBKeys.GLOBAL_OPTIONS, 1).subscribe((data) => {
+      if (!data) return;
+      this.animationStatus = data.checked;
+      setTimeout(() => this.particlesStatus(data.checked), 1000);
+    });
+  }
+
   prepareRoute(outlet: RouterOutlet) {
     return outlet?.activatedRouteData?.['animation'];
   }
@@ -30,6 +38,7 @@ export class AppComponent {
     eventContainer.subscribe((container: Container) => {
       this.container = container;
       this.particlesStatus(this.animationStatus);
+      this.userPreferences();
     });
   }
 
@@ -45,7 +54,14 @@ export class AppComponent {
 
   slideStatus(event: MatSlideToggleChange) {
     this.animationStatus = event.checked;
+
     this.particlesStatus(this.animationStatus);
+    this.indexDB
+      .update(eIndexDBKeys.GLOBAL_OPTIONS, {
+        id: 1,
+        checked: this.animationStatus,
+      })
+      .subscribe();
   }
 
   private particlesStatus(state: boolean) {

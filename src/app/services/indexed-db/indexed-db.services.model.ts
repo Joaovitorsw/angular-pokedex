@@ -1,5 +1,5 @@
 export enum eIndexDBKeys {
   POKEMONS = 'cached-pokemons',
   USER = 'user',
-  SPRITE_PATH = 'pokemons-images',
+  GLOBAL_OPTIONS = 'global-options',
 }
