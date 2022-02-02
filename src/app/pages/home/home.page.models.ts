@@ -1,18 +1,21 @@
 export interface DefaultUser {
+  search: string;
   generation: {
     selected: string;
     from: number;
     to: number;
   };
-  filters: {
-    sort: string;
-    height?: number;
-    weight?: number;
-    type?: string;
-    weakness?: string;
-  };
+  filters: UsersFilters;
   scroll: number;
   morePokemons: boolean;
+}
+
+export interface UsersFilters {
+  sort: string;
+  height: number | undefined;
+  weight: number | undefined;
+  type: string | undefined;
+  weakness: string | undefined;
 }
 
 export enum eGenerations {
@@ -39,6 +42,7 @@ export const GENERATIONS: { [key: string]: { from: number; to: number } } = {
 };
 
 export const userGeneration: DefaultUser = {
+  search: '',
   generation: {
     selected: eGenerations.GENERATION_1,
     from: GENERATIONS[eGenerations.GENERATION_1].from,
@@ -46,11 +50,16 @@ export const userGeneration: DefaultUser = {
   },
   filters: {
     sort: 'ascending',
-    type: 'grass',
-    weight: 25,
-    height: 4,
-    weakness: 'weakness',
+    type: undefined,
+    weight: undefined,
+    height: undefined,
+    weakness: undefined,
   },
   scroll: 0,
   morePokemons: false,
 };
+
+export enum eSort {
+  ASCENDING = 'ascending',
+  DESCENDING = 'descending',
+}

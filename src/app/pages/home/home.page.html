@@ -104,8 +104,12 @@
         <mat-form-field appearance="outline">
           <mat-label>Pokemons Sort</mat-label>
           <mat-select formControlName="sort">
-            <mat-option [value]="'ascending'"> Ascending </mat-option>
-            <mat-option [value]="'descending'"> Descending </mat-option>
+            <mat-option [value]="eSort.ASCENDING">
+              {{eSort.ASCENDING | titlecase}}
+            </mat-option>
+            <mat-option [value]="eSort.DESCENDING">
+              {{eSort.DESCENDING | titlecase}}
+            </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
