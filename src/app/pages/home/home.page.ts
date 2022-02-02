@@ -7,7 +7,6 @@ import {
   OnInit,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -17,42 +16,40 @@ import {
   PokeAPIService,
 } from '@pokedex/services';
 import { particles, particlesAnimations } from '@pokedex/shared';
+import { CustomErrorStateMatcher } from 'app/directives/show-validation-error';
 import { Container, IOptions, RecursivePartial } from 'ng-particles';
 import { Pokemon } from 'poke-api-models';
-import { of, Subscription } from 'rxjs';
-import { debounceTime, map, switchMap, tap } from 'rxjs/operators';
+import {
+  BehaviorSubject,
+  combineLatest,
+  concat,
+  forkJoin,
+  merge,
+  Observable,
+  of,
+  ReplaySubject,
+  Subject,
+  zip,
+} from 'rxjs';
+import {
+  concatMap,
+  debounceTime,
+  startWith,
+  switchMap,
+  take,
+  takeUntil,
+  tap,
+} from 'rxjs/operators';
+import { POKEMONS } from '.';
 import { CustomValidators } from '../../../validators';
+import {
+  DefaultUser,
+  eGenerations,
+  GENERATIONS,
+  TYPES,
+  userGeneration,
+} from './home.page.models';
 
-const GENERATIONS = {
-  'generation-1': { from: 1, to: 151 },
-  'generation-2': { from: 152, to: 251 },
-  'generation-3': { from: 252, to: 386 },
-  'generation-4': { from: 387, to: 494 },
-  'generation-5': { from: 495, to: 649 },
-  'generation-6': { from: 650, to: 721 },
-  'generation-7': { from: 722, to: 809 },
-  'generation-8': { from: 810, to: 898 },
-};
-
-interface DefaultUser {
-  generation: {
-    selected: string;
-    from: number;
-    to: number;
-  };
-  scroll: number;
-  infinityScroll: boolean;
-}
-
-const userGeneration: DefaultUser = {
-  generation: {
-    selected: 'generation-1',
-    from: 1,
-    to: 151,
-  },
-  scroll: 0,
-  infinityScroll: false,
-};
 @Component({
   selector: 'px-home',
   templateUrl: './home.page.html',
@@ -61,87 +58,243 @@ const userGeneration: DefaultUser = {
 @UntilDestroy()
 export class HomePage implements OnInit, OnDestroy {
   @HostBinding('class.loading') hasLoading = true;
+
+  particlesEvent: EventEmitter<Container> = new EventEmitter();
   particlesOptions: RecursivePartial<IOptions>;
   container: Container;
   id = 'home-page';
-  InfinityScroll: BooleanInput = false;
-  matcher = new ErrorStateMatcher();
-  InfinityScrollOption: Boolean = false;
-  lazyLoadingSubscription: Subscription;
-  searchControl: FormControl;
+
   user: DefaultUser = userGeneration;
-  rangeControl: FormGroup;
-  particlesEvent: EventEmitter<Container> = new EventEmitter();
+  pokemons$ = new BehaviorSubject<Pokemon[]>([]);
+  filteredPokemons$ = new BehaviorSubject<Pokemon[]>([]);
+
+  generationFilter$ = new ReplaySubject<string>(1);
+  sortFilter$ = new ReplaySubject<string>(1);
+
+  selectedTypeFilter$ = new ReplaySubject<string>(1);
+  typeFilterOptions$ = new ReplaySubject<string[]>(1);
+
+  selectedWeightFilter$ = new ReplaySubject<number | null>(1);
+  weightFilterOptions$ = new ReplaySubject<number[]>(1);
+
+  selectedHeightFilter$ = new ReplaySubject<number | null>(1);
+  heightFilterOptions$ = new ReplaySubject<number[]>(1);
+
+  morePokemons: BooleanInput = false;
+  morePokemonsOption: Boolean = false;
+  filtersGroup: FormGroup;
+  searchControl: FormControl;
+  rangeGroup: FormGroup;
+  matcher = new CustomErrorStateMatcher();
+
   constructor(
     public pokeAPI: PokeAPIService,
     private indexDB: IndexedDbService
   ) {}
 
   ngOnInit(): void {
-    this.hasLoading = true;
     particlesAnimations.homePage();
     this.particlesOptions = particles;
     this.createRangeForm();
     this.createSearchForm();
-    this.createPokemons().subscribe(() => {
-      this.pokeAPI.request$$.next(true);
-    });
-  }
+    this.createPokemons();
+    this.createFilters();
 
-  createPokemons() {
-    return of<DefaultUser>(this.user).pipe(
-      switchMap((defaultUser) => {
-        return this.indexDB.getAll(eIndexDBKeys.USER).pipe(
-          switchMap(([user]) => {
-            if (user) {
-              return of(user).pipe(
-                map((user) => {
-                  this.user = user;
-                  const { generation, scroll, infinityScroll } = this.user;
-                  const { selected, from, to } = generation;
-                  this.InfinityScroll = infinityScroll;
+    this.rangeGroup.controls.selectedGeneration.valueChanges
+      .pipe(untilDestroyed(this), startWith(this.user.generation.selected))
+      .subscribe(this.generationFilter$);
 
-                  if (selected === 'custom') {
-                    this.InfinityScrollOption = true;
-                  }
+    this.filtersGroup.controls.sort.valueChanges
+      .pipe(
+        untilDestroyed(this),
+        startWith(this.filtersGroup.controls.sort.value)
+      )
+      .subscribe(this.sortFilter$);
 
-                  this.pokeAPI
-                    .nextPokemonsRange(from, to)
-                    .subscribe((pokemons) => {
-                      this.pokeAPI.pokemons$$.next(pokemons);
-                      this.updateFormValueNoEmit(from, to);
-                      this.scrollAfterLoading(0, scroll);
-                      this.hasLoading = false;
-                    });
-                })
-              );
-            }
-            const { generation, scroll } = defaultUser;
-            const { from, to } = generation;
-            return this.pokeAPI.nextPokemonsRange(from, to).pipe(
-              tap((pokemons: Pokemon[]) => {
-                this.pokeAPI.pokemons$$.next(pokemons.slice(from - 1, to));
-                this.updateFormValueNoEmit(from, to);
+    this.filtersGroup.controls.type.valueChanges
+      .pipe(
+        untilDestroyed(this),
+        startWith(this.filtersGroup.controls.type.value)
+      )
+      .subscribe(this.selectedTypeFilter$);
 
-                this.scrollAfterLoading(0, scroll);
-                this.hasLoading = false;
-              })
-            );
-          })
+    this.filtersGroup.controls.weight.valueChanges
+      .pipe(
+        untilDestroyed(this),
+        startWith(this.filtersGroup.controls.weight.value)
+      )
+      .subscribe(this.selectedWeightFilter$);
+
+    this.filtersGroup.controls.height.valueChanges
+      .pipe(
+        untilDestroyed(this),
+        startWith(this.filtersGroup.controls.height.value)
+      )
+      .subscribe(this.selectedHeightFilter$);
+
+    combineLatest([
+      this.generationFilter$,
+      this.sortFilter$,
+      this.selectedTypeFilter$,
+      this.selectedWeightFilter$,
+      this.selectedHeightFilter$,
+    ]).subscribe(
+      ([
+        selectedGeneration,
+        selectedSort,
+        selectedType,
+        selectedWeight,
+        selectedHeight,
+      ]) => {
+        const sortDescendingPredicate = (
+          firstPokemon: Pokemon,
+          secondPokemon: Pokemon
+        ) => secondPokemon.id - firstPokemon.id;
+
+        const sortAscendingPredicate = (
+          firstPokemon: Pokemon,
+          secondPokemon: Pokemon
+        ) => firstPokemon.id - secondPokemon.id;
+
+        const sortPredicate =
+          selectedSort === 'ascending'
+            ? sortAscendingPredicate
+            : sortDescendingPredicate;
+
+        if (this.user.generation.selected !== selectedGeneration) {
+          if (selectedGeneration === eGenerations.CUSTOM_GENERATION) return;
+          scrollTo(0, 0);
+        }
+
+        const { from, to } =
+          GENERATIONS[selectedGeneration] ?? this.user.generation;
+
+        this.updateUserGeneration(selectedGeneration, from, to);
+
+        this.rangeGroup.controls.from.setValue(from, { emitEvent: false });
+        this.rangeGroup.controls.to.setValue(to, { emitEvent: false });
+
+        const pokemons = this.pokeAPI.pokemons.slice(from - 1, to);
+
+        const customGenerations =
+          selectedGeneration === eGenerations.CUSTOM_GENERATION;
+        this.setMorePokemonsOptions(customGenerations, customGenerations);
+
+        const types = pokemons
+          .map((pokemon) => pokemon.types)
+          .reduce((acc, curr) => acc.concat(curr), [])
+          .map((type) => type.type.name);
+
+        this.typeFilterOptions$.next([...new Set(types)]);
+
+        const pokemonsTypesFiltered = pokemons.filter((pokemon) => {
+          if (!selectedType) return pokemon;
+          const types = pokemon.types.map((type) => type.type.name);
+          return types.some((type) => type === selectedType);
+        });
+
+        pokemonsTypesFiltered.sort(sortPredicate);
+
+        const weights = pokemonsTypesFiltered
+          .map((pokemon) => pokemon.weight)
+          .sort((a, b) => a - b);
+
+        const removeDuplicatedWeights = [...new Set(weights)];
+        this.weightFilterOptions$.next(removeDuplicatedWeights);
+
+        const hasWeightOption = removeDuplicatedWeights.some(
+          (weight) => weight === selectedWeight
         );
-      })
+
+        if (!hasWeightOption) selectedWeight = null;
+
+        const pokemonsWeightFiltered = pokemonsTypesFiltered.filter(
+          (pokemon) => {
+            if (!selectedWeight) return pokemon;
+            return pokemon.weight === selectedWeight;
+          }
+        );
+
+        const heights = pokemonsWeightFiltered
+          .map((pokemon) => pokemon.height)
+          .sort((a, b) => a - b);
+
+        const removeDuplicatedHeights = [...new Set(heights)];
+
+        this.heightFilterOptions$.next(removeDuplicatedHeights);
+
+        const hasHeightOption = removeDuplicatedHeights.some(
+          (height) => height === selectedHeight
+        );
+
+        if (!hasHeightOption) selectedHeight = null;
+
+        const pokemonsHeightFiltered = pokemonsWeightFiltered.filter(
+          (pokemon) => {
+            if (!selectedHeight) return pokemon;
+            return pokemon.height === selectedHeight;
+          }
+        );
+
+        this.filteredPokemons$.next(pokemonsHeightFiltered);
+        this.pokemons$.next(pokemonsHeightFiltered);
+
+        if (!selectedHeight) {
+          if (this.filtersGroup.controls.height.value !== null)
+            this.filtersGroup.controls.height.setValue(null);
+        }
+
+        if (!selectedWeight) {
+          if (this.filtersGroup.controls.weight.value !== null)
+            this.filtersGroup.controls.weight.setValue(null);
+        }
+      }
     );
   }
 
-  scrollAfterLoading(scrollX: number, scrollY: number) {
-    setTimeout(() => {
-      scrollTo(scrollX, scrollY);
-    }, 500);
+  particlesLoaded(container: Container) {
+    this.container = container;
+    this.particlesEvent.emit(container);
+  }
+
+  createPokemons() {
+    this.getUser().subscribe((user) => {
+      this.user = user;
+      const customGeneration =
+        user.generation.selected === eGenerations.CUSTOM_GENERATION;
+      this.rangeGroup.controls.selectedGeneration.setValue(
+        user.generation.selected
+      );
+      this.updateFromAndToControls(
+        this.user.generation.from,
+        this.user.generation.to
+      );
+      this.updateUserGeneration(
+        this.user.generation.selected,
+        this.user.generation.from,
+        this.user.generation.to
+      );
+      this.setMorePokemonsOptions(this.user.morePokemons, customGeneration);
+      this.hasLoading = false;
+      this.scrollAfterLoading(0, user.scroll);
+    });
+  }
+  createFilters() {
+    this.filtersGroup = new FormGroup({
+      sort: new FormControl('ascending'),
+      type: new FormControl(undefined),
+      weight: new FormControl(undefined),
+      height: new FormControl(undefined),
+      weakness: new FormControl(undefined),
+    });
   }
 
   createRangeForm() {
-    this.rangeControl = new FormGroup(
+    this.rangeGroup = new FormGroup(
       {
+        selectedGeneration: new FormControl(this.user.generation.selected, [
+          Validators.required,
+        ]),
         from: new FormControl(1, [
           Validators.required,
           Validators.min(1),
@@ -161,113 +314,69 @@ export class HomePage implements OnInit, OnDestroy {
       ]
     );
 
-    this.rangeControl.valueChanges
-      .pipe(debounceTime(1500), untilDestroyed(this))
-      .subscribe((value) => {
-        if (this.rangeControl.invalid) return;
-        this.pokeAPI
-          .nextPokemonsRange(value.from, value.to)
-          .subscribe((pokemons) => {
-            if (this.user.generation.selected === 'custom') {
-              this.user.generation.from = value.from;
-              this.user.generation.to = value.to;
-            }
-            this.pokeAPI.pokemons$$.next(pokemons);
-          });
+    this.rangeGroup.valueChanges
+      .pipe(debounceTime(2000), untilDestroyed(this))
+      .subscribe(({ selectedGeneration, from, to }) => {
+        const customRange =
+          selectedGeneration === eGenerations.CUSTOM_GENERATION ||
+          this.rangeGroup.valid;
+        if (!customRange) return;
+        this.updateUserGeneration(selectedGeneration, from, to);
+        this.generationFilter$.next(selectedGeneration);
       });
   }
 
   createSearchForm() {
-    this.searchControl = new FormControl(null, [Validators.required]);
+    const from = this.user.generation.from;
+    const to = this.user.generation.to;
+    this.searchControl = new FormControl('', [
+      CustomValidators.pokemonNameForGeneration(from, to),
+    ]);
+
+    const searchPredicate = (search: string) => {
+      if (search === '') {
+        const resetPokemons = this.pokemons$.value;
+        this.filteredPokemons$.next(resetPokemons);
+        return;
+      }
+      if (this.searchControl.invalid || this.rangeGroup.invalid) return;
+
+      const pokemons = this.filteredPokemons$.value.filter((pokemon) => {
+        const name = pokemon.name.toLowerCase();
+        const searchValue = search.toLowerCase();
+        return name.includes(searchValue);
+      });
+
+      this.filteredPokemons$.next(pokemons);
+    };
 
     this.searchControl.valueChanges
-      .pipe(untilDestroyed(this), debounceTime(3000))
-      .subscribe((value) => {
-        if (this.searchControl.invalid) return;
-
-        const lowerCaseValue = value.toLowerCase();
-        const pokemons$ = this.pokeAPI.searchPokemons(lowerCaseValue);
-        pokemons$.subscribe((pokemons) => {
-          this.pokeAPI.pokemons$$.next(pokemons);
-          const index = pokemons?.length - 1;
-          this.updateFormValueNoEmit(pokemons[0]?.id, pokemons[index]?.id);
-          this.InfinityScroll = false;
-          this.InfinityScrollOption = false;
-        });
-      });
+      .pipe(untilDestroyed(this), debounceTime(2000))
+      .subscribe(searchPredicate);
   }
 
-  updateFormValueNoEmit(from: number, to: number) {
-    this.rangeControl.controls.from.setValue(from, {
-      emitEvent: false,
-    });
-    this.rangeControl.controls.to.setValue(to, {
-      emitEvent: false,
-    });
-  }
-
-  pokemonRange(event: MatSelectChange) {
-    if (event.value === 'custom') {
-      this.user.generation.selected = 'custom';
-      this.InfinityScrollOption = true;
-      return;
-    }
-
-    const generationSelected = event.value as keyof typeof GENERATIONS;
-    const { from, to } = GENERATIONS[generationSelected];
-    this.user.generation.selected = generationSelected;
-    this.user.generation.from = from;
-    this.user.generation.to = to;
-    this.updateFormValueNoEmit(from, to);
-    this.InfinityScroll = false;
-    this.InfinityScrollOption = false;
-    this.pokeAPI.pokemons$$.next([]);
-    this.pokeAPI.request$$.next(false);
-    this.updateForm(from, to);
-  }
-
-  updateInfinityScroll(event: MatSlideToggleChange) {
-    if (!this.InfinityScrollOption) return;
-
-    this.InfinityScroll = event.checked;
-
-    if (event.checked) this.endScroll();
-  }
-
-  updateForm(from: number, to: number) {
-    this.rangeControl.controls.from.setValue(from);
-    this.rangeControl.controls.to.setValue(to);
-  }
-
-  endScroll() {
+  updateFromAndToControls(from: number, to: number) {
     const maxPokemons = 898;
-    if (
-      !this.InfinityScroll ||
-      this.pokeAPI.pokemons$$.value.length >= maxPokemons ||
-      this.user.generation.to >= maxPokemons
-    )
-      return;
 
-    const { from, to } = this.user.generation;
-    const pokemonsLength = this.pokeAPI.pokemons$$.value.length;
-    const nextPokemons = pokemonsLength === to - from + 1;
+    if (to >= maxPokemons) to = maxPokemons;
 
-    if (nextPokemons) {
-      this.pokeAPI.request$$.next(false);
-      const nextValue =
-        this.user.generation.to + 24 >= maxPokemons ? maxPokemons : to + 24;
-      this.user.generation.to = nextValue;
-      this.updateForm(this.user.generation.from, this.user.generation.to);
-    }
+    this.rangeGroup.controls.from.setValue(from);
+    this.rangeGroup.controls.to.setValue(to);
   }
 
-  particlesLoaded(container: Container) {
-    this.container = container;
-    this.particlesEvent.emit(container);
-  }
-
-  trackByFn(index: number, item: any) {
-    return item.id || index;
+  getUser(): Observable<DefaultUser> {
+    return of(this.user).pipe(
+      untilDestroyed(this),
+      switchMap((user) => {
+        return this.indexDB.getByKey(eIndexDBKeys.USER, eIndexDBKeys.USER).pipe(
+          untilDestroyed(this),
+          switchMap((userDB) => {
+            if (userDB) return of(userDB);
+            return of(user);
+          })
+        );
+      })
+    );
   }
 
   createUser() {
@@ -276,9 +385,70 @@ export class HomePage implements OnInit, OnDestroy {
       uid: eIndexDBKeys.USER,
       generation,
       scroll: scrollY,
-      infinityScroll: this.InfinityScroll,
+      morePokemons: this.morePokemons,
     });
   }
+
+  updateUserGeneration(generation: string, from: number, to: number) {
+    this.user.generation.selected = generation;
+    this.user.generation.from = from;
+    this.user.generation.to = to;
+    this.searchControl.setValidators([
+      CustomValidators.pokemonNameForGeneration(from, to),
+    ]);
+  }
+
+  setMorePokemonsOptions(morePokemons: boolean, morePokemonsOption: boolean) {
+    this.morePokemons = morePokemons;
+    this.morePokemonsOption = morePokemonsOption;
+  }
+
+  updateMorePokemons(event: MatSlideToggleChange) {
+    if (!this.morePokemonsOption) return;
+
+    this.morePokemons = event.checked;
+
+    if (event.checked) this.endScroll();
+  }
+
+  scrollAfterLoading(scrollX: number, scrollY: number) {
+    setTimeout(() => scrollTo(scrollX, scrollY), 500);
+  }
+
+  endScroll() {
+    const pokemonsLength = this.filteredPokemons$.value.length;
+
+    if (!this.morePokemons || pokemonsLength >= 898) {
+      this.pokeAPI.request$$.next(false);
+      return;
+    }
+
+    this.pokeAPI.request$$.next(true);
+    const { from, to } = this.user.generation;
+    const nextPokemons = pokemonsLength === to - from + 1;
+    const maxPokemons = 898;
+    const increment = 24;
+
+    if (nextPokemons) {
+      const userNext = this.user.generation.to + increment;
+      const nextValue = userNext >= maxPokemons ? maxPokemons : to + increment;
+
+      this.user.generation.to = nextValue;
+      const pokemons = this.pokeAPI.pokemons.slice(from - 1, nextValue);
+      this.rangeGroup.controls.to.setValue(nextValue, { emitEvent: false });
+      this.rangeGroup.controls.from.setValue(from, { emitEvent: false });
+      this.pokemons$.next(pokemons);
+      this.filteredPokemons$.next(pokemons);
+      this.pokeAPI.request$$.next(false);
+      return;
+    }
+    this.pokeAPI.request$$.next(false);
+  }
+
+  trackByFn(index: number, item: any) {
+    return item.id || index;
+  }
+
   ngOnDestroy(): void {
     this.createUser().subscribe();
   }

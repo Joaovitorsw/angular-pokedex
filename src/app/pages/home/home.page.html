@@ -1,81 +1,185 @@
 <div class="loading-progress" *ngIf="hasLoading"></div>
 
-<div class="filters">
-  <mat-form-field appearance="outline" class="search-input">
-    <mat-label>Search your Pokemon!</mat-label>
-    <input
-      matInput
-      type="text"
-      placeholder="Ex : Pikachu"
-      [formControl]="searchControl"
-      [errorStateMatcher]="matcher"
-    />
-  </mat-form-field>
-  <form class="range-option" [formGroup]="rangeControl">
-    <div class="range-input">
-      <mat-form-field appearance="outline">
-        <mat-label>Select an range</mat-label>
-        <mat-select
-          #matSelect
-          [value]="user.generation.selected"
-          (selectionChange)="pokemonRange($event)"
-        >
-          <mat-option value="generation-1">Generation I</mat-option>
-          <mat-option value="generation-2">Generation II</mat-option>
-          <mat-option value="generation-3">Generation III</mat-option>
-          <mat-option value="generation-4">Generation IV</mat-option>
-          <mat-option value="generation-5">Generation V</mat-option>
-          <mat-option value="generation-6">Generation VI</mat-option>
-          <mat-option value="generation-7">Generation VII</mat-option>
-          <mat-option value="generation-8">Generation VIII</mat-option>
-          <mat-option value="custom">Custom Range</mat-option>
-        </mat-select>
-      </mat-form-field>
+<mat-drawer-container autosize clas="filters-content">
+  <mat-drawer #filterDrawer mode="side" class="filters-options">
+    <div class="filters" [formGroup]="filtersGroup">
+      <div class="search-input">
+        <mat-form-field appearance="outline">
+          <mat-label>Search your Pokemon!</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Ex : Pikachu"
+            [formControl]="searchControl"
+            [errorStateMatcher]="matcher"
+          />
 
-      <ng-container *ngIf="matSelect.value === 'custom'">
-        <div class="custom-range">
-          <div>
-            From
-            <mat-form-field appearance="fill" class="custom-range">
-              <input
-                matInput
-                type="number"
-                min="1"
-                max="898"
-                formControlName="from"
-              />
-            </mat-form-field>
-            To
-            <mat-form-field appearance="fill" class="custom-range">
-              <input
-                matInput
-                type="number"
-                min="1"
-                max="898"
-                formControlName="to"
-              />
-            </mat-form-field>
-          </div>
-          <ng-container
-            *ngIf="rangeControl.controls.from.invalid; else toMatError"
+          <mat-error
+            pxShowValidationError
+            [pxShowValidationErrorControl]="searchControl"
           >
-            <mat-error [pxShowValidationError]="'from'"></mat-error>
-          </ng-container>
-          <ng-template #toMatError>
-            <mat-error [pxShowValidationError]="'to'"></mat-error>
-          </ng-template>
-        </div>
-      </ng-container>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="range-input">
+        <form class="range-option" [formGroup]="rangeGroup">
+          <mat-form-field appearance="outline">
+            <mat-label>Select an range</mat-label>
+            <mat-select formControlName="selectedGeneration" #matSelect>
+              <mat-option value="generation-1">Generation I</mat-option>
+              <mat-option value="generation-2">Generation II</mat-option>
+              <mat-option value="generation-3">Generation III</mat-option>
+              <mat-option value="generation-4">Generation IV</mat-option>
+              <mat-option value="generation-5">Generation V</mat-option>
+              <mat-option value="generation-6">Generation VI</mat-option>
+              <mat-option value="generation-7">Generation VII</mat-option>
+              <mat-option value="generation-8">Generation VIII</mat-option>
+              <mat-option value="custom-generation">Custom Range</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div class="custom-range-container">
+            <ng-container *ngIf="matSelect.value === 'custom-generation'">
+              <div class="custom-range">
+                <div>
+                  From
+                  <mat-form-field appearance="fill" class="custom-range">
+                    <input
+                      matInput
+                      type="number"
+                      min="1"
+                      max="898"
+                      formControlName="from"
+                      [errorStateMatcher]="matcher"
+                    />
+                  </mat-form-field>
+                  To
+                  <mat-form-field appearance="fill" class="custom-range">
+                    <input
+                      matInput
+                      type="number"
+                      min="1"
+                      max="898"
+                      formControlName="to"
+                      [errorStateMatcher]="matcher"
+                    />
+                  </mat-form-field>
+                </div>
+
+                <ng-container
+                  *ngIf="rangeGroup.controls.from.invalid; else toMatError"
+                >
+                  <mat-error
+                    pxShowValidationError
+                    [pxShowValidationErrorControlName]="'from'"
+                  ></mat-error>
+                </ng-container>
+
+                <ng-template #toMatError>
+                  <mat-error
+                    pxShowValidationError
+                    [pxShowValidationErrorControlName]="'to'"
+                  ></mat-error>
+                </ng-template>
+              </div>
+            </ng-container>
+          </div>
+        </form>
+      </div>
+
+      <div class="sort">
+        <mat-form-field appearance="outline">
+          <mat-label>Pokemons Sort</mat-label>
+          <mat-select formControlName="sort">
+            <mat-option [value]="'ascending'"> Ascending </mat-option>
+            <mat-option [value]="'descending'"> Descending </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="type">
+        <mat-form-field appearance="outline">
+          <mat-label>Pokemon Type</mat-label>
+          <mat-select formControlName="type">
+            <mat-option>--</mat-option>
+            <mat-option
+              *ngFor="let type of typeFilterOptions$ | async"
+              [value]="type "
+            >
+              {{type | titlecase }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="weight">
+        <mat-form-field appearance="outline">
+          <mat-label>Pokemon Weight</mat-label>
+          <mat-select formControlName="weight">
+            <mat-option>--</mat-option>
+            <mat-option
+              *ngFor="let weight of weightFilterOptions$ | async"
+              [value]="weight"
+            >
+              {{weight | weight}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="height">
+        <mat-form-field appearance="outline">
+          <mat-label>Pokemon Height</mat-label>
+          <mat-select formControlName="height">
+            <mat-option>--</mat-option>
+            <mat-option
+              *ngFor="let height of heightFilterOptions$ | async"
+              [value]="height"
+            >
+              {{height | height}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="weakness">
+        <mat-form-field appearance="outline">
+          <mat-label>Pokemon Weakness</mat-label>
+          <mat-select formControlName="weakness">
+            <mat-option>--</mat-option>
+            <mat-option [value]="'weakness'"> Weakness </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="more-pokemons">
+        <p>
+          Load more pokemons<br />
+          on end scroll
+        </p>
+        <mat-slide-toggle
+          [disabled]="!morePokemonsOption"
+          (change)="updateMorePokemons($event)"
+          [checked]="morePokemons"
+        >
+        </mat-slide-toggle>
+      </div>
     </div>
-    <mat-slide-toggle
-      [disabled]="!InfinityScrollOption"
-      (change)="updateInfinityScroll($event)"
-      [checked]="InfinityScroll"
-    >
-      Infinity Scroll</mat-slide-toggle
-    >
-  </form>
-</div>
+  </mat-drawer>
+</mat-drawer-container>
+
+<mat-toolbar>
+  <mat-toolbar-row>
+    <div class="logo">
+      <img src="/assets/images/3-stars-pokemon.png" alt="" />
+      <span>Pokedex</span>
+    </div>
+
+    <button mat-icon-button (click)="filterDrawer.toggle()">
+      <mat-icon>search</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
 
 <div
   class="pokemons-content"
@@ -85,10 +189,10 @@
 >
   <px-pokemon-card
     [pokemon]="pokemon"
-    *ngFor="let pokemon of pokeAPI.pokemons$$ | async; trackBy: trackByFn"
+    *ngFor="let pokemon of filteredPokemons$ | async; trackBy: trackByFn"
   >
   </px-pokemon-card>
-  <div class="spinner" *ngIf="!(pokeAPI.request$$ | async) let request">
+  <div class="spinner" *ngIf="pokeAPI.request$$ | async let request">
     <mat-spinner></mat-spinner>
   </div>
 

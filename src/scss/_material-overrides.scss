@@ -3,6 +3,18 @@ mat-drawer {
   width: 100%;
   height: 100%;
 }
+
+mat-drawer.filters-options {
+  top: 75px;
+  padding: 20px;
+  border-radius: 0px 0px 15px 15px;
+  background-color: rgba(255, 255, 255, 0.95);
+  height: min-content;
+
+  .mat-drawer-inner-container {
+    overflow: hidden;
+  }
+}
 .mat-drawer.mat-drawer-push {
   background-color: rgba(255, 255, 255, 0.4);
 }
@@ -13,4 +25,15 @@ mat-drawer-container {
 
 mat-progress-bar.pxColorProgressBar .mat-progress-bar-fill::after {
   background-color: var(--color) !important;
+}
+
+@media screen and (max-width: 450px) {
+  mat-drawer.filters-options {
+    .mat-drawer-inner-container {
+      display: flex;
+      justify-content: center;
+      max-height: 500px;
+      overflow-y: scroll;
+    }
+  }
 }
