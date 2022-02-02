@@ -67,6 +67,8 @@ export class HomePage implements OnInit, OnDestroy {
   selectedHeightFilter$ = new ReplaySubject<number | null>(1);
   heightFilterOptions$ = new ReplaySubject<number[]>(1);
 
+  userSearchFilter$ = new ReplaySubject<string>(1);
+
   morePokemons: BooleanInput = false;
   morePokemonsOption: Boolean = false;
 
@@ -100,6 +102,7 @@ export class HomePage implements OnInit, OnDestroy {
       this.selectedTypeFilter$,
       this.selectedWeightFilter$,
       this.selectedHeightFilter$,
+      this.userSearchFilter$,
     ]).subscribe(
       ([
         selectedGeneration,
@@ -107,6 +110,7 @@ export class HomePage implements OnInit, OnDestroy {
         selectedType,
         selectedWeight,
         selectedHeight,
+        userSearch,
       ]) => {
         const sortPredicate = this.sortFunction(selectedSort);
 
@@ -187,6 +191,21 @@ export class HomePage implements OnInit, OnDestroy {
 
         this.filteredPokemons$.next(pokemonsHeightFiltered);
         this.pokemons$.next(pokemonsHeightFiltered);
+
+        if (userSearch != '') {
+          const searchPokemons = pokemonsHeightFiltered.filter((pokemon) => {
+            const name = pokemon.name.toLowerCase();
+            const searchValue = userSearch.toLowerCase();
+            return name.includes(searchValue);
+          });
+
+          const weights = this.weightsOptions(searchPokemons);
+          const heights = this.heightsOptions(searchPokemons);
+
+          this.weightFilterOptions$.next(weights);
+          this.heightFilterOptions$.next(heights);
+          this.filteredPokemons$.next(searchPokemons);
+        }
 
         if (selectedHeight) {
           const weights = this.weightsOptions(pokemonsHeightFiltered);
@@ -402,20 +421,9 @@ export class HomePage implements OnInit, OnDestroy {
     const searchPredicate = (search: string) => {
       this.hasLoading = false;
 
-      if (search === '') {
-        const resetPokemons = this.pokemons$.value;
-        this.filteredPokemons$.next(resetPokemons);
-        return;
-      }
       if (this.searchControl.invalid || this.rangeGroup.invalid) return;
 
-      const pokemons = this.filteredPokemons$.value.filter((pokemon) => {
-        const name = pokemon.name.toLowerCase();
-        const searchValue = search.toLowerCase();
-        return name.includes(searchValue);
-      });
-
-      this.filteredPokemons$.next(pokemons);
+      this.userSearchFilter$.next(search);
     };
 
     this.searchControl.valueChanges
