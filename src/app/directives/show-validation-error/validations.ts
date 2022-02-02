@@ -3,7 +3,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 
 export enum eValidationErrorMessage {
   REQUIRED = 'This field <strong>is required</strong>',
-  NAME = 'This name <strong> is not valid </strong>',
+  POKEMON_NAME = 'This pokemon name <strong> is not valid </strong>',
   EMAIL = 'This email <strong> is not valid </strong>',
   MIN = 'This field <strong> must be at least </strong>',
   MAX = 'This field <strong> must be at most </strong>',
@@ -12,7 +12,7 @@ export enum eValidationErrorMessage {
 }
 
 export enum eValidationErrorKeys {
-  NAME = 'name',
+  POKEMON_NAME = 'pokemon-name',
   EMAIL = 'email',
   MIN = 'min',
   MAX = 'max',
@@ -36,8 +36,8 @@ export const VALIDATIONS = [
     messageFn: () => eValidationErrorMessage.REQUIRED,
   },
   {
-    errorName: eValidationErrorKeys.NAME,
-    messageFn: () => eValidationErrorMessage.NAME,
+    errorName: eValidationErrorKeys.POKEMON_NAME,
+    messageFn: () => eValidationErrorMessage.POKEMON_NAME,
   },
   {
     errorName: eValidationErrorKeys.EMAIL,
