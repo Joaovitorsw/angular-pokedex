@@ -1,10 +1,10 @@
-const { writeFile } = require("fs");
-const { argv } = require("yargs");
+import * as dotenv from 'dotenv';
+import { writeFile } from 'fs';
+import { argv } from 'yargs';
+dotenv.config({ path: __dirname + '/.env' });
 
-require("dotenv").config();
-
-const environment = argv.environment;
-const isProduction = environment === "prod";
+const environment = (argv as any).environment;
+const isProduction = environment === 'prod';
 
 const targetPath = isProduction
   ? `./src/environments/environment.prod.ts`
@@ -27,11 +27,6 @@ const environmentFileContent = `export const environment = {
     version: 1,
     objectStoresMeta: [
       {
-        store: 'cached-pokemons',
-        storeConfig: { keyPath: 'id', autoIncrement: true },
-        storeSchema: [],
-      },
-      {
         store: 'pokemons-images',
         storeConfig: { keyPath: 'id', autoIncrement: true },
         storeSchema: [],
@@ -52,9 +47,8 @@ const environmentFileContent = `export const environment = {
 };
 `;
 
-writeFile(targetPath, environmentFileContent, function (err) {
-  if (err) {
-    console.log(err);
-  }
+writeFile(targetPath, environmentFileContent, (err) => {
+  if (err) console.log(err);
+
   console.log(`Wrote variables to ${targetPath}`);
 });
