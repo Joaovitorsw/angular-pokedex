@@ -6,7 +6,7 @@ mat-drawer {
 
 mat-drawer.filters-options {
   width: 100%;
-  top: 75px;
+  top: 80px;
   padding: 20px;
   border-radius: 0px 0px 15px 15px;
   background-color: rgba(255, 255, 255, 0.95);
@@ -33,7 +33,7 @@ mat-progress-bar.pxColorProgressBar .mat-progress-bar-fill::after {
     .mat-drawer-inner-container {
       display: flex;
       justify-content: center;
-      min-height: 300px;
+      min-height: 380px;
       max-height: 500px;
       height: 100%;
       overflow-y: scroll;
