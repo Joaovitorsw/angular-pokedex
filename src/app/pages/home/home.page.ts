@@ -120,7 +120,9 @@ export class HomePage implements OnInit, OnDestroy {
         if (newGenerationOption) {
           const customGenerationOption =
             selectedGeneration === eGenerations.CUSTOM_GENERATION;
+
           if (customGenerationOption) return;
+
           scrollTo(0, 0);
         }
 
@@ -141,7 +143,12 @@ export class HomePage implements OnInit, OnDestroy {
         const types = this.typesOptions(pokemons);
         this.typeFilterOptions$.next(types);
 
-        if (!selectedType && !selectedWeight && !selectedHeight) {
+        if (
+          !selectedType &&
+          !selectedWeight &&
+          !selectedHeight &&
+          !userSearch
+        ) {
           pokemons.sort(sortPredicate);
           const weightsOptions = this.weightsOptions(pokemons);
           const heightsOptions = this.heightsOptions(pokemons);
@@ -159,8 +166,6 @@ export class HomePage implements OnInit, OnDestroy {
         );
 
         pokemonsTypesFiltered.sort(sortPredicate);
-
-        console.log(pokemonsTypesFiltered);
 
         const weightsOptions = this.weightsOptions(pokemonsTypesFiltered);
 
