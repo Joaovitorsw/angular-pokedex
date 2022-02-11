@@ -20,6 +20,7 @@
           />
         </div>
       </div>
+
       <div>
         <p class="weight">Weight : {{ pokemon.weight | weight }}</p>
         <p class="height">Height : {{ pokemon.height | height }}</p>
@@ -89,6 +90,7 @@
           ></px-pokemon-card>
         </div>
       </ng-container>
+
       <ng-container *ngIf="pokemonForms.varietiesPokemon.length >= 1">
         <h2>Varieties</h2>
         <div class="varieties">
@@ -99,8 +101,10 @@
         </div>
       </ng-container>
     </div>
+
     <div class="damage-relations">
       <h1>Damage Relations</h1>
+
       <div
         *ngFor="let damageRelations of damagesRelations"
         class="type-relations"
@@ -111,6 +115,7 @@
             [alt]="damageRelations.name"
           />
         </div>
+
         <div class="container">
           <h1>Double Damage From :</h1>
 
