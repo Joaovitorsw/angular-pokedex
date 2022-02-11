@@ -4,8 +4,14 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'pokemonTitleCase',
 })
 export class PokemonTitleCasePipe implements PipeTransform {
-  transform(pokemonName: string | undefined): string | undefined {
-    const pokemonNameSplit = pokemonName?.split('-');
+  transform(pokemonName: string | undefined | number): string | undefined {
+    if (pokemonName === '-') return pokemonName;
+
+    if (pokemonName === 'id' || pokemonName === 'pp')
+      return pokemonName.toUpperCase();
+
+    const stringy = pokemonName?.toString();
+    const pokemonNameSplit = stringy?.split('-');
 
     const titleCase = (word: string) =>
       word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
