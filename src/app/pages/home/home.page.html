@@ -55,7 +55,6 @@
             <ng-container *ngIf="matSelect.value === 'custom-generation'">
               <div class="custom-range">
                 <div>
-                  From
                   <mat-form-field appearance="fill" class="custom-range">
                     <input
                       matInput
@@ -164,7 +163,12 @@
           <mat-label>Pokemon Weakness</mat-label>
           <mat-select formControlName="weakness">
             <mat-option>--</mat-option>
-            <mat-option [value]="'weakness'"> Weakness </mat-option>
+            <mat-option
+              *ngFor="let weakness of weaknessFilterOptions$  | async "
+              [value]="weakness"
+            >
+              {{weakness | titlecase}}
+            </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
@@ -191,11 +195,13 @@
   [infiniteScrollDistance]="1"
   (scrolled)="endScroll()"
 >
-  <px-pokemon-card
-    [pokemon]="pokemon"
+  <px-flip-card
     *ngFor="let pokemon of filteredPokemons$ | async; trackBy: trackByFn"
   >
-  </px-pokemon-card>
+    <px-pokemon-card front-card [pokemon]="pokemon"> </px-pokemon-card>
+    <px-pokemon-back-card back-card [pokemon]="pokemon"></px-pokemon-back-card>
+  </px-flip-card>
+
   <div class="spinner" *ngIf="pokeAPI.request$$ | async let request">
     <mat-spinner></mat-spinner>
   </div>

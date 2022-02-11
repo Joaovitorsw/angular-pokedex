@@ -36,6 +36,12 @@
   &.ng-animating ng-particles {
     opacity: 0;
   }
+
+  ::ng-deep px-pokemon-card {
+    .id {
+      margin-top: 56px !important;
+    }
+  }
 }
 
 mat-toolbar {
@@ -67,7 +73,7 @@ mat-toolbar-row {
   min-height: 700px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  grid-gap: 20px;
+  grid-gap: 32px 20px;
 }
 
 .filters {
@@ -151,7 +157,6 @@ mat-toolbar-row {
 }
 
 px-pokemon-card {
-  min-height: 210px;
   width: 100%;
   animation: fadeIn 1s ease-in-out;
 }
@@ -198,8 +203,12 @@ input::-webkit-inner-spin-button {
 }
 
 @media screen and (max-width: 280px) {
-  :host {
+  :host,
+  .pokemons-content {
     padding: 0;
+  }
+  .pokemons-content {
+    padding-top: 120px;
   }
 }
 @media screen and (max-width: 470px) {
