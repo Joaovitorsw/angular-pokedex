@@ -546,7 +546,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     const { generation } = this.user;
-    const { value } = this.filtersGroup;
+    const { value: filterOptions } = this.filtersGroup;
     this.indexDB
       .update(eIndexDBKeys.USER, {
         uid: eIndexDBKeys.USER,
@@ -555,7 +555,7 @@ export class HomePage implements OnInit, OnDestroy {
         scroll: scrollY,
         morePokemons: this.morePokemons,
         filters: {
-          ...value,
+          ...filterOptions,
         },
       })
       .subscribe();
