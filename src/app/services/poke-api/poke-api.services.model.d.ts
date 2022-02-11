@@ -1,11 +1,3 @@
-/*
- * Type definitions for pokedex-promise-v2 v4.x
- * DO NOT MODIFY, THIS IS AUTO GENERATED
- * Code by: HRKings <https://github.com/HRKings/>
- * And: Christian Garza <https://github.com/C-Garza/>
- * Code inspired by: Mudkip <https://github.com/mudkipme/>
- * Execute `npm run generate` to regenerate
- */
 declare module 'poke-api-models' {
   namespace PokeAPI {
     interface APIResource {
