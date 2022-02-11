@@ -1,47 +1,287 @@
-<div class="pokemon-card" *ngIf="pokemon$ | async let pokemon">
-  <a [routerLink]="['/']">Homepage</a>
-
-  <p class="id">#{{ pokemon.id | padStart: 3:"0" }}</p>
-  <img
-    [pxPokemonSpritePokemonName]="pokemon.name"
-    [pxPokemonSprite]="pokemon.id - 1"
-  />
-  <h1>{{ pokemon.name | pokemonTitleCase }}</h1>
-  <p class="weight">{{ pokemon.weight | weight }}</p>
-  <p class="height">{{ pokemon.height | height }}</p>
-
-  <div class="type-container">
-    <px-type-card
-      [type]="slot.type.name"
-      *ngFor="let slot of pokemon?.types"
-    ></px-type-card>
-  </div>
-
-  <div class="stats-container" *ngFor="let stats of pokemon.stats">
-    <p class="name">{{ stats.stat.name}}</p>
-    <p class="value">{{ stats.base_stat}}</p>
-    <mat-progress-bar
-      class="pxColorProgressBar"
-      [value]="stats.base_stat * stats_conversion"
-      mode="determinate"
-    ></mat-progress-bar>
-  </div>
-  <mat-spinner
-    class="{{ type }}"
-    *ngIf="pokeAPI.request$$ | async  "
-  ></mat-spinner>
-  <div class="evolution" *ngIf="pokemonDetails$ | async let pokemonForms">
-    <px-pokemon-card
-      [pokemon]="pokemon"
-      *ngFor="let pokemon of pokemonForms?.evolutions"
-    ></px-pokemon-card>
-
-    <px-pokemon-card
-      [pokemon]="pokemon"
-      *ngFor="let pokemon of pokemonForms?.varietiesPokemon"
-    ></px-pokemon-card>
-  </div>
+<div class="request" *ngIf="pokeAPI.request$$ | async  ">
+  <mat-spinner class="{{ type }}"></mat-spinner>
 </div>
+<ng-container *ngIf="pokemon$ | async let pokemon">
+  <div class="pokemon-card" *ngIf="pokemonDetails$ | async let pokemonForms">
+    <a [routerLink]="['/']">Homepage</a>
+
+    <p class="id">#{{ pokemon.id | padStart: 3:"0" }}</p>
+    <h1>{{ pokemon.name | pokemonTitleCase }}</h1>
+    <p class="pokemon-genus">
+      {{pokemonForms.species.genera[7].genus | pokemonTitleCase}}
+    </p>
+
+    <div class="pokemon-infos">
+      <div class="pokemon-image">
+        <div>
+          <img
+            [pxPokemonSpritePokemonName]="pokemon.name"
+            [pxPokemonSprite]="pokemon.id - 1"
+          />
+        </div>
+      </div>
+      <div>
+        <p class="weight">Weight : {{ pokemon.weight | weight }}</p>
+        <p class="height">Height : {{ pokemon.height | height }}</p>
+        <p class="habitat">
+          Habitat : {{ pokemonForms.species.habitat?.name | pokemonTitleCase}}
+        </p>
+        <p class="abilities">Abilities : {{ abilities }}</p>
+        <p>Egg Groups : {{ eggType | pokemonTitleCase }}</p>
+        <br />
+        <p class="flavor-text">
+          <span>
+            {{ pokemonForms.species.flavor_text_entries[0].flavor_text |
+            flavorText }}
+          </span>
+        </p>
+        <br />
+
+        <div class="type-container">
+          <p>Type :</p>
+          <px-type-card
+            [type]="slot.type.name"
+            *ngFor="let slot of pokemon?.types"
+          ></px-type-card>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-container">
+      <h1>Stats</h1>
+      <div
+        class="stats {{stats.stat.name}}"
+        *ngFor="let stats of pokemon.stats"
+      >
+        <p class="name">{{ stats.stat.name}}</p>
+        <p class="value">{{ stats.base_stat}}</p>
+        <mat-progress-bar
+          class="pxColorProgressBar"
+          [value]="stats.base_stat * stats_conversion"
+          mode="determinate"
+        ></mat-progress-bar>
+      </div>
+    </div>
+
+    <div class="abilities-content">
+      <h1>Abilities</h1>
+      <div *ngFor="let ability of abilities$ |async">
+        <p>Name : <span>{{ ability.name | pokemonTitleCase}}</span></p>
+        <br />
+        <p *ngIf="ability.flavor_text_entries[0] as flavor_text_entries ">
+          <span>{{ flavor_text_entries.flavor_text| flavorText }}</span>
+        </p>
+        <br />
+        <p *ngIf="ability.effect_entries[0] as effect_entries ">
+          Effect Entries :
+          <span>{{ effect_entries.effect | flavorText }}</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="forms" *ngIf="pokemonForms.evolutions.length >= 2 ">
+      <ng-container *ngIf="pokemonForms.evolutions.length >= 2 ">
+        <h1>Evolutions</h1>
+        <div class="evolution" *ngIf="pokemonForms.evolutions.length > 1">
+          <px-pokemon-card
+            [pokemon]="pokemon"
+            *ngFor="let pokemon of pokemonForms.evolutions"
+          ></px-pokemon-card>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="pokemonForms.varietiesPokemon.length >= 1">
+        <h2>Varieties</h2>
+        <div class="varieties">
+          <px-pokemon-card
+            [pokemon]="pokemon"
+            *ngFor="let pokemon of pokemonForms.varietiesPokemon"
+          ></px-pokemon-card>
+        </div>
+      </ng-container>
+    </div>
+    <div class="damage-relations">
+      <h1>Damage Relations</h1>
+      <div
+        *ngFor="let damageRelations of damagesRelations"
+        class="type-relations"
+      >
+        <div [class]="damageRelations.name + ' image-container' ">
+          <img
+            [src]="damageRelations.name | typeIconPath"
+            [alt]="damageRelations.name"
+          />
+        </div>
+        <div class="container">
+          <h1>Double Damage From :</h1>
+
+          <div
+            class="type-container-relation"
+            *ngIf="damageRelations.damage_relations.double_damage_from; "
+          >
+            <div
+              *ngFor="let double_damage_from of damageRelations.damage_relations.double_damage_from"
+            >
+              <span>2x</span>
+              <div [class]="double_damage_from + ' image-container'">
+                <img
+                  [src]="double_damage_from | typeIconPath"
+                  [alt]="double_damage_from"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container">
+          <h1>Double Damage To :</h1>
+
+          <div
+            class="type-container-relation"
+            *ngIf="damageRelations.damage_relations.double_damage_to; "
+          >
+            <div
+              *ngFor="let double_damage_to of damageRelations.damage_relations.double_damage_to"
+            >
+              <span>2x</span>
+              <div [class]="double_damage_to + ' image-container' ">
+                <img
+                  [src]="double_damage_to | typeIconPath"
+                  [alt]="double_damage_to"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container">
+          <h1>Double Damage Half :</h1>
+
+          <div
+            class="type-container-relation"
+            *ngIf="damageRelations.damage_relations.half_damage_from; "
+          >
+            <div
+              *ngFor="let half_damage_from of damageRelations.damage_relations.half_damage_from"
+            >
+              <span>0.5x</span>
+              <div [class]="half_damage_from + ' image-container'">
+                <img
+                  [src]="half_damage_from | typeIconPath"
+                  [alt]="half_damage_from"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container">
+          <h1>Half Damage To :</h1>
+
+          <div
+            class="type-container-relation"
+            *ngIf="damageRelations.damage_relations.half_damage_to; "
+          >
+            <div
+              *ngFor="let half_damage_to of damageRelations.damage_relations.half_damage_to"
+            >
+              <span>0.5x</span>
+              <div [class]="half_damage_to + ' image-container'">
+                <img
+                  [src]="half_damage_to | typeIconPath"
+                  [alt]="half_damage_to"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container">
+          <h1>No Damage From :</h1>
+
+          <div
+            class="type-container-relation"
+            *ngIf="damageRelations.damage_relations.no_damage_from; "
+          >
+            <div
+              *ngFor="let no_damage_from of damageRelations.damage_relations.no_damage_from"
+            >
+              <span>0x</span>
+              <div [class]="no_damage_from + ' image-container'">
+                <img
+                  [src]="no_damage_from | typeIconPath"
+                  [alt]="no_damage_from"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container">
+          <h1>No Damage To :</h1>
+
+          <div
+            class="type-container-relation"
+            *ngIf="damageRelations.damage_relations.no_damage_to; "
+          >
+            <div
+              *ngFor="let no_damage_to of damageRelations.damage_relations.no_damage_to"
+            >
+              <span>0x</span>
+              <div [class]="no_damage_to + ' image-container'">
+                <img [src]="no_damage_to | typeIconPath" [alt]="no_damage_to" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="moves-content" *ngIf="pokemon.moves.length > 0">
+      <ng-container *ngIf="movesTableData$ | async let data; else loadingMoves">
+        <h1>Moves</h1>
+        <px-table
+          [data]="data"
+          [hasSort]="true"
+          [tablePointer]="true"
+          [hasCellClass]="true"
+          (rowClick)="updateMovesDetail($event)"
+          [displayedColumns]="displayedColumns"
+          [paginatorOptions]="[5, 10, 15]"
+        ></px-table>
+
+        <h2>Move Details</h2>
+        <div class="move-details" *ngIf="move$ | async as move">
+          <div>
+            <px-table
+              [hasCellClass]="true"
+              [data]="moveTableData "
+              [displayedColumns]="displayedColumns"
+            ></px-table>
+          </div>
+          <p>
+            Move Description :
+            <span>{{ move.effect_entries[0].short_effect | flavorText }}</span>
+          </p>
+          <p>
+            Move Effect Entries:
+            <span>{{ move.effect_entries[0].effect | flavorText}}</span>
+          </p>
+          <p>
+            Move Priority :
+            <span>{{ move.priority | pokemonTitleCase }}</span>
+          </p>
+          <p>
+            Move Target :
+            <span>{{ move.target.name | pokemonTitleCase}}</span>
+          </p>
+        </div>
+      </ng-container>
+      <ng-template #loadingMoves>
+        <mat-spinner class="{{ type }}"></mat-spinner>
+      </ng-template>
+    </div>
+  </div>
+</ng-container>
+
 <ng-particles
   *ngIf="hasChanged"
   [id]="id"
