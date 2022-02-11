@@ -1,0 +1,9 @@
+<img [src]="typeSlot | typeIconPath" [alt]="typeSlot" class="type-slot" />
+<div class="damage-relation">
+  <div *ngFor="let type of damagesRelations">
+    <p>{{ damageText }}</p>
+    <div [class]="type">
+      <img [src]="type | typeIconPath" [alt]="type" />
+    </div>
+  </div>
+</div>
