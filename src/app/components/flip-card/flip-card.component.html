@@ -1,0 +1,11 @@
+<div class="card" [@cardFlip]="state">
+  <div class="face back" [class.hidden]="state === 'flipped'">
+    <ng-content select="[front-card]"></ng-content>
+  </div>
+  <div class="face front" [class.hidden]="state === 'default'">
+    <ng-content select="[back-card]"></ng-content>
+  </div>
+</div>
+<div class="flip-button" (click)="cardClicked()">
+  <mat-icon>loop</mat-icon>
+</div>
