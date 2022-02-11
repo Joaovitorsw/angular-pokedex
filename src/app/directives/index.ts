@@ -3,3 +3,5 @@
  */
 
 export * from "./color-progress-bar/index";
+export * from "./pokemon-sprite/index";
+export * from "./show-validation-error/index";
