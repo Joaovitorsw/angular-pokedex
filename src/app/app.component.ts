@@ -25,7 +25,7 @@ export class AppComponent {
     this.indexDB.getByKey(eIndexDBKeys.GLOBAL_OPTIONS, 1).subscribe((data) => {
       if (!data) return;
       this.animationStatus = data.checked;
-      setTimeout(() => this.particlesStatus(data.checked), 1000);
+      setTimeout(() => this.particlesStatus(data.checked), 1500);
     });
   }
 
