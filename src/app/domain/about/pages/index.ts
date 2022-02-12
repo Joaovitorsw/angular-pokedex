@@ -3,4 +3,3 @@
  */
 
 export * from "./about/index";
-export * from "./home/index";
