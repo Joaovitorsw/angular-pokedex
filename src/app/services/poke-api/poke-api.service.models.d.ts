@@ -223,7 +223,7 @@ declare module 'poke-api-models' {
       highest_stat: NamedAPIResource;
       /** The identifier for this resource. */
       id: number;
-      /** The possible values of the highest stat that would result in a Pokémon recieving this characteristic when divided by 5. */
+      /** The possible values of the highest stat that would result in a Pokémon receiving this characteristic when divided by 5. */
       possible_values: number[];
     }
 
@@ -1977,7 +1977,7 @@ declare module 'poke-api-models' {
       varietiesPokemon: Pokemon[];
     }
 
-    interface SimplifiedPokemon {
+    interface ShortPokemon {
       name: string;
       stats: StatElement[];
       types: PokemonType[];

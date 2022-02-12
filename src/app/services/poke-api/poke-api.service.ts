@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { SIMPLIFIED_POKEMONS } from 'app/database/simplified-pokemons';
-import { Pokemon, SimplifiedPokemon } from 'poke-api-models';
+import { Pokemon, ShortPokemon } from 'poke-api-models';
 import { combineLatest, Observable } from 'rxjs';
 
 @Injectable({
@@ -12,7 +11,7 @@ import { combineLatest, Observable } from 'rxjs';
 export class PokeApiService {
   readonly BASE_URL = 'https://pokeapi.co/api/v2/';
   readonly POKEMON_EXTENSION = 'pokemon/';
-  simplifiedPokemons: SimplifiedPokemon[] = SIMPLIFIED_POKEMONS;
+  simplifiedPokemons: ShortPokemon[];
   constructor(private http: HttpClient) {}
 
   getPokemonByNameOrID(nameOrID: string | number): Observable<Pokemon> {

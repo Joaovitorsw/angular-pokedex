@@ -1,6 +1,6 @@
-import { SimplifiedPokemon } from 'poke-api-models';
+import { ShortPokemon } from 'poke-api-models';
 
-export const SIMPLIFIED_POKEMONS = [
+export const SHORT_POKEMONS = [
   {
     name: 'bulbasaur',
     id: 1,
@@ -72064,4 +72064,4 @@ export const SIMPLIFIED_POKEMONS = [
       },
     },
   },
-] as SimplifiedPokemon[];
+] as ShortPokemon[];

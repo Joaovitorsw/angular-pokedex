@@ -3,7 +3,7 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { SIMPLIFIED_POKEMONS } from 'app/database/simplified-pokemons';
+import { SHORT_POKEMONS } from 'app/database/short-pokemons';
 import { Pokemon } from 'poke-api-models';
 import { PokeApiService } from './poke-api.service';
 
@@ -20,7 +20,7 @@ describe('PokeAPIService', () => {
   });
 
   it('should return a pokemon by name or id', (done) => {
-    const pokemon = SIMPLIFIED_POKEMONS[0] as Pokemon;
+    const pokemon = SHORT_POKEMONS[0] as Pokemon;
     service.getPokemonByNameOrID(pokemon.name).subscribe((res) => {
       expect(res).toEqual(pokemon);
       done();
@@ -33,7 +33,7 @@ describe('PokeAPIService', () => {
   });
 
   it('should return a list of pokemons by list', (done) => {
-    const expectedPokemons = SIMPLIFIED_POKEMONS.slice(0, 3) as Pokemon[];
+    const expectedPokemons = SHORT_POKEMONS.slice(0, 3) as Pokemon[];
     const pokemonsList = expectedPokemons.map((pokemon) => pokemon.name);
     service.getPokemonsByList(pokemonsList).subscribe((res) => {
       expect(res).toEqual(expectedPokemons);
