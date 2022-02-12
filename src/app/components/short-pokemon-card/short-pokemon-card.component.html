@@ -1,12 +1,12 @@
 <a [routerLink]="['/about/' + pokemon.name]" data-testid="pokemon-card">
-  <p class="id" data-testid="pokemon-id">#{{ pokemon.id }}</p>
+  <p class="id" data-testid="pokemon-id">#{{ pokemon.id | padStart: 3:"0" }}</p>
   <div class="pokemon-image">
     <img class="lazyload" [src]="pokemon.sprites.front_default" />
   </div>
   <h1 data-testid="pokemon-name">{{ pokemon.name }}</h1>
   <div class="type-container"></div>
   <p class="overall-container" data-testid="pokemon-overall">
-    overall {{ stats_total }}
+    overall {{ stats_total | number: "1.0-0" }}
     <mat-progress-bar
       data-testid="pokemon-overall-bar"
       class="pxColorProgressBar"
@@ -14,6 +14,10 @@
       mode="determinate"
     ></mat-progress-bar>
   </p>
-  <p class="weight" data-testid="pokemon-weight">{{ pokemon.weight }} Kg</p>
-  <p class="height" data-testid="pokemon-height">{{ pokemon.height }} CM</p>
+  <p class="weight" data-testid="pokemon-weight">
+    {{ pokemon.weight | weight }}
+  </p>
+  <p class="height" data-testid="pokemon-height">
+    {{ pokemon.height | height }}
+  </p>
 </a>
