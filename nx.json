@@ -1,0 +1,10 @@
+{
+  "generators": {
+    "@schematics/angular:component": {
+      "prefix": "px",
+      "style": "scss",
+      "displayBlock": true,
+      "changeDetection": "OnPush"
+    }
+  }
+}
