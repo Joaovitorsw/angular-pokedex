@@ -5,25 +5,29 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { POKEMONS } from '@pokedex/pages';
+import { PokemonSprites } from 'poke-api-models';
 
 @Directive({
   selector: 'img [pxPokemonSprite]',
 })
 export class PokemonSpriteDirective implements OnInit {
-  @Input('pxPokemonSprite') id: number;
-  @Input('pxPokemonSpritePokemonName') pokemonName: string;
+  @Input('pxPokemonSprite') sprites: PokemonSprites;
+  @Input('pxPokemonSpriteName') name: string;
+
   readonly BASE_URL =
     'https://raw.githubusercontent.com/Joaovitorsw/poke-gifs/main/normal/';
   readonly EXTENSION = '.gif';
+
   @HostBinding('src') src: string;
   @HostListener('error') onError() {
-    const defaultSprite = POKEMONS[this.id].sprites.front_default;
+    const defaultSprite = this.sprites.front_default;
+    const lastSpriteVersion =
+      this.sprites.versions['generation-viii']?.icons?.front_default;
     const omegaRubySprite =
-      POKEMONS[this.id].sprites.versions['generation-vi'][
-        'omegaruby-alphasapphire'
-      ].front_default;
-    const spritePath = omegaRubySprite ?? defaultSprite;
+      this.sprites.versions['generation-vi']['omegaruby-alphasapphire']
+        .front_default;
+    const updatedSprite = omegaRubySprite ?? lastSpriteVersion;
+    const spritePath = updatedSprite ?? defaultSprite;
     this.src = spritePath as string;
   }
 
@@ -32,6 +36,6 @@ export class PokemonSpriteDirective implements OnInit {
   }
 
   getSpritePath() {
-    return `${this.BASE_URL}${this.pokemonName}${this.EXTENSION}`;
+    return `${this.BASE_URL}${this.name}${this.EXTENSION}`;
   }
 }

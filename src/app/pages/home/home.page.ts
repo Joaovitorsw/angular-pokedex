@@ -6,12 +6,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
@@ -19,7 +14,6 @@ import {
   IndexedDbService,
   PokeAPIService,
 } from '@pokedex/services';
-import { particles, particlesAnimations } from '@pokedex/shared';
 import { CustomErrorStateMatcher } from 'app/directives/show-validation-error';
 import { Container, IOptions, RecursivePartial } from 'ng-particles';
 import { Pokemon } from 'poke-api-models';
@@ -99,8 +93,7 @@ export class HomePage implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    particlesAnimations.homePage();
-    this.particlesOptions = particles;
+    this.firstLoading = true;
     this.createPokemons();
     this.createRangeForm();
     this.createSearchForm();
@@ -157,7 +150,6 @@ export class HomePage implements OnInit, OnDestroy {
       }
 
       if (selectedWeakness) {
-        this.disabledFilter(this.filtersGroup.controls.type);
         const weakness = DAMAGE_RELATIONS.find(
           (relation) => relation.name === selectedWeakness
         )!;
@@ -167,18 +159,12 @@ export class HomePage implements OnInit, OnDestroy {
           .flatMap((pokemons) => pokemons);
         this.pokemons = pokemons;
         this.filteredPokemons = this.pokemons;
-      } else {
-        this.enableFilter(this.filtersGroup.controls.type);
       }
 
       if (selectedType) {
         this.pokemons = this.pokemonsTypeFilter(this.pokemons, selectedType);
         this.filteredPokemons = this.pokemons;
-        this.disabledFilter(this.filtersGroup.controls.weakness);
-      } else {
-        this.enableFilter(this.filtersGroup.controls.weakness);
       }
-
       if (userSearch) {
         this.pokemons = this.pokemons.filter((pokemon) => {
           const userSearchLowerCase = userSearch.toLowerCase();
@@ -237,14 +223,6 @@ export class HomePage implements OnInit, OnDestroy {
       this.filteredPokemons$.next(this.pokemons);
       this.pokemons$.next(this.pokemons);
     });
-  }
-  enableFilter(control: AbstractControl) {
-    if (control.enabled) return;
-    control.enable();
-  }
-  disabledFilter(control: AbstractControl) {
-    if (control.disabled) return;
-    control.disable();
   }
 
   pokemonsHeightFilter(pokemons: Pokemon[], selectedHeight: number): Pokemon[] {
@@ -507,7 +485,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   scrollAfterLoading(scrollX: number, scrollY: number) {
-    setTimeout(() => scrollTo(scrollX, scrollY), 500);
+    setTimeout(() => scrollTo(scrollX, scrollY), 1000);
   }
 
   endScroll() {

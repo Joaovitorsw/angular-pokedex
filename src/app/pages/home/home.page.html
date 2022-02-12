@@ -205,11 +205,4 @@
   <div class="spinner" *ngIf="pokeAPI.request$$ | async let request">
     <mat-spinner></mat-spinner>
   </div>
-
-  <ng-particles
-    [id]="id"
-    [options]="particlesOptions"
-    (particlesLoaded)="particlesLoaded($event)"
-  >
-  </ng-particles>
 </div>

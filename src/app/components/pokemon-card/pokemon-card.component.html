@@ -3,13 +3,10 @@
 
   <div class="poke-image">
     <img
-      [pxPokemonSpritePokemonName]="pokemon.name"
-      [pxPokemonSprite]="pokemon.id - 1"
-      (load)="hasImage = true"
-      [class.has-image]="hasImage"
       class="lazyload"
+      [pxPokemonSprite]="pokemon.sprites"
+      [pxPokemonSpriteName]="pokemon.name"
     />
-    <mat-spinner class="{{ type }}" *ngIf="!hasImage"></mat-spinner>
   </div>
   <h1 data-testid="pokemon-name">{{ pokemon.name | pokemonTitleCase }}</h1>
   <div class="type-container">

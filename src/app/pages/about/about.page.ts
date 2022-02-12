@@ -81,20 +81,17 @@ export class AboutPage implements OnInit, OnDestroy {
 
           this.abilities = names.join(' | ');
 
-          this.pokeAPI
-            .getPokemonEvolutions(pokemon.name)
-            .then((pokemonDetails$) => {
-              this.pokemonDetails$ = pokemonDetails$.pipe(
-                tap((evolutions) => {
-                  console.log(evolutions);
-                  this.eggType = evolutions.species.egg_groups
-                    .map((slot) => slot.name)
-                    .join(' | ');
-                })
-              );
-            });
+          this.pokemonDetails$ = this.pokeAPI
+            .getPokemonEvolutionsByName(pokemon.name)
+            .pipe(
+              tap((evolutions) => {
+                this.eggType = evolutions.species.egg_groups
+                  .map((slot) => slot.name)
+                  .join(' | ');
+              })
+            );
 
-          this.abilities$ = this.pokeAPI.getPokemonAbilities(urls).pipe(
+          this.abilities$ = this.pokeAPI.getPokemonAbilitiesByIDS(urls).pipe(
             map((ability) => {
               const data = ability.map((slot, index) => {
                 if (pokemon.abilities[index].ability.name === slot.name) {
@@ -111,7 +108,7 @@ export class AboutPage implements OnInit, OnDestroy {
             (slot) => slot.move.url.split('/')[6]
           );
 
-          this.movesTableData$ = this.pokeAPI.getMoveList(movesID).pipe(
+          this.movesTableData$ = this.pokeAPI.getMovesByIDS(movesID).pipe(
             map((moves) => {
               const data = moves.map((move) => {
                 return {

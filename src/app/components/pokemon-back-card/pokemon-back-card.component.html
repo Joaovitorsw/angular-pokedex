@@ -5,6 +5,7 @@
       [damageText]="'2x'"
       [damagesRelations]="damageRelation.double_damage_from"
       [typeSlot]="damageRelation.name"
+      data-testid="double_damage_from"
       *ngFor="let damageRelation of damageRelations"
     ></px-damage-relations-card>
   </div>
@@ -13,6 +14,7 @@
     <px-damage-relations-card
       [damageText]="'0.5x'"
       [damagesRelations]="damageRelation.half_damage_from"
+      data-testid="half_damage_from"
       [typeSlot]="damageRelation.name"
       *ngFor="let damageRelation of damageRelations"
     ></px-damage-relations-card>

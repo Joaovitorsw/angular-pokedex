@@ -11,7 +11,7 @@ import {
   PokemonSpecies,
   Variety,
 } from 'poke-api-models';
-import { BehaviorSubject, combineLatest, defer, Observable, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
 @Injectable({
@@ -26,6 +26,8 @@ export class PokeAPIService {
   readonly POKEMON_EXTENSION = 'pokemon/';
   readonly ABILITY_EXTENSION = 'ability/';
   readonly EVOLUTION_CHAIN_EXTENSION = 'evolution-chain/';
+  readonly EXCLUDED_NAMES =
+    /-gmax|-mega|-alola|-galar|-y|-x |-amped |-ice |-hero|-single-strike|-standard|-altered/g;
   request$$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   pokemons$$ = new BehaviorSubject<Pokemon[]>([]);
   pokemons: Pokemon[] = POKEMONS;
@@ -33,6 +35,8 @@ export class PokeAPIService {
   pokemonMoves: Move[];
 
   getPokemonByNameOrID(name: string | number): Observable<Pokemon> {
+    if (name === 'giratina') name = 'giratina-altered';
+
     return this.http
       .get<Pokemon>(`${this.BASE_URL}${this.POKEMON_EXTENSION}${name}`)
       .pipe(untilDestroyed(this));
@@ -41,14 +45,15 @@ export class PokeAPIService {
   getPokemonsByList(
     pokemonsList: Array<string | number>
   ): Observable<Pokemon[]> {
-    const pokemonsPromiseList = pokemonsList.map((pokemon: string | number) => {
+    const pokemons$ = pokemonsList.map((pokemon: string | number) => {
+      if (pokemon === 'giratina') pokemon = 'giratina-altered';
+
       return this.http
         .get<Pokemon>(`${this.BASE_URL}${this.POKEMON_EXTENSION}${pokemon}`)
-        .toPromise();
+        .pipe(untilDestroyed(this));
     });
-    return defer(async () => Promise.all(pokemonsPromiseList)).pipe(
-      untilDestroyed(this)
-    );
+
+    return combineLatest(pokemons$).pipe(untilDestroyed(this));
   }
 
   getPokemonsByCustomRange(...args: Array<number>): Observable<Pokemon[]> {
@@ -74,108 +79,174 @@ export class PokeAPIService {
       .pipe(untilDestroyed(this));
   }
 
-  nextPokemonsRange(previous: number, next: number): Observable<Pokemon[]> {
-    const pokemonsRange = this.pokemons.slice(previous - 1, next);
-    return of(pokemonsRange);
+  getAbilityByID(id: string): Observable<Ability> {
+    return this.http
+      .get<Ability>(`${this.BASE_URL}${this.ABILITY_EXTENSION}${id}`)
+      .pipe(untilDestroyed(this));
   }
 
-  searchPokemons(search: string): Observable<Pokemon[]> {
-    const searchedPokemons = this.pokemons$$.value.filter((pokemon: Pokemon) =>
-      pokemon.name.includes(search)
+  getPokemonAbilitiesByIDS(ids: string[]): Observable<Ability[]> {
+    const ids$ = ids.map((id) => this.getAbilityByID(id));
+    const abilities$ = combineLatest(ids$).pipe(
+      map((abilities) => {
+        const formattedAbilities = abilities.map((ability) => {
+          const flavor_text_entries = ability.flavor_text_entries.filter(
+            (entry) => entry.language.name === 'en'
+          );
+
+          const effect_entries = ability.effect_entries.filter(
+            (entry) => entry.language.name === 'en'
+          );
+          ability.effect_entries = effect_entries;
+          const flavor_text_index = flavor_text_entries.length - 1;
+          ability.flavor_text_entries = [
+            flavor_text_entries[flavor_text_index],
+          ];
+          return ability;
+        });
+
+        return formattedAbilities;
+      }),
+      catchError((error) => of(error))
     );
-    return of(searchedPokemons);
+    return abilities$;
   }
 
-  async getPokemonEvolutions(
+  getMoveByID(id: string): Observable<Move> {
+    return this.http
+      .get<Move>(`${this.BASE_URL}${this.MOVE_EXTENSION}${id}`)
+      .pipe(untilDestroyed(this));
+  }
+
+  getMovesByIDS(ids: string[]): Observable<Move[]> {
+    const ids$ = ids.map((id) => this.getMoveByID(id));
+    const moves$ = combineLatest(ids$).pipe(
+      map((moves) => {
+        const formattedMoves = moves.map((move) => {
+          const flavor_text_entries = move.flavor_text_entries.filter(
+            (entry) => entry.language.name === 'en'
+          );
+
+          const flavor_text_index = flavor_text_entries.length - 1;
+
+          move.flavor_text_entries = [flavor_text_entries[flavor_text_index]];
+          this.pokemonMoves = moves;
+          return move;
+        });
+
+        return formattedMoves;
+      })
+    );
+    return moves$;
+  }
+
+  getPokemonEvolutionsByName(
     pokemonName: string
-  ): Promise<Observable<PokemonEvolutions>> {
+  ): Observable<PokemonEvolutions> {
     this.request$$.next(true);
-    const excludeNames =
-      /-gmax|-mega|-alola|-galar|-y|-x |-amped |-ice |-hero|-single-strike|-standard/g;
-    const pokeName = pokemonName.replace(excludeNames, '');
 
-    let species: PokemonSpecies = await this.getSpeciesByName(
-      pokeName
-    ).toPromise();
+    const pokeName = pokemonName.replace(this.EXCLUDED_NAMES, '');
 
-    const url = species.evolution_chain.url;
-    const chainPath = url.split('/')[6];
-    const id = parseInt(chainPath);
-    const { chain } = await this.getEvolutionChainById(id).toPromise();
-
-    let forms: Array<string | number> = chain.evolves_to.map(
-      (pokemon) => pokemon.species.name
+    const specie$ = this.getSpeciesByName(pokeName);
+    const evolutionChain$ = specie$.pipe(
+      switchMap((specie) => {
+        const url = specie.evolution_chain.url;
+        const chainPath = url.split('/')[6];
+        return this.getEvolutionChainById(+chainPath);
+      })
     );
 
-    if (chain.evolves_to.length === 0) {
-      forms = [chain.species.name];
-    }
-    const hasEvolutions = chain.evolves_to.length === 1;
-
-    if (hasEvolutions) {
-      const firstForm = chain.species.url.split('/')[6];
-      const secondForm = chain.evolves_to[0]?.species.url.split('/')[6];
-      const thirdForm =
-        chain.evolves_to[0]?.evolves_to[0]?.species.url.split('/')[6];
-      forms = [firstForm, secondForm, thirdForm].filter((form) => form);
-    }
-
-    const evolutions$ = this.getPokemonsByList(forms).pipe(
-      untilDestroyed(this),
-      switchMap(async (pokemons) => {
-        const otherSpecies = pokemons.map((pokemon) =>
-          this.getSpeciesByName(
-            pokemon.name.replace(excludeNames, '')
-          ).toPromise()
+    const forms$ = evolutionChain$.pipe(
+      map(({ chain }) => {
+        let forms: Array<string | number> = chain.evolves_to.map(
+          (pokemon) => pokemon.species.name
         );
 
-        const evolutionsSpecies: PokemonSpecies[] = await Promise.all(
-          otherSpecies
+        if (chain.evolves_to.length <= 0) {
+          forms = [chain.species.name];
+          return forms;
+        }
+
+        const hasEvolutions = chain.evolves_to.length === 1;
+
+        if (hasEvolutions) {
+          const firstForm = chain.species.url.split('/')[6];
+          const secondForm = chain.evolves_to[0]?.species.url.split('/')[6];
+          const thirdForm =
+            chain.evolves_to[0]?.evolves_to[0]?.species.url.split('/')[6];
+
+          forms = [firstForm, secondForm, thirdForm].filter((form) => form);
+          return forms;
+        }
+
+        forms = [chain.species.name, ...forms];
+
+        return forms;
+      })
+    );
+
+    const species$ = forms$.pipe(
+      switchMap((forms) => {
+        const pokemons$ = this.getPokemonsByList(forms);
+        return pokemons$.pipe(
+          switchMap((pokemons) => {
+            const otherSpecies = pokemons.map((pokemon) => {
+              const name = pokemon.name.replace(this.EXCLUDED_NAMES, '');
+              return this.getSpeciesByName(name);
+            });
+            return combineLatest(otherSpecies);
+          })
         );
-        const allSpecies = [species, ...evolutionsSpecies];
-        const filteredSpecies = allSpecies.filter((element) =>
-          allSpecies.indexOf(element)
-        );
-        const variables = await this.getPokemonVariates(filteredSpecies);
-        const flavor_text_entries = species.flavor_text_entries.filter(
+      })
+    );
+
+    const varietiesPokemon$ = species$.pipe(
+      switchMap((species) => {
+        const variables$ = this.getPokemonVariates(species);
+        return variables$;
+      })
+    );
+
+    const evolutionForms$ = forms$.pipe(
+      switchMap((forms) => {
+        return this.getPokemonsByList(forms);
+      }),
+      catchError(() => of([]))
+    );
+
+    const pokemonEvolutions$ = combineLatest([
+      species$,
+      evolutionForms$,
+      varietiesPokemon$,
+    ]).pipe(untilDestroyed(this));
+
+    return pokemonEvolutions$.pipe(
+      map(([species, forms, varietiesPokemon]) => {
+        const lastSpecie = species[species.length - 1];
+
+        const flavor_text_entries = lastSpecie.flavor_text_entries.filter(
           (entry) => entry.language.name === 'en'
         )[0];
         flavor_text_entries.flavor_text =
           flavor_text_entries.flavor_text.replace('POKéMON', 'pokémon');
-        species.flavor_text_entries = [flavor_text_entries];
+        lastSpecie.flavor_text_entries = [flavor_text_entries];
 
-        const evolution: PokemonEvolutions = {
-          species: species,
-          evolutions: pokemons,
-          varietiesPokemon: variables,
+        const data = {
+          species: lastSpecie,
+          evolutions: forms,
+          varietiesPokemon: varietiesPokemon,
         };
+
         this.request$$.next(false);
-
-        return evolution;
-      }),
-      catchError(async () => {
-        const evolution = await this.getPokemonVariates([species]).then(
-          (variates) => {
-            const evolution: PokemonEvolutions = {
-              species: species,
-              evolutions: [],
-              varietiesPokemon: variates,
-            };
-
-            return evolution;
-          }
-        );
-        this.request$$.next(false);
-
-        return evolution;
+        return data;
       })
     );
-
-    return evolutions$;
   }
 
-  async getPokemonVariates(allSpecies: PokemonSpecies[]): Promise<Pokemon[]> {
-    const variatesPokemons: Variety[] = allSpecies.flatMap(
+  private getPokemonVariates(
+    evolutionChainSpecies: PokemonSpecies[]
+  ): Observable<Pokemon[]> {
+    const variatesPokemons: Variety[] = evolutionChainSpecies.flatMap(
       (species: PokemonSpecies) => {
         const variantesPredicate = (varieties: Variety) => {
           const hasAlola =
@@ -191,7 +262,8 @@ export class PokeAPIService {
             !varieties.pokemon.name.includes('belle') &&
             !varieties.pokemon.name.includes('libre') &&
             !varieties.pokemon.name.includes('cosplay') &&
-            !varieties.pokemon.name.includes('phd');
+            !varieties.pokemon.name.includes('phd') &&
+            !varieties.pokemon.name.includes('starter');
 
           return miscellanies || hasAlola;
         };
@@ -207,69 +279,11 @@ export class PokeAPIService {
       (variant: Variety) => variant.pokemon.name
     );
 
-    const variables: Pokemon[] = await this.getPokemonsByList(
-      listVariantes
-    ).toPromise();
+    if (listVariantes.length === 0) return of([]);
+
+    const variables: Observable<Pokemon[]> =
+      this.getPokemonsByList(listVariantes);
 
     return variables;
-  }
-
-  getPokemonAbility(id: string): Observable<Ability> {
-    return this.http
-      .get<Ability>(`${this.BASE_URL}${this.ABILITY_EXTENSION}${id}`)
-      .pipe(untilDestroyed(this));
-  }
-
-  getPokemonMove(id: string): Observable<Move> {
-    return this.http
-      .get<Move>(`${this.BASE_URL}${this.MOVE_EXTENSION}${id}`)
-      .pipe(untilDestroyed(this));
-  }
-
-  getPokemonAbilities(ids: string[]): Observable<Ability[]> {
-    const ids$ = ids.map((id) => this.getPokemonAbility(id));
-    const abilities$ = combineLatest(ids$).pipe(
-      map((abilities) => {
-        const formattedAbilities = abilities.map((ability) => {
-          const flavor_text_entries = ability.flavor_text_entries.filter(
-            (entry) => entry.language.name === 'en'
-          );
-
-          const effect_entries = ability.effect_entries.filter(
-            (entry) => entry.language.name === 'en'
-          );
-          ability.effect_entries = effect_entries;
-          ability.flavor_text_entries = [
-            flavor_text_entries[flavor_text_entries.length - 1],
-          ];
-          return ability;
-        });
-
-        return formattedAbilities;
-      }),
-      catchError((error) => of(error))
-    );
-    return abilities$;
-  }
-
-  getMoveList(ids: string[]): Observable<Move[]> {
-    const ids$ = ids.map((id) => this.getPokemonMove(id));
-    const moves$ = combineLatest(ids$).pipe(
-      map((moves) => {
-        const formattedMoves = moves.map((move) => {
-          const flavor_text_entries = move.flavor_text_entries.filter(
-            (entry) => entry.language.name === 'en'
-          );
-          move.flavor_text_entries = [
-            flavor_text_entries[flavor_text_entries.length - 1],
-          ];
-          this.pokemonMoves = moves;
-          return move;
-        });
-
-        return formattedMoves;
-      })
-    );
-    return moves$;
   }
 }

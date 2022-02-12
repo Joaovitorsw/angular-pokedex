@@ -10,7 +10,6 @@ import { FLYING } from './types/flying';
 import { GHOST } from './types/ghost';
 import { GRASS } from './types/grass';
 import { GROUND } from './types/ground';
-import { HOME } from './types/home';
 import { ICE } from './types/ice';
 import { NORMAL } from './types/normal';
 import { POISON } from './types/poison';
@@ -25,10 +24,6 @@ export let particles: IParticlesProps;
 particles = DEFAULT;
 
 export const particlesAnimations: any = {
-  homePage() {
-    particles = HOME;
-  },
-
   bug() {
     particles = BUG;
   },

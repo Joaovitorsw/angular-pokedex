@@ -13,7 +13,6 @@ import { Pokemon } from 'poke-api-models';
   styleUrls: ['./pokemon-card.component.scss'],
 })
 export class PokemonCardComponent {
-  hasImage: boolean = false;
   stats_overall = 0.1;
   color: string;
   @Input() pokemon: Pokemon;

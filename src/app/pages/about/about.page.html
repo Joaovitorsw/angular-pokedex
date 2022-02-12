@@ -15,8 +15,8 @@
       <div class="pokemon-image">
         <div>
           <img
-            [pxPokemonSpritePokemonName]="pokemon.name"
-            [pxPokemonSprite]="pokemon.id - 1"
+            [pxPokemonSprite]="pokemon.sprites"
+            [pxPokemonSpriteName]="pokemon.name"
           />
         </div>
       </div>
@@ -80,17 +80,16 @@
       </div>
     </div>
 
-    <div class="forms" *ngIf="pokemonForms.evolutions.length >= 2 ">
-      <ng-container *ngIf="pokemonForms.evolutions.length >= 2 ">
+    <div class="forms" *ngIf="pokemonForms.evolutions.length >= 1 ">
+      <ng-container *ngIf="pokemonForms.evolutions.length >= 1 ">
         <h1>Evolutions</h1>
-        <div class="evolution" *ngIf="pokemonForms.evolutions.length > 1">
+        <div class="evolution">
           <px-pokemon-card
-            [pokemon]="pokemon"
-            *ngFor="let pokemon of pokemonForms.evolutions"
+            [pokemon]="pokemonForm"
+            *ngFor="let pokemonForm of pokemonForms.evolutions"
           ></px-pokemon-card>
         </div>
       </ng-container>
-
       <ng-container *ngIf="pokemonForms.varietiesPokemon.length >= 1">
         <h2>Varieties</h2>
         <div class="varieties">
@@ -281,7 +280,9 @@
         </div>
       </ng-container>
       <ng-template #loadingMoves>
-        <mat-spinner class="{{ type }}"></mat-spinner>
+        <div class="request">
+          <mat-spinner class="{{ type }}"></mat-spinner>
+        </div>
       </ng-template>
     </div>
   </div>
