@@ -13,9 +13,11 @@ import { ShortPokemon } from 'poke-api-models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShortPokemonCardComponent {
+  stats_overall = 0.1;
+  color: string;
   @Input() pokemon: ShortPokemon;
   @HostBinding('attr.type') get type(): string {
-    return this.pokemon.types.map((type) => type.type.name)[0];
+    return this.pokemon.types[0].type.name;
   }
   get stats_total(): number {
     return this.pokemon.stats.reduce((acc, stat) => acc + stat.base_stat, 0);
