@@ -3,11 +3,9 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "src",
-    "outDir": "./dist/out-tsc",
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
     "paths": {
       "@pokedex/components": ["app/components"],
+      "@pokedex/database": ["app/database"],
       "@pokedex/shared": ["app/shared"],
       "@pokedex/directives": ["app/directives"],
       "@pokedex/mocks": ["app/mocks"],
@@ -16,6 +14,11 @@
       "@pokedex/pipes": ["app/pipes"],
       "@pokedex/services": ["app/services"]
     },
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strictPropertyInitialization": false,
+    "strict": true,
+
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
