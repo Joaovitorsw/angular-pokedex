@@ -2,10 +2,20 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": "src",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "paths": {
+      "@pokedex/components": ["app/components"],
+      "@pokedex/shared": ["app/shared"],
+      "@pokedex/directives": ["app/directives"],
+      "@pokedex/mocks": ["app/mocks"],
+      "@pokedex/models": ["app/models"],
+      "@pokedex/pages": ["app/pages"],
+      "@pokedex/pipes": ["app/pipes"],
+      "@pokedex/services": ["app/services"]
+    },
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
@@ -18,10 +28,7 @@
     "importHelpers": true,
     "target": "es2017",
     "module": "es2020",
-    "lib": [
-      "es2020",
-      "dom"
-    ]
+    "lib": ["es2020", "dom"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
