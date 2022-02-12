@@ -1,0 +1,12 @@
+@import "colors";
+
+:host {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-image: $home-page-background-color;
+  padding: 20px;
+  div {
+    margin-top: 40px;
+  }
+}
