@@ -1977,9 +1977,14 @@ declare module 'poke-api-models' {
       varietiesPokemon: Pokemon[];
     }
 
-    interface CachedPokemon {
+    interface SimplifiedPokemon {
+      name: string;
+      stats: StatElement[];
+      types: PokemonType[];
+      weight: number;
+      height: number;
       id: number;
-      pokemon: Pokemon[];
+      sprites: PokemonSprites;
     }
 
     interface ListEndpointOptions {
