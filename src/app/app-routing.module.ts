@@ -7,6 +7,11 @@ const routes: Routes = [
     loadChildren: async () =>
       (await import('./domain/home/home.domain.module')).HomeDomainModule,
   },
+  {
+    path: 'about/:pokemonName',
+    loadChildren: async () =>
+      (await import('./domain/about/about.domain.module')).AboutDomainModule,
+  },
 ];
 
 @NgModule({
