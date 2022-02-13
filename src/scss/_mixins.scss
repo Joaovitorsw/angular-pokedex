@@ -4,3 +4,9 @@
   justify-content: center;
   align-items: center;
 }
+
+@mixin position($position: absolute, $y: 0, $x: 0) {
+  position: $position;
+  top: $y;
+  left: $x;
+}
