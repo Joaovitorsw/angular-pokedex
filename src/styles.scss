@@ -1,12 +1,43 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "reset";
+@import "colors";
 @import "material-overrides";
+@import "app.component";
+
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   height: 100%;
 }
+
+body {
+  margin: 0;
+  background-image: url("/assets/images/about-loading.gif");
+  background-repeat: no-repeat;
+  background-position: center;
+  overflow-x: hidden;
+  background-color: #181b1d;
+}
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $smooth-black;
+  border-radius: 85px;
+}
+
+::-webkit-scrollbar-track {
+  border: 5px solid $smooth-white;
 }
