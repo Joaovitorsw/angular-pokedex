@@ -1,9 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ShortPokemonCardComponent } from 'app/components/short-pokemon-card/short-pokemon-card.component';
@@ -30,12 +33,16 @@ import { HomePage } from './pages';
   imports: [
     CommonModule,
     HomeDomainRoutingModule,
+    ReactiveFormsModule,
+    FormsModule,
     MatProgressBarModule,
     MatToolbarModule,
     MatIconModule,
     MatFormFieldModule,
     MatButtonModule,
     MatSidenavModule,
+    MatInputModule,
+    MatSelectModule,
   ],
 })
 export class HomeDomainModule {}

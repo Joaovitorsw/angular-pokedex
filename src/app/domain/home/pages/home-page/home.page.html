@@ -12,9 +12,60 @@
 
 <mat-drawer-container autosize>
   <mat-drawer #filterDrawer mode="side">
-    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Laborum, quaerat
-    quasi ipsa quo ad minima quae quis recusandae voluptate voluptatem et
-    explicabo fugiat adipisci unde ducimus numquam ex tempore eaque.
+    <form class="filters" [formGroup]="filtersGroup">
+      <mat-form-field appearance="outline">
+        <mat-label>Search You Pokemon!</mat-label>
+        <input matInput formControlName="search" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Select an range</mat-label>
+        <mat-select formControlName="range">
+          <mat-option value="one">First option</mat-option>
+          <mat-option value="two">Second option</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Pokemons Sort</mat-label>
+        <mat-select formControlName="sort">
+          <mat-option value="one">Ascending</mat-option>
+          <mat-option value="two">Descending</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Select an type</mat-label>
+        <mat-select formControlName="type">
+          <mat-option value="one">First option</mat-option>
+          <mat-option value="two">Second option</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Pokemon Weight</mat-label>
+        <mat-select formControlName="weight">
+          <mat-option value="one">First option</mat-option>
+          <mat-option value="two">Second option</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Pokemon Height</mat-label>
+        <mat-select formControlName="height">
+          <mat-option value="one">First option</mat-option>
+          <mat-option value="two">Second option</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Pokemon Weakness</mat-label>
+        <mat-select formControlName="weakness">
+          <mat-option value="one">First option</mat-option>
+          <mat-option value="two">Second option</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
   </mat-drawer>
 </mat-drawer-container>
 
