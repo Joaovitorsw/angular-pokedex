@@ -1,3 +1,27 @@
-<div>
-  <px-short-pokemon-card [pokemon]="pokemon"></px-short-pokemon-card>
+<mat-toolbar>
+  <mat-toolbar-row>
+    <div class="logo">
+      <img src="/assets/images/3-stars-pokemon.png" alt="" />
+      <span>Pokedex</span>
+    </div>
+    <button mat-icon-button (click)="filterDrawer.toggle()">
+      <mat-icon>search</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-drawer-container autosize>
+  <mat-drawer #filterDrawer mode="side">
+    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Laborum, quaerat
+    quasi ipsa quo ad minima quae quis recusandae voluptate voluptatem et
+    explicabo fugiat adipisci unde ducimus numquam ex tempore eaque.
+  </mat-drawer>
+</mat-drawer-container>
+
+<div class="short-pokemons-content">
+  <px-short-pokemon-card
+    *ngFor="let pokemon of  pokemons$$| async"
+    [routerLink]="['about/' + pokemon.name]"
+    [pokemon]="pokemon"
+  ></px-short-pokemon-card>
 </div>

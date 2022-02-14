@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { SHORT_POKEMONS } from 'app/database/short-pokemons';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   templateUrl: './home.page.html',
@@ -7,7 +8,8 @@ import { SHORT_POKEMONS } from 'app/database/short-pokemons';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePage implements OnInit {
-  pokemon = SHORT_POKEMONS[3];
+  pokemons = SHORT_POKEMONS;
+  pokemons$$ = new BehaviorSubject(SHORT_POKEMONS);
   constructor() {}
 
   ngOnInit(): void {}
