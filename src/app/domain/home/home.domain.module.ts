@@ -17,6 +17,8 @@ import { HomePage } from './pages';
     WeightPipe,
     HeightPipe,
     PadStartPipe,
+    PokemonTextTitleCasePipe,
+    PokemonSpriteDirective,
   ],
   imports: [CommonModule, HomeDomainRoutingModule, MatProgressBarModule],
 })
