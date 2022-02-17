@@ -15,7 +15,12 @@
   }
 }
 
+:host.loading {
+  opacity: 0;
+}
+
 :host {
+  transition: opacity 0.5s;
   &::before {
     content: "";
     width: 100vw;

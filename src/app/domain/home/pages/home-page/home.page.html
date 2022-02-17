@@ -100,28 +100,25 @@
     </div>
   </mat-drawer>
 </mat-drawer-container>
-<ng-container *ngIf="pokemons$$| async as pokemons; else elseTemplate">
-  <div class="short-pokemons-content" [class.not-found]="pokemons.length <= 0">
-    <ng-container *ngIf="pokemons.length > 0; else notFound">
-      <px-short-pokemon-card
-        *ngFor="let pokemon of pokemons "
-        [weakness]=" selectedWeaknessFilter$ | async"
-        [routerLink]="['about/' + pokemon.name]"
-        [pokemon]="pokemon"
-      ></px-short-pokemon-card>
-    </ng-container>
+<div
+  class="short-pokemons-content"
+  [class.not-found]="pokemons.length <= 0"
+  *ngIf="pokemons$$ | async as pokemons;"
+>
+  <ng-container *ngIf="pokemons.length > 0; else notFound">
+    <px-short-pokemon-card
+      *ngFor="let pokemon of pokemons "
+      [weakness]=" selectedWeaknessFilter$ | async"
+      [routerLink]="['about/' + pokemon.name]"
+      [pokemon]="pokemon"
+    ></px-short-pokemon-card>
+  </ng-container>
 
-    <ng-template #notFound>
-      <div class="not-found">
-        <h1>No Pokemons Found</h1>
-        <img src="assets/images/pokemon-404.png" alt="not-found" />
-        <p>Try to change the filters to find your favorite pokemon!</p>
-      </div>
-    </ng-template>
-  </div>
-</ng-container>
-<ng-template #elseTemplate>
-  <div class="short-pokemons-content loading">
-    <mat-spinner></mat-spinner>
-  </div>
-</ng-template>
+  <ng-template #notFound>
+    <div class="not-found">
+      <h1>No Pokemons Found</h1>
+      <img src="assets/images/pokemon-404.png" alt="not-found" />
+      <p>Try to change the filters to find your favorite pokemon!</p>
+    </div>
+  </ng-template>
+</div>

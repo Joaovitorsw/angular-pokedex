@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  HostBinding,
   OnDestroy,
   OnInit,
 } from '@angular/core';
@@ -23,6 +24,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePage implements OnInit, OnDestroy {
+  @HostBinding('class.loading') loading = true;
   hasWeakness: boolean = false;
   hasTypes: boolean = false;
   userScrollY: number;
@@ -120,6 +122,7 @@ export class HomePage implements OnInit, OnDestroy {
 
       if (!this.pokemons$$) {
         this.pokemons$$ = new BehaviorSubject(filteredPokemons);
+        this.loading = false;
         setTimeout(() => scrollTo(0, this.userScrollY), 1000);
       }
 
