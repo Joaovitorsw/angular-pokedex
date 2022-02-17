@@ -14,12 +14,12 @@ import { ShortPokemonCardComponent } from 'app/components/short-pokemon-card/sho
 import { TypeCardComponent } from 'app/components/type-card';
 import { ColorProgressBarDirective } from 'app/directives/color-progress-bar';
 import { DisableControlDirective } from 'app/directives/disable-control/disable-control.directive';
-import { PokemonSpriteWidgetModule } from 'app/directives/pokemon-sprite/pokemon-sprite.module';
-import { HeightWidgetModule } from 'app/pipes/height/height.module';
-import { PadStartWidgetModule } from 'app/pipes/pad-start/pad-start.module';
-import { PokemonTextTitleCaseWidgetModule } from 'app/pipes/pokemon-text-title-case/pokemon-text-title-case.module';
+import { PokemonSpriteWidgetModule } from 'app/directives/pokemon-sprite/pokemon-sprite.widget.module';
+import { HeightWidgetModule } from 'app/pipes/height/height.widget.module';
+import { PadStartWidgetModule } from 'app/pipes/pad-start/pad-start.widget.module';
+import { PokemonTextTitleCaseWidgetModule } from 'app/pipes/pokemon-text-title-case/pokemon-text-title-case.widget.module';
 import { TypeIconPathPipe } from 'app/pipes/type-icon-path';
-import { WeightWidgetModule } from 'app/pipes/weight/weight.module';
+import { WeightWidgetModule } from 'app/pipes/weight/weight.widget.module';
 import { HomeDomainRoutingModule } from './home.domain-routing.module';
 import { HomePage } from './pages';
 
