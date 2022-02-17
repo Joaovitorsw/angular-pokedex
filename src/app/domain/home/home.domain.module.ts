@@ -6,15 +6,19 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ShortPokemonCardComponent } from 'app/components/short-pokemon-card/short-pokemon-card.component';
+import { TypeCardComponent } from 'app/components/type-card';
 import { ColorProgressBarDirective } from 'app/directives/color-progress-bar';
+import { DisableControlDirective } from 'app/directives/disable-control/disable-control.directive';
 import { PokemonSpriteDirective } from 'app/directives/pokemon-sprite';
 import { HeightPipe } from 'app/pipes/height';
 import { PadStartPipe } from 'app/pipes/pad-start';
 import { PokemonTextTitleCasePipe } from 'app/pipes/pokemon-text-title-case';
+import { TypeIconPathPipe } from 'app/pipes/type-icon-path';
 import { WeightPipe } from 'app/pipes/weight';
 import { HomeDomainRoutingModule } from './home.domain-routing.module';
 import { HomePage } from './pages';
@@ -22,6 +26,9 @@ import { HomePage } from './pages';
 @NgModule({
   declarations: [
     HomePage,
+    TypeCardComponent,
+    DisableControlDirective,
+    TypeIconPathPipe,
     ShortPokemonCardComponent,
     ColorProgressBarDirective,
     WeightPipe,
@@ -43,6 +50,7 @@ import { HomePage } from './pages';
     MatSidenavModule,
     MatInputModule,
     MatSelectModule,
+    MatProgressSpinnerModule,
   ],
 })
 export class HomeDomainModule {}

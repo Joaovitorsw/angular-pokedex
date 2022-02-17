@@ -6,9 +6,9 @@
   .mat-drawer {
     position: fixed !important;
     top: 100px !important;
-    width: 105%;
+    width: 100%;
     height: min-content;
-    min-height: 80px;
+    min-height: 100px;
     max-height: 600px;
     background-color: $header-background-color;
     border-radius: 0px 0px $card-border-radius $card-border-radius;
@@ -56,20 +56,58 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     grid-gap: 32px 20px;
+
+    &.not-found {
+      grid-template-columns: unset;
+    }
+    &.loading {
+      grid-template-columns: unset;
+      justify-content: center;
+    }
+
+    .not-found {
+      z-index: 0;
+      flex-direction: column;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 
   mat-form-field {
     font-size: 11.5px;
+    margin-bottom: 10px;
     margin-right: 20px;
   }
 
   .filters {
     margin: 10px 20px;
   }
+
+  .from,
+  .to {
+    max-width: 60px;
+  }
 }
 
-@media screen and (max-width: 668px) {
+@media screen and (max-width: 280px) {
+  .short-pokemons-content {
+    margin-top: 130px !important;
+    padding: 0px !important;
+  }
+}
+
+@media screen and (max-width: 615px) {
   .filters {
     text-align: center;
+  }
+
+  mat-form-field {
+    font-size: 12.5px !important;
+  }
+
+  .from,
+  .to {
+    max-width: unset;
   }
 }

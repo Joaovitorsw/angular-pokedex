@@ -12,67 +12,116 @@
 
 <mat-drawer-container autosize>
   <mat-drawer #filterDrawer mode="side">
-    <form class="filters" [formGroup]="filtersGroup">
+    <div class="filters" [formGroup]="filtersGroup">
       <mat-form-field appearance="outline">
         <mat-label>Search You Pokemon!</mat-label>
         <input matInput formControlName="search" />
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="range-form-field">
         <mat-label>Select an range</mat-label>
-        <mat-select formControlName="range">
-          <mat-option value="one">First option</mat-option>
-          <mat-option value="two">Second option</mat-option>
+        <mat-select #range formControlName="range">
+          <mat-option [value]="key" *ngFor="let key of generationsKeys"
+            >{{ key | pokemonTextTitleCasePipe}}</mat-option
+          >
+          <mat-option value="custom-range">Custom Range</mat-option>
         </mat-select>
       </mat-form-field>
+
+      <ng-container
+        *ngIf="range.value === 'custom-range'"
+        [formGroup]="customRangeGroup"
+      >
+        <mat-form-field appearance="outline" class="from">
+          <mat-label>From</mat-label>
+          <input matInput formControlName="from" placeholder="Ex: 1" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="to">
+          <mat-label>To</mat-label>
+          <input matInput formControlName="to" placeholder="Ex: 151" />
+        </mat-form-field>
+      </ng-container>
 
       <mat-form-field appearance="outline">
         <mat-label>Pokemons Sort</mat-label>
         <mat-select formControlName="sort">
-          <mat-option value="one">Ascending</mat-option>
-          <mat-option value="two">Descending</mat-option>
+          <mat-option value="ascending">Ascending</mat-option>
+          <mat-option value="descending">Descending</mat-option>
         </mat-select>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Select an type</mat-label>
-        <mat-select formControlName="type">
-          <mat-option value="one">First option</mat-option>
-          <mat-option value="two">Second option</mat-option>
+        <mat-select formControlName="type" [pxDisableControl]="hasWeakness">
+          <mat-option>--</mat-option>
+          <mat-option
+            [value]="typeOption"
+            *ngFor="let typeOption of typeFilterOptions$ | async"
+            >{{typeOption | titlecase}}</mat-option
+          >
         </mat-select>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Pokemon Weight</mat-label>
         <mat-select formControlName="weight">
-          <mat-option value="one">First option</mat-option>
-          <mat-option value="two">Second option</mat-option>
+          <mat-option>--</mat-option>
+          <mat-option
+            [value]="weightOption"
+            *ngFor="let weightOption of weightFilterOptions$ | async"
+            >{{weightOption | weight}}</mat-option
+          >
         </mat-select>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Pokemon Height</mat-label>
         <mat-select formControlName="height">
-          <mat-option value="one">First option</mat-option>
-          <mat-option value="two">Second option</mat-option>
+          <mat-option>--</mat-option>
+          <mat-option
+            [value]="heightOption"
+            *ngFor="let heightOption of heightFilterOptions$ | async"
+            >{{heightOption | height}}</mat-option
+          >
         </mat-select>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Pokemon Weakness</mat-label>
-        <mat-select formControlName="weakness">
-          <mat-option value="one">First option</mat-option>
-          <mat-option value="two">Second option</mat-option>
+        <mat-select formControlName="weakness" [pxDisableControl]="hasTypes">
+          <mat-option>--</mat-option>
+          <mat-option
+            [value]="weaknessOption"
+            *ngFor="let weaknessOption of weaknessFilterOptions$ | async"
+            >{{weaknessOption | titlecase}}</mat-option
+          >
         </mat-select>
       </mat-form-field>
-    </form>
+    </div>
   </mat-drawer>
 </mat-drawer-container>
+<ng-container *ngIf="pokemons$$| async as pokemons; else elseTemplate">
+  <div class="short-pokemons-content" [class.not-found]="pokemons.length <= 0">
+    <ng-container *ngIf="pokemons.length > 0; else notFound">
+      <px-short-pokemon-card
+        *ngFor="let pokemon of pokemons "
+        [weakness]=" selectedWeaknessFilter$ | async"
+        [routerLink]="['about/' + pokemon.name]"
+        [pokemon]="pokemon"
+      ></px-short-pokemon-card>
+    </ng-container>
 
-<div class="short-pokemons-content">
-  <px-short-pokemon-card
-    *ngFor="let pokemon of  pokemons$$| async"
-    [routerLink]="['about/' + pokemon.name]"
-    [pokemon]="pokemon"
-  ></px-short-pokemon-card>
-</div>
+    <ng-template #notFound>
+      <div class="not-found">
+        <h1>No Pokemons Found</h1>
+        <img src="assets/images/pokemon-404.png" alt="not-found" />
+        <p>Try to change the filters to find your favorite pokemon!</p>
+      </div>
+    </ng-template>
+  </div>
+</ng-container>
+<ng-template #elseTemplate>
+  <div class="short-pokemons-content loading">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>
