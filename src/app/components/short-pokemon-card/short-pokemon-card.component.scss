@@ -13,6 +13,22 @@
       text-shadow: 0px 0px 2.5px $color;
     }
   }
+
+  .weakness.#{$name} {
+    text-shadow: 0px 0px 2.5px $color;
+
+    &.most-weakness {
+      &::before {
+        opacity: 0.8;
+      }
+    }
+
+    &::before {
+      background-color: $color !important;
+      opacity: 0.4;
+      box-shadow: 0px 0px 15px $color !important;
+    }
+  }
 }
 
 :host {
@@ -110,8 +126,27 @@
     left: 0;
   }
 
+  .weakness {
+    top: 0;
+
+    &::before {
+      padding: 10px 12px !important;
+    }
+
+    .weakness-image-container {
+      position: relative;
+      text-align: center;
+      top: -12px;
+      left: 1.2px;
+      img {
+        width: 21px;
+      }
+    }
+  }
+
   .height,
-  .weight {
+  .weight,
+  .weakness {
     z-index: 0;
     text-align: center;
     min-width: 40px;

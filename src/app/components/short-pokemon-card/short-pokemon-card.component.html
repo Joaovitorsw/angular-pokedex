@@ -9,7 +9,13 @@
 <h1 data-testid="pokemon-name">
   {{ pokemon.name | pokemonTextTitleCasePipe }}
 </h1>
-<div class="type-container"></div>
+<div class="type-container">
+  <px-type-card
+    [attr.data-testid]="'pokemon-type-' + slot.type.name"
+    [type]="slot.type.name"
+    *ngFor="let slot of pokemon?.types"
+  ></px-type-card>
+</div>
 <p class="overall-container" data-testid="pokemon-overall">
   overall {{ stats_total | number: "1.0-0" }}
   <mat-progress-bar
@@ -25,3 +31,15 @@
 <p class="height" data-testid="pokemon-height">
   {{ pokemon.height | height }}
 </p>
+<div
+  *ngIf="!!selectedWeakness"
+  class="weakness"
+  [ngClass]="weakness"
+  [class.most-weakness]="quadDamage"
+  data-testid="pokemon-weakness"
+>
+  <div class="weakness-image-container">
+    <img [src]="weakness | typeIconPath" [alt]="weakness" />
+    <p>{{ damageFrom }}</p>
+  </div>
+</div>
