@@ -3,7 +3,7 @@ import {
   HostBinding,
   HostListener,
   Input,
-  OnInit,
+  OnInit
 } from '@angular/core';
 import { PokemonSprites } from 'poke-api-models';
 
@@ -27,11 +27,14 @@ export class PokemonSpriteDirective implements OnInit {
     this.src = spritePath;
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
+    this.src = this.getSpritePath();
+
+    if (!this.sprites) return;
+
     this.OMEGA_RUBY_VERSION = this.sprites.versions['generation-vi']['omegaruby-alphasapphire'].front_default;
     this.DEFAULT_VERSION = this.sprites.front_default as string;
     this.GENERATION_VIII_VERSION = this.sprites.versions['generation-viii']?.icons?.front_default;
-    this.src = this.getSpritePath();
   }
 
   getSpritePath() {

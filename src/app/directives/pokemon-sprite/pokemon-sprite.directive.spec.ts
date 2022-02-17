@@ -13,7 +13,8 @@ describe('PokemonSpriteDirective', () => {
     const TEST_TEMPLATE = `
     <img
       data-testid="image"
-      [pxPokemonSpritePokemonName]="'${POKEMON_NAME}'"
+      pxPokemonSprite
+      [pxPokemonSpriteName]="'${POKEMON_NAME}'"
     />
 `;
 
@@ -24,7 +25,7 @@ describe('PokemonSpriteDirective', () => {
     const image = screen.getByTestId<HTMLImageElement>('image');
 
     const expected = BASE_URL + POKEMON_NAME + EXTENSION;
-    
+
     expect(image.src).toBe(expected);
   });
 
@@ -33,18 +34,24 @@ describe('PokemonSpriteDirective', () => {
     const TEST_TEMPLATE = `
     <img
       data-testid="image"
-      [pxPokemonSprite]="${SHORT_POKEMONS[POKEMON_ID]}"
+      [pxPokemonSprite]="sprites"
     />
 `;
     await render(TEST_TEMPLATE, {
       declarations: [PokemonSpriteDirective],
+      componentProperties: {
+        sprites: SHORT_POKEMONS[POKEMON_ID].sprites,
+      },
     });
 
     const image = screen.getByTestId<HTMLImageElement>('image');
 
     fireEvent.error(image);
 
-    const expected = SHORT_POKEMONS[POKEMON_ID].sprites.versions['generation-vi']['omegaruby-alphasapphire'].front_default!;
+    const expected =
+      SHORT_POKEMONS[POKEMON_ID].sprites.versions['generation-vi'][
+        'omegaruby-alphasapphire'
+      ].front_default!;
 
     expect(image.src).toBe(expected);
   });
