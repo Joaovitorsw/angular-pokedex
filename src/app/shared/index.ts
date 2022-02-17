@@ -3,3 +3,4 @@
  */
 
 export * from "./animations/index";
+export * from "./ts-particles/index";
