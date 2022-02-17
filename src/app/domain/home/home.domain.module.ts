@@ -14,12 +14,12 @@ import { ShortPokemonCardComponent } from 'app/components/short-pokemon-card/sho
 import { TypeCardComponent } from 'app/components/type-card';
 import { ColorProgressBarDirective } from 'app/directives/color-progress-bar';
 import { DisableControlDirective } from 'app/directives/disable-control/disable-control.directive';
-import { PokemonSpriteDirective } from 'app/directives/pokemon-sprite';
-import { HeightPipe } from 'app/pipes/height';
-import { PadStartPipe } from 'app/pipes/pad-start';
-import { PokemonTextTitleCasePipe } from 'app/pipes/pokemon-text-title-case';
+import { PokemonSpriteWidgetModule } from 'app/directives/pokemon-sprite/pokemon-sprite.module';
+import { HeightWidgetModule } from 'app/pipes/height/height.module';
+import { PadStartWidgetModule } from 'app/pipes/pad-start/pad-start.module';
+import { PokemonTextTitleCaseWidgetModule } from 'app/pipes/pokemon-text-title-case/pokemon-text-title-case.module';
 import { TypeIconPathPipe } from 'app/pipes/type-icon-path';
-import { WeightPipe } from 'app/pipes/weight';
+import { WeightWidgetModule } from 'app/pipes/weight/weight.module';
 import { HomeDomainRoutingModule } from './home.domain-routing.module';
 import { HomePage } from './pages';
 
@@ -31,11 +31,6 @@ import { HomePage } from './pages';
     TypeIconPathPipe,
     ShortPokemonCardComponent,
     ColorProgressBarDirective,
-    WeightPipe,
-    HeightPipe,
-    PadStartPipe,
-    PokemonTextTitleCasePipe,
-    PokemonSpriteDirective,
   ],
   imports: [
     CommonModule,
@@ -51,6 +46,11 @@ import { HomePage } from './pages';
     MatInputModule,
     MatSelectModule,
     MatProgressSpinnerModule,
+    PokemonTextTitleCaseWidgetModule,
+    HeightWidgetModule,
+    WeightWidgetModule,
+    PokemonSpriteWidgetModule,
+    PadStartWidgetModule,
   ],
 })
 export class HomeDomainModule {}
