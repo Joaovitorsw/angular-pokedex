@@ -1,2 +1,30 @@
-<a [routerLink]="''">Home</a>
-<p>about works!</p>
+<ng-container *ngIf="pokemon$ | async as pokemon">
+  <div class="pokemon-card">
+    <a [routerLink]="['/']">Homepage</a>
+    <p class="id">#{{ pokemon.id | padStart: 3:"0" }}</p>
+    <h1>{{ pokemon.name | pokemonTextTitleCasePipe }}</h1>
+    <div class="pokemon-infos">
+      <div class="pokemon-image">
+        <div>
+          <img
+            [pxPokemonSprite]="pokemon.sprites"
+            [pxPokemonSpriteName]="pokemon.name"
+          />
+        </div>
+      </div>
+
+      <div>
+        <p class="weight">Weight : {{ pokemon.weight | weight }}</p>
+        <p class="height">Height : {{ pokemon.height | height }}</p>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-particles
+  *ngIf="hasChanged"
+  [id]="'about-page'"
+  [options]="particlesOptions"
+  class="{{ type }}"
+>
+</ng-particles>

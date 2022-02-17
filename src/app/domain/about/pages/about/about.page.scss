@@ -1,3 +1,101 @@
+@import "colors";
+@import "variables";
+
+h1,
+h2 {
+  font-size: 32px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  font-family: "Bebas Neue", cursive;
+}
+
+p,
+a {
+  font-size: 24px;
+  font-family: "Bebas Neue", cursive;
+}
+
+span {
+  font-size: 23px;
+  font-family: "Balsamiq Sans", cursive;
+}
+
 :host {
-  display: block;
+  min-height: 100vh;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &::before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    background-color: #181b1d;
+    background-image: url("/assets/images/about-loading.gif");
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: -3;
+  }
+
+  &.ng-animating > .pokemon-card,
+  &.ng-animating > ng-particles {
+    opacity: 0;
+  }
+
+  .pokemon-card {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    padding: 20px;
+    font-size: 26px;
+    width: 100%;
+    display: flex;
+    z-index: 2;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 900px;
+
+    .pokemon-image {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      min-height: 120px;
+    }
+  }
+}
+
+@each $name, $color in $type-background {
+  ng-particles.#{$name} {
+    ::ng-deep canvas {
+      background-color: $color;
+    }
+  }
+}
+
+@each $name, $color in $type-colors-light {
+  :host[type="#{$name}"] {
+    .pokemon-card::after {
+      content: "";
+      z-index: -1;
+      opacity: 0.5;
+      border-radius: $card-border-radius;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: $color;
+    }
+  }
+}
+
+ng-particles {
+  position: absolute;
+  z-index: -1;
 }
