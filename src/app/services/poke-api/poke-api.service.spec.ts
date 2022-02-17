@@ -39,5 +39,13 @@ describe('PokeAPIService', () => {
       expect(res).toEqual(expectedPokemons);
       done();
     });
+
+    expectedPokemons.forEach((pokemon) => {
+      const req = httpMock.expectOne(
+        `${service.BASE_URL}${service.POKEMON_EXTENSION}${pokemon.name}`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(pokemon);
+    });
   });
 });
