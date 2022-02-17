@@ -26,6 +26,7 @@
     "@ngneat/until-destroy": "^9.0.0",
     "@schematics/angular": "^13.2.3",
     "barrelsby": "^2.3.2",
+    "ng-particles": "^2.40.2",
     "rxjs": "~7.5.0",
     "ts-mockito": "^2.6.1",
     "tslib": "^2.3.0",
