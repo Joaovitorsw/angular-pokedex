@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { PadStartPipe } from '..';
+import { PadStartPipe } from './pad-start.pipe';
 
 @NgModule({
   declarations: [PadStartPipe],
