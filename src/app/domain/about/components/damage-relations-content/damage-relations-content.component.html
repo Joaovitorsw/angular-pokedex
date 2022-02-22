@@ -1,0 +1,142 @@
+<h1>Damage Relations</h1>
+
+<div *ngFor="let damageRelations of damagesRelations" class="damage-relations">
+  <div [class]="damageRelations.name + ' image-container'">
+    <img
+      [src]="damageRelations.name | typeIconPath"
+      [alt]="damageRelations.name"
+    />
+  </div>
+
+  <div class="damage-relation-container">
+    <h1>Double Damage From :</h1>
+
+    <div
+      class="damage-relation"
+      *ngIf="damageRelations.damage_relations.double_damage_from"
+    >
+      <div
+        *ngFor="
+          let double_damage_from of damageRelations.damage_relations
+            .double_damage_from
+        "
+      >
+        <span>2x</span>
+        <div [class]="double_damage_from + ' image-container'">
+          <img
+            [src]="double_damage_from | typeIconPath"
+            [alt]="double_damage_from"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="damage-relation-container">
+    <h1>Double Damage To :</h1>
+
+    <div
+      class="damage-relation"
+      *ngIf="damageRelations.damage_relations.double_damage_to"
+    >
+      <div
+        *ngFor="
+          let double_damage_to of damageRelations.damage_relations
+            .double_damage_to
+        "
+      >
+        <span>2x</span>
+        <div [class]="double_damage_to + ' image-container'">
+          <img
+            [src]="double_damage_to | typeIconPath"
+            [alt]="double_damage_to"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="damage-relation-container">
+    <h1>Double Damage Half :</h1>
+
+    <div
+      class="damage-relation"
+      *ngIf="damageRelations.damage_relations.half_damage_from"
+    >
+      <div
+        *ngFor="
+          let half_damage_from of damageRelations.damage_relations
+            .half_damage_from
+        "
+      >
+        <span>0.5x</span>
+        <div [class]="half_damage_from + ' image-container'">
+          <img
+            [src]="half_damage_from | typeIconPath"
+            [alt]="half_damage_from"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="damage-relation-container">
+    <h1>Half Damage To :</h1>
+
+    <div
+      class="damage-relation"
+      *ngIf="damageRelations.damage_relations.half_damage_to"
+    >
+      <div
+        *ngFor="
+          let half_damage_to of damageRelations.damage_relations.half_damage_to
+        "
+      >
+        <span>0.5x</span>
+        <div [class]="half_damage_to + ' image-container'">
+          <img [src]="half_damage_to | typeIconPath" [alt]="half_damage_to" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="damage-relation-container">
+    <h1>No Damage From :</h1>
+
+    <div
+      class="damage-relation"
+      *ngIf="damageRelations.damage_relations.no_damage_from"
+    >
+      <div
+        *ngFor="
+          let no_damage_from of damageRelations.damage_relations.no_damage_from
+        "
+      >
+        <span>0x</span>
+        <div [class]="no_damage_from + ' image-container'">
+          <img [src]="no_damage_from | typeIconPath" [alt]="no_damage_from" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="damage-relation-container">
+    <h1>No Damage To :</h1>
+
+    <div
+      class="damage-relation"
+      *ngIf="damageRelations.damage_relations.no_damage_to"
+    >
+      <div
+        *ngFor="
+          let no_damage_to of damageRelations.damage_relations.no_damage_to
+        "
+      >
+        <span>0x</span>
+        <div [class]="no_damage_to + ' image-container'">
+          <img [src]="no_damage_to | typeIconPath" [alt]="no_damage_to" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

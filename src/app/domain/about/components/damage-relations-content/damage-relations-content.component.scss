@@ -1,0 +1,120 @@
+@import "colors";
+@import "variables";
+@import "mixins";
+
+@each $name, $color in $type-colors {
+  :host {
+    .#{$name}.image-container {
+      box-shadow: 0px 0px 2px 1px $color;
+      transition: box-shadow 0.3s;
+      &:hover {
+        box-shadow: 0px 0px 4px 2px $color;
+      }
+    }
+  }
+}
+@each $name, $color in $type-colors-dark {
+  :host {
+    .#{$name}.image-container {
+      background-color: $color;
+    }
+  }
+}
+
+:host {
+  width: 100%;
+  padding: 10px;
+  background-color: $white-background;
+  border-radius: $card-border-radius;
+
+  h1 {
+    min-width: 188px;
+    text-align: center;
+    font-family: $font-family-primary;
+  }
+
+  .host {
+    @include flex-center(column);
+    @include full-size;
+    background-color: $white-background;
+    border-radius: $card-border-radius;
+  }
+
+  .damage-relations {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    h1,
+    h2 {
+      font-size: 24px;
+    }
+
+    & > div:first-child {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    .image-container {
+      position: relative;
+      top: -2.5px;
+      @include flex-center(row);
+
+      padding: 2px;
+      border-radius: 50px;
+      img {
+        width: 22px;
+        padding: 2px;
+      }
+    }
+  }
+
+  .damage-relation {
+    display: flex;
+    position: relative;
+    flex-flow: wrap;
+    top: 2.5px;
+
+    div {
+      display: flex;
+      align-items: center;
+      margin: 0px 5px;
+      padding: 5px;
+
+      span {
+        font-family: $font-family-primary !important;
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .damage-relation-container {
+    background-color: $white-background;
+    border-radius: $card-border-radius;
+    padding: 4px;
+    min-height: 60px;
+    margin: 5px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    h1 {
+      text-align: start;
+      margin-left: 10px;
+    }
+  }
+
+  @media screen and (max-width: $mobile-media-query) {
+    .damage-relation-container {
+      flex-direction: column;
+
+      h1 {
+        text-align: center !important;
+      }
+    }
+    .damage-relation {
+      justify-content: center;
+    }
+  }
+}
