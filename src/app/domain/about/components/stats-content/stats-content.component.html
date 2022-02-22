@@ -1,0 +1,10 @@
+<h1>Stats</h1>
+<div class="stats {{ stats.stat.name }}" *ngFor="let stats of pokemonStatus">
+  <p class="name">{{ stats.stat.name }}</p>
+  <p class="value">{{ stats.base_stat }}</p>
+  <mat-progress-bar
+    class="pxColorProgressBar"
+    [value]="stats.base_stat * stats_conversion"
+    mode="determinate"
+  ></mat-progress-bar>
+</div>
