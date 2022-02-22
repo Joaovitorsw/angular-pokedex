@@ -1,0 +1,108 @@
+@import "colors";
+@import "variables";
+@import "mixins";
+@each $name, $color in $type-colors-dark {
+  .form.#{$name} {
+    &::after {
+      border-radius: $card-border-radius;
+      background-color: $color;
+    }
+  }
+}
+@each $name, $color in $type-colors-dark {
+  mat-spinner.#{$name} {
+    margin-top: 20px;
+    ::ng-deep circle {
+      stroke: $color !important;
+    }
+  }
+}
+
+:host {
+  background-color: $white-background;
+  border-radius: $card-border-radius;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  width: 100%;
+  font-family: $font-family-primary;
+
+  &.has-evolutions {
+    @include flex-center(column);
+    min-height: 220px;
+  }
+
+  h1 {
+    margin-top: 20px;
+    text-align: center;
+  }
+  .pokemon-evolutions-content {
+    width: 100%;
+    padding: 20px;
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
+    gap: 15px;
+  }
+
+  .form {
+    @include flex-center(column);
+    z-index: 2;
+    text-align: center;
+    position: relative;
+    border-radius: $card-border-radius;
+    cursor: pointer;
+    &::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      opacity: 0.2;
+      top: 0;
+      left: 0;
+      @include full-size;
+    }
+
+    & > * {
+      margin: 8px;
+    }
+  }
+
+  .pokemon-image {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+
+    &::after {
+      position: absolute;
+      content: "";
+      border-radius: 50%;
+      z-index: -1;
+      @include full-size;
+      min-width: 250px;
+      background: $white-background;
+    }
+  }
+}
+
+.request {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  width: 100%;
+  @include flex-center(row);
+  border-radius: $card-border-radius;
+}
+
+.type-container {
+  @include flex-center(row);
+}
+
+.form-name {
+  margin-top: 15px !important;
+}
+px-type-card {
+  max-width: 150px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  box-shadow: 0px 0px 5px #00000030 !important;
+}

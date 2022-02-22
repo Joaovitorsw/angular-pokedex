@@ -1,0 +1,68 @@
+<ng-container *ngIf="forms$ | async as forms; else loadingTemplate">
+  <ng-container *ngIf="forms.length > 1 || isGalar">
+    <h1>Evolution Chain</h1>
+    <div class="pokemon-evolutions-content">
+      <div
+        class="form"
+        [ngClass]="form.types[0].type.name"
+        *ngFor="let form of forms"
+        [routerLink]="['../' + form.name]"
+      >
+        <p>No {{ form.id | padStart: 3:"0" }}</p>
+        <div class="pokemon-image">
+          <img
+            class="lazyload"
+            [pxPokemonSprite]="form.sprites"
+            [pxPokemonSpriteName]="form.name"
+          />
+        </div>
+
+        <p class="form-name">{{ form.name | pokemonTextTitleCasePipe }}</p>
+
+        <div class="type-container">
+          <px-type-card
+            [type]="slot.type.name"
+            *ngFor="let slot of form?.types"
+          ></px-type-card>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
+
+<ng-container *ngIf="varieties$ | async as varieties; else loadingTemplate">
+  <ng-container *ngIf="varieties.length > 0 && !isGalar">
+    <h1>Varieties</h1>
+    <div class="pokemon-evolutions-content">
+      <div
+        class="form"
+        [ngClass]="variety.types[0].type.name"
+        *ngFor="let variety of varieties"
+        [routerLink]="['../' + variety.name]"
+      >
+        <p>No {{ variety.id | padStart: 3:"0" }}</p>
+        <div class="pokemon-image">
+          <img
+            class="lazyload"
+            [pxPokemonSprite]="variety.sprites"
+            [pxPokemonSpriteName]="variety.name"
+          />
+        </div>
+
+        <p class="form-name">{{ variety.name | pokemonTextTitleCasePipe }}</p>
+
+        <div class="type-container">
+          <px-type-card
+            [type]="slot.type.name"
+            *ngFor="let slot of variety?.types"
+          ></px-type-card>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
+<ng-template #loadingTemplate>
+  <div class="request">
+    <mat-spinner class="{{ pokemon.types[0].type.name }}"></mat-spinner>
+  </div>
+</ng-template>
