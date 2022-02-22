@@ -1,8 +1,15 @@
-<ng-container *ngIf="pokemon$ | async as pokemon">
-  <div class="pokemon-card">
+<ng-container *ngIf="pokemon$ | async let pokemon ;">
+  <div
+    class="pokemon-card"
+    *ngIf="specie$ | async  as species; else requestLoadingTemplate;"
+  >
     <a [routerLink]="['/']">Homepage</a>
     <p class="id">#{{ pokemon.id | padStart: 3:"0" }}</p>
     <h1>{{ pokemon.name | pokemonTextTitleCasePipe }}</h1>
+    <p class="pokemon-genus">
+      {{species.genera[7].genus | pokemonTextTitleCasePipe}}
+    </p>
+
     <div class="pokemon-infos">
       <div class="pokemon-image">
         <div>
@@ -16,8 +23,60 @@
       <div>
         <p class="weight">Weight : {{ pokemon.weight | weight }}</p>
         <p class="height">Height : {{ pokemon.height | height }}</p>
+        <p class="habitat">
+          Habitat : {{ species.habitat?.name ?? 'urban areas'|
+          pokemonTextTitleCasePipe }}
+        </p>
+        <div class="egg-group">
+          Egg group :
+          <p *ngFor="let eggGroup of species.egg_groups">
+            {{eggGroup.name | pokemonTextTitleCasePipe }}
+          </p>
+        </div>
+
+        <p class="shape">
+          Shape : {{ species.shape?.name ?? 'No-Shape' |
+          pokemonTextTitleCasePipe }}
+        </p>
+        <p class="abilities">Abilities : {{ abilities }}</p>
+        <br />
+        <p class="flavor-text">
+          <span>
+            {{ species.flavor_text_entries[0].flavor_text | flavorText }}
+          </span>
+        </p>
+        <div class="type-container">
+          <p>Type :</p>
+          <px-type-card
+            [type]="slot.type.name"
+            *ngFor="let slot of pokemon?.types"
+          ></px-type-card>
+        </div>
       </div>
     </div>
+    <px-stats-content [pokemonStatus]="pokemon.stats"></px-stats-content>
+
+    <ng-container
+      *ngIf="abilities$ | async as abilities ; else requestLoadingTemplate"
+    >
+      <px-abilities-content [abilities]="abilities"></px-abilities-content>
+    </ng-container>
+
+    <px-forms-content
+      [pokemon]="pokemon"
+      [pokemonSpecie]="specie$"
+      [pokeAPI]="pokeAPI"
+    ></px-forms-content>
+
+    <ng-container *ngIf="moves$ | async as moves; else requestLoadingTemplate">
+      <px-moves-content [moves]="moves"></px-moves-content>
+    </ng-container>
+
+    <ng-container *ngIf="damagesRelations; else requestLoadingTemplate">
+      <px-damage-relations-content
+        [damagesRelations]="damagesRelations"
+      ></px-damage-relations-content>
+    </ng-container>
   </div>
 </ng-container>
 
@@ -28,3 +87,9 @@
   class="{{ type }}"
 >
 </ng-particles>
+
+<ng-template #requestLoadingTemplate>
+  <div class="request">
+    <mat-spinner class="{{ type }}"></mat-spinner>
+  </div>
+</ng-template>
