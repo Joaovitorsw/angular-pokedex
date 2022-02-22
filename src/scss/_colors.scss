@@ -2,6 +2,8 @@ $home-page-background-color: linear-gradient(-225deg, #e3fdf5 0%, #ffe6fa 100%);
 $smooth-black: rgba(0, 0, 0, 0.03);
 $smooth-white: rgba(255, 255, 255, 0.515);
 $smooth-white-color: rgba(128, 128, 128, 0.452);
+$white-background: rgba(255, 255, 255, 0.193);
+$loading-background: #181b1d;
 $white: white;
 $header-background-color: rgba(255, 255, 255, 0.9);
 $smooth-black-linear: linear-gradient(315deg, #ffffff0e, #ffffff4f 74%);
@@ -20,7 +22,7 @@ $type-colors: (
   "psychic": #f85888,
   "flying": #a890f0,
   "fighting": #c03028,
-  "normal": #a8a878,
+  "normal": #999940,
   "ice": #9db7f5,
   "ghost": #705898,
   "dark": #705848,
@@ -42,7 +44,7 @@ $type-colors-light: (
   "flying": #c6b7f5,
   "fighting": #d67873,
   "normal": #c6c6a7,
-  "ice": #748cc2,
+  "ice": #667fba,
   "ghost": #7141bebd,
   "dark": #a29288,
   "steel": #d1d1e0,
@@ -83,7 +85,7 @@ $type-background: (
   "ice": #bff8f8,
   "bug": #c6d16e,
   "electric": #d8ad00,
-  "fighting": #f335008c,
+  "fighting": #f32d00,
   "psychic": #800d2f,
   "steel": #787887,
 );
