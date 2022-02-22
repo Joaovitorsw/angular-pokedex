@@ -1,0 +1,67 @@
+.auto-size {
+  width: 100%;
+  overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(46, 46, 46, 0.453) !important;
+    border-radius: 85px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border: 3px solid rgba(128, 128, 128, 0.411) !important;
+  }
+}
+
+table {
+  width: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+
+  &.pointer {
+    tr {
+      cursor: pointer;
+    }
+  }
+
+  td,
+  th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  tr {
+    &:nth-child(even) {
+      background-color: #fcfcfc;
+    }
+    &:hover {
+      background-color: #ddd;
+    }
+  }
+
+  th {
+    text-align: center;
+    font-size: 17px;
+    color: white;
+  }
+}
+
+::ng-deep {
+  & tr.mat-row {
+    height: 30px !important;
+  }
+  & tr.mat-header-row {
+    height: 5px !important;
+  }
+  & .mat-sort-header-container,
+  .mat-sort-header-content {
+    display: block !important;
+  }
+  & .mat-sort-header-arrow {
+    color: white;
+  }
+}
