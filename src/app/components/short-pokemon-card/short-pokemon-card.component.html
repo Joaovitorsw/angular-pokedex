@@ -39,7 +39,11 @@
   data-testid="pokemon-weakness"
 >
   <div class="weakness-image-container">
-    <img [src]="weakness | typeIconPath" [alt]="weakness" />
+    <img
+      data-testid="weakness-image"
+      [src]="weakness | typeIconPath"
+      [alt]="weakness"
+    />
     <p>{{ damageFrom }}</p>
   </div>
 </div>

@@ -21,8 +21,9 @@ export class ShortPokemonCardComponent implements OnChanges {
   damageFrom: string;
   weakness: string;
   quadDamage: boolean;
-
-  @Input('weakness') selectedWeakness?: string | null;
+  @HostBinding('attr.data-testid') dataTestID = 'short-pokemon-card';
+  @Input('weakness')
+  selectedWeakness?: string | null;
   @Input() pokemon: ShortPokemon;
   @HostBinding('attr.type') get type(): string {
     return this.pokemon.types[0].type.name;
