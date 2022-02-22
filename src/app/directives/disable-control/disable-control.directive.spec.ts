@@ -71,7 +71,8 @@ describe('DisableControlDirective', () => {
       controlName: 'required',
       condition: false,
     });
+    const changeStatus = control.disabled;
 
-    expect(controlStatus).toBeFalsy();
+    expect(changeStatus).toBeFalsy();
   });
 });
