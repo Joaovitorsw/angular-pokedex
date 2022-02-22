@@ -3,3 +3,4 @@
  */
 
 export * from "./type-card.component";
+export * from "./type-card.widget.module";

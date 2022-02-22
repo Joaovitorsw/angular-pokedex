@@ -3,4 +3,5 @@
  */
 
 export * from "./short-pokemon-card/index";
+export * from "./table/index";
 export * from "./type-card/index";

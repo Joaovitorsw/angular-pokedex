@@ -3,3 +3,4 @@
  */
 
 export * from "./color-progress-bar.directive";
+export * from "./color-progress-bar.widget.module";

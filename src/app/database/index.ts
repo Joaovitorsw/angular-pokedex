@@ -3,4 +3,5 @@
  */
 
 export * from "./damage-relations";
+export * from "./pokemon-names.mock";
 export * from "./short-pokemons";
