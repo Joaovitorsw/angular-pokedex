@@ -1,5 +1,5 @@
 import { AbstractControl, FormGroup } from '@angular/forms';
-import { POKEMONS_NAMES } from 'app/database/pokemon-names.mock';
+import { POKEMONS_NAMES } from 'app/database/pokemon-names';
 import { eValidationErrorKeys } from 'app/directives/show-validation-error';
 
 interface RangeOptions {
