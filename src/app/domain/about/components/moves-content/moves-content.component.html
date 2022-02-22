@@ -1,0 +1,34 @@
+<h1>Moves</h1>
+<px-table
+  [data]="movesDataTable"
+  [hasSort]="true"
+  [tablePointer]="true"
+  [hasCellClass]="true"
+  (rowClick)="updateMovesDetail($event)"
+  [displayedColumns]="displayedColumns"
+  [paginatorOptions]="[5, 10, 15]"
+></px-table>
+<div *ngIf="move$ | async as move" class="move">
+  <h1>Move Details</h1>
+  <px-table
+    [hasCellClass]="true"
+    [data]="moveTableData"
+    [displayedColumns]="displayedColumns"
+  ></px-table>
+  <p>
+    Move Priority :
+    <span>{{ move.priority | pokemonTextTitleCasePipe }}</span>
+  </p>
+  <p>
+    Move Target :
+    <span>{{ move.target.name | pokemonTextTitleCasePipe }}</span>
+  </p>
+  <p>
+    Move Description :
+    <span>{{ move.effect_entries[0].short_effect | flavorText }}</span>
+  </p>
+  <p>
+    Move Effect Entries:
+    <span>{{ move.effect_entries[0].effect | flavorText }}</span>
+  </p>
+</div>

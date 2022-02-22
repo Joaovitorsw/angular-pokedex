@@ -1,0 +1,36 @@
+@import "colors";
+@import "variables";
+@import "mixins";
+
+:host {
+  @include full-size;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: $white-background;
+  border-radius: $card-border-radius;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  font-family: $font-family-primary;
+  text-align: start;
+  h1 {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .move {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    @include full-size;
+
+    p {
+      margin-top: 10px !important;
+      margin-bottom: 10px;
+    }
+
+    span {
+      font-size: 22px;
+      font-family: $font-family-secondary;
+    }
+  }
+}
