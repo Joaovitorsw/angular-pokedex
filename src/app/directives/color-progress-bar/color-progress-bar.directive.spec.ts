@@ -1,6 +1,5 @@
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { render, screen } from '@testing-library/angular';
-import { ColorProgressBarDirective } from '.';
+import { ColorProgressBarWidgetModule } from './color-progress-bar.widget.module';
 
 const TEST_TEMPLATE = `
     <mat-progress-bar
@@ -14,8 +13,7 @@ const TEST_TEMPLATE = `
 describe('ColorProgressBarDirective', () => {
   it('should set the color of the progress bar', async () => {
     await render(TEST_TEMPLATE, {
-      declarations: [ColorProgressBarDirective],
-      imports: [MatProgressBarModule],
+      imports: [ColorProgressBarWidgetModule],
     });
 
     const $matProgressBar = screen.getByTestId('progress-bar');
