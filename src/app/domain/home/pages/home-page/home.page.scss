@@ -5,13 +5,19 @@
 ::ng-deep {
   .mat-drawer {
     position: fixed !important;
-    top: 100px !important;
+    top: 90px !important;
     width: 100%;
     height: min-content;
+
     min-height: 100px;
-    max-height: 600px;
+    max-height: 300px;
     background-color: $header-background-color;
     border-radius: 0px 0px $card-border-radius $card-border-radius;
+  }
+
+  .mat-drawer-inner-container {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
   }
 }
 
@@ -55,7 +61,8 @@
   }
 
   .short-pokemons-content {
-    margin-top: 110px;
+    position: relative;
+    top: 110px;
     padding: 20px;
     width: 100%;
     display: grid;
@@ -64,6 +71,14 @@
 
     &.not-found {
       grid-template-columns: unset;
+      font-family: $font-family-primary !important;
+      text-align: center;
+      font-size: 25px;
+
+      img {
+        width: 100%;
+        max-width: 450px;
+      }
     }
     &.loading {
       grid-template-columns: unset;
@@ -86,23 +101,40 @@
   }
 
   .filters {
+    @include full-size;
     margin: 10px 20px;
   }
 
   .from,
   .to {
+    text-align: center;
     max-width: 60px;
+
+    mat-error {
+      position: absolute;
+      word-break: break-all;
+      top: 43px;
+      left: -8px;
+      min-width: 140px;
+    }
   }
 }
 
-@media screen and (max-width: 280px) {
+@media screen and (max-width: $mobile-small-media-query) {
   .short-pokemons-content {
     margin-top: 130px !important;
     padding: 0px !important;
   }
 }
 
-@media screen and (max-width: 615px) {
+@media screen and (max-width: $mobile-media-query) {
+  ::ng-deep {
+    .mat-drawer {
+      min-height: 600px;
+      max-height: 600px;
+    }
+  }
+
   .filters {
     text-align: center;
   }
@@ -113,6 +145,11 @@
 
   .from,
   .to {
-    max-width: unset;
+    max-width: unset !important;
+
+    mat-error {
+      top: 45px !important;
+      left: 23px !important;
+    }
   }
 }

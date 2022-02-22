@@ -8,6 +8,7 @@ import {
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DAMAGE_RELATIONS } from 'app/database/damage-relations';
 import { SHORT_POKEMONS } from 'app/database/short-pokemons';
+import { CustomValidators } from 'app/validators';
 import { ShortPokemon } from 'poke-api-models';
 import {
   BehaviorSubject,
@@ -110,8 +111,9 @@ export class HomePage implements OnInit, OnDestroy {
       ];
       const rangeInvalid =
         this.customRangeGroup.invalid && selectedGeneration === 'custom-range';
+      const searchInvalid = this.filtersGroup.invalid && userSearch;
 
-      if (rangeInvalid) return;
+      if (rangeInvalid || searchInvalid) return;
 
       let sortPredicated = this.sortFunction(selectedSort);
 
@@ -354,56 +356,60 @@ export class HomePage implements OnInit, OnDestroy {
   createFiltersGroup() {
     const userCacheStringified = localStorage.getItem('userCache');
 
-    this.customRangeGroup = new FormGroup({
-      from: new FormControl(null, [
-        Validators.required,
-        Validators.min(1),
-        Validators.max(898),
-      ]),
-      to: new FormControl(null, [
-        Validators.required,
-        Validators.min(1),
-        Validators.max(898),
-      ]),
-    });
+    let userCache = {
+      search: null,
+      range: 'generation-1',
+      sort: 'ascending',
+      weight: null,
+      height: null,
+      type: null,
+      weakness: null,
+      scrollY: 0,
+      customRange: {
+        from: 1,
+        to: 151,
+      },
+    };
+
+    if (userCacheStringified) userCache = JSON.parse(userCacheStringified);
+
+    const { from, to } = userCache.customRange;
+
+    this.customRangeGroup = new FormGroup(
+      {
+        from: new FormControl(from, [
+          Validators.required,
+          Validators.min(1),
+          Validators.max(898),
+        ]),
+        to: new FormControl(to, [
+          Validators.required,
+          Validators.min(1),
+          Validators.max(898),
+        ]),
+      },
+      [
+        CustomValidators.range({
+          previousControl: 'from',
+          nexControl: 'to',
+        }),
+      ]
+    );
 
     this.filtersGroup = new FormGroup({
-      search: new FormControl(null),
-      range: new FormControl('generation-1'),
-      sort: new FormControl('ascending'),
-      type: new FormControl(null),
-      weight: new FormControl(null),
-      height: new FormControl(null),
-      weakness: new FormControl(null),
+      search: new FormControl(
+        userCache.search,
+        CustomValidators.pokemonNameForGeneration(from, to)
+      ),
+      range: new FormControl(userCache.range),
+      sort: new FormControl(userCache.sort),
+      type: new FormControl(userCache.type),
+      weight: new FormControl(userCache.weight),
+      height: new FormControl(userCache.height),
+      weakness: new FormControl(userCache.weakness),
     });
 
-    if (userCacheStringified) {
-      const userCache = JSON.parse(userCacheStringified);
-      this.customRangeGroup = new FormGroup({
-        from: new FormControl(userCache.customRange.from, [
-          Validators.required,
-          Validators.min(1),
-          Validators.max(898),
-        ]),
-        to: new FormControl(userCache.customRange.to, [
-          Validators.required,
-          Validators.min(1),
-          Validators.max(898),
-        ]),
-      });
-
-      this.filtersGroup = new FormGroup({
-        search: new FormControl(userCache.search),
-        range: new FormControl(userCache.range),
-        sort: new FormControl(userCache.sort),
-        type: new FormControl(userCache.type),
-        weight: new FormControl(userCache.weight),
-        height: new FormControl(userCache.height),
-        weakness: new FormControl(userCache.weakness),
-      });
-
-      this.userScrollY = userCache.scrollY;
-    }
+    this.userScrollY = userCache.scrollY;
 
     const subscribeAndStreamValueChanges = (
       controlName: string,
@@ -428,6 +434,7 @@ export class HomePage implements OnInit, OnDestroy {
     subscribeAndStreamValueChanges('height', this.selectedHeightFilter$);
     subscribeAndStreamValueChanges('weakness', this.selectedWeaknessFilter$);
   }
+
   ngOnDestroy(): void {
     const filtersGroup = this.filtersGroup.value;
     const { from, to } =

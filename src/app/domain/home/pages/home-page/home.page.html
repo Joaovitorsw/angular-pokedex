@@ -4,7 +4,11 @@
       <img src="/assets/images/3-stars-pokemon.png" alt="" />
       <span>Pokedex</span>
     </div>
-    <button mat-icon-button (click)="filterDrawer.toggle()">
+    <button
+      data-testid="filter-drawer"
+      mat-icon-button
+      (click)="filterDrawer.toggle()"
+    >
       <mat-icon>search</mat-icon>
     </button>
   </mat-toolbar-row>
@@ -12,13 +16,26 @@
 
 <mat-drawer-container autosize>
   <mat-drawer #filterDrawer mode="side">
-    <div class="filters" [formGroup]="filtersGroup">
-      <mat-form-field appearance="outline">
+    <div
+      class="filters"
+      [formGroup]="filtersGroup"
+      data-testid="filter-content"
+    >
+      <mat-form-field appearance="outline" data-testid="search">
         <mat-label>Search You Pokemon!</mat-label>
         <input matInput formControlName="search" />
+        <mat-error
+          pxShowValidationError
+          [pxShowValidationErrorControlName]="'search'"
+        >
+        </mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="range-form-field">
+      <mat-form-field
+        appearance="outline"
+        class="range-form-field"
+        data-testid="range"
+      >
         <mat-label>Select an range</mat-label>
         <mat-select #range formControlName="range">
           <mat-option [value]="key" *ngFor="let key of generationsKeys"
@@ -32,17 +49,33 @@
         *ngIf="range.value === 'custom-range'"
         [formGroup]="customRangeGroup"
       >
-        <mat-form-field appearance="outline" class="from">
+        <mat-form-field appearance="outline" class="from" data-testid="from">
           <mat-label>From</mat-label>
           <input matInput formControlName="from" placeholder="Ex: 1" />
+          <ng-container
+            *ngIf="customRangeGroup.controls['from'].invalid; else toMatError"
+          >
+            <mat-error
+              data-testid="custom-range-error"
+              pxShowValidationError
+              [pxShowValidationErrorControlName]="'from'"
+            ></mat-error>
+          </ng-container>
         </mat-form-field>
-        <mat-form-field appearance="outline" class="to">
+        <mat-form-field appearance="outline" class="to" data-testid="to">
           <mat-label>To</mat-label>
           <input matInput formControlName="to" placeholder="Ex: 151" />
+          <ng-template #toMatError>
+            <mat-error
+              data-testid="custom-range-error"
+              pxShowValidationError
+              [pxShowValidationErrorControlName]="'to'"
+            ></mat-error>
+          </ng-template>
         </mat-form-field>
       </ng-container>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" data-testid="sort">
         <mat-label>Pokemons Sort</mat-label>
         <mat-select formControlName="sort">
           <mat-option value="ascending">Ascending</mat-option>
@@ -50,7 +83,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" data-testid="type">
         <mat-label>Select an type</mat-label>
         <mat-select formControlName="type" [pxDisableControl]="hasWeakness">
           <mat-option>--</mat-option>
@@ -62,7 +95,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" data-testid="weight">
         <mat-label>Pokemon Weight</mat-label>
         <mat-select formControlName="weight">
           <mat-option>--</mat-option>
@@ -74,7 +107,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" data-testid="height">
         <mat-label>Pokemon Height</mat-label>
         <mat-select formControlName="height">
           <mat-option>--</mat-option>
@@ -86,7 +119,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" data-testid="weakness">
         <mat-label>Pokemon Weakness</mat-label>
         <mat-select formControlName="weakness" [pxDisableControl]="hasTypes">
           <mat-option>--</mat-option>
@@ -115,7 +148,7 @@
   </ng-container>
 
   <ng-template #notFound>
-    <div class="not-found">
+    <div class="not-found" data-testid="not-found">
       <h1>No Pokemons Found</h1>
       <img src="assets/images/pokemon-404.png" alt="not-found" />
       <p>Try to change the filters to find your favorite pokemon!</p>
