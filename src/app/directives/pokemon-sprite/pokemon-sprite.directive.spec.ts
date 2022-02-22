@@ -1,10 +1,12 @@
 import { SHORT_POKEMONS } from '@pokedex/database';
 import { fireEvent, render, screen } from '@testing-library/angular';
-import { PokemonSpriteDirective } from './pokemon-sprite.directive';
+import { PokemonSpriteWidgetModule } from './pokemon-sprite.widget.module';
 
 const BASE_URL =
   'https://raw.githubusercontent.com/Joaovitorsw/poke-gifs/main/normal/';
 const EXTENSION = '.gif';
+
+const DEFAULT_IMPORTS = [PokemonSpriteWidgetModule];
 
 describe('PokemonSpriteDirective', () => {
   it('should return pokemon image url', async () => {
@@ -19,7 +21,7 @@ describe('PokemonSpriteDirective', () => {
 `;
 
     await render(TEST_TEMPLATE, {
-      declarations: [PokemonSpriteDirective],
+      imports: DEFAULT_IMPORTS,
     });
 
     const image = screen.getByTestId<HTMLImageElement>('image');
@@ -38,7 +40,7 @@ describe('PokemonSpriteDirective', () => {
     />
 `;
     await render(TEST_TEMPLATE, {
-      declarations: [PokemonSpriteDirective],
+      imports: DEFAULT_IMPORTS,
       componentProperties: {
         sprites: SHORT_POKEMONS[POKEMON_ID].sprites,
       },
