@@ -5,6 +5,7 @@
     "baseUrl": "src",
     "paths": {
       "@pokedex/components": ["app/components"],
+      "@pokedex/validators": ["app/validators"],
       "@pokedex/database": ["app/database"],
       "@pokedex/shared": ["app/shared"],
       "@pokedex/directives": ["app/directives"],

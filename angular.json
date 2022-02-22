@@ -51,7 +51,11 @@
               "src/styles.scss"
             ],
             "stylePreprocessorOptions": {
-              "includePaths": ["node_modules", "src/scss/", "src/app/"]
+              "includePaths": [
+                "node_modules",
+                "src/scss/",
+                "src/app/"
+              ]
             },
             "scripts": [],
             "serviceWorker": true,
@@ -131,9 +135,44 @@
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
             ],
             "stylePreprocessorOptions": {
-              "includePaths": ["node_modules", "src/scss/", "src/app/"]
+              "includePaths": [
+                "node_modules",
+                "src/scss/",
+                "src/app/"
+              ]
             },
             "scripts": []
+          }
+        },
+        "cypress-run": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "devServerTarget": "angular-pokedex:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "angular-pokedex:serve:production"
+            }
+          }
+        },
+        "cypress-open": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "watch": true,
+            "headless": false
+          }
+        },
+        "e2e": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "devServerTarget": "angular-pokedex:serve",
+            "watch": true,
+            "headless": false
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "angular-pokedex:serve:production"
+            }
           }
         }
       }
