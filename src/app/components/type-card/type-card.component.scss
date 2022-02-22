@@ -1,4 +1,5 @@
 @import "colors";
+@import "mixins";
 
 @each $name, $color in $type-colors-dark {
   :host {
@@ -46,9 +47,7 @@
   }
 
   p {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include flex-center(row);
     text-transform: uppercase;
     text-align: center;
     width: 100%;
