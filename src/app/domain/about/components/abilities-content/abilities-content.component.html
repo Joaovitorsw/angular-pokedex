@@ -1,0 +1,15 @@
+<h1>Abilities</h1>
+<div *ngFor="let ability of abilities">
+  <p>
+    Name : <span>{{ ability.name | pokemonTextTitleCasePipe }}</span>
+  </p>
+  <br />
+  <p *ngIf="ability.flavor_text_entries[0] as flavor_text_entries">
+    <span>{{ flavor_text_entries.flavor_text | flavorText }}</span>
+  </p>
+  <br />
+  <p *ngIf="ability.effect_entries[0] as effect_entries">
+    Effect Entries :
+    <span>{{ effect_entries.effect | flavorText }}</span>
+  </p>
+</div>

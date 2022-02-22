@@ -1,0 +1,39 @@
+@import "colors";
+@import "variables";
+
+:host {
+  margin-top: 20px;
+  margin-bottom: 15px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: $white-background;
+  border-radius: $card-border-radius;
+  margin-top: 15px;
+  padding: 10px;
+
+  .abilities {
+    text-transform: uppercase;
+  }
+
+  h1 {
+    text-align: center;
+    font-family: $font-family-primary;
+  }
+
+  p {
+    font-family: $font-family-primary;
+    font-size: 24px;
+    margin: 0px 5px;
+  }
+  span {
+    font-family: $font-family-secondary;
+
+    font-size: 22px;
+    font-weight: 400;
+  }
+
+  div {
+    margin: 10px 0px;
+  }
+}
