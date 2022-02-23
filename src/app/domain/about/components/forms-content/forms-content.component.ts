@@ -114,10 +114,10 @@ export class FormsContentComponent implements OnInit {
     const varieties$ = species$.pipe(
       map((species) => {
         return species
-          .map((species: PokemonSpecies) => {
+          .map((specie: PokemonSpecies) => {
             const variantesPredicate = (varieties: Variety) => {
               const hasAlola =
-                varieties.pokemon.name.includes(`${species.name}-alola`) &&
+                varieties.pokemon.name.includes(`${specie.name}-alola`) &&
                 !varieties.pokemon.name.includes('cap');
 
               const miscellanies =
@@ -132,11 +132,18 @@ export class FormsContentComponent implements OnInit {
                 !varieties.pokemon.name.includes('phd') &&
                 !varieties.pokemon.name.includes('starter');
 
+              const politoed = varieties.pokemon.name === 'poliwrath';
+
+              if (politoed) {
+                varieties.pokemon.name = 'politoed';
+                return politoed;
+              }
+
               return miscellanies || hasAlola;
             };
 
             const hasVariantes: Variety[] =
-              species.varieties.filter(variantesPredicate);
+              specie.varieties.filter(variantesPredicate);
 
             return hasVariantes;
           })
