@@ -1,7 +1,6 @@
 {
   "name": "angular-pokedex",
   "short_name": "angular-pokedex",
-  "theme_color": "#ffffff",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
