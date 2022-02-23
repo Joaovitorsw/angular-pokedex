@@ -21,7 +21,7 @@
     <img alt="Developed by João Vitor" src="https://img.shields.io/badge/Developer-João_Vitor-%3498db?color=3498db&style=for-the-badge&label=Desenvolvedor">
   </a>  
   <img alt="Project License" src="https://img.shields.io/apm/l/vim-mode?style=for-the-badge&label=licen%C3%A7a"/>   
-  <img alt="Project Status" src="https://img.shields.io/badge/Em Progresso-%3498db?color=yellow&style=for-the-badge&label=Status">
+  <img alt="Project Status" src="https://img.shields.io/badge/Finalizado-%3498db?color=green&style=for-the-badge&label=Status">
 
 </p>
 
@@ -108,7 +108,7 @@ $ yarn start
 
 ---
 
-## :hammer_and_wrench: _Tecnologias_
+## :hammer*and_wrench: \_Tecnologias*
 
 <div align="center">
 
@@ -130,7 +130,6 @@ $ yarn start
 ---
 
 ## :brain: _Conceitos Aplicados_
-
 
 <div align="center">
 
@@ -163,8 +162,6 @@ $ yarn start
 |               Acesso aos detalhes de cada um dos Pokemons               |
 | Filtro de pokemons por pesquisa,favoritos,gerações,peso,altura,fraqueza |
 
-
-
 </div>
 
 ---
@@ -189,7 +186,7 @@ Desenvolvido com ❤️ por João Vitor Pereira dos Santos 👋🏽 Meus Contato
 
 ---
 
-## :balance_scale: _Licença_
+## :balance*scale: \_Licença*
 
 <div align="center">
 
