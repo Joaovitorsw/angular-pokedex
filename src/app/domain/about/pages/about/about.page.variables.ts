@@ -1,1 +1,1 @@
-export const EXCLUDED_NAMES = /-(\w){3}([\w-]*)/gm;
+export const SPECIE_PATTERN = /-(?!mime)(?!rime)(\w){3}([\w-]*)/gm;

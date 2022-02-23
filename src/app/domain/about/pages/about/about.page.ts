@@ -6,7 +6,7 @@ import { IOptions, RecursivePartial } from 'ng-particles';
 import { Ability, Move, Pokemon, PokemonSpecies } from 'poke-api-models';
 import { map, Observable, tap } from 'rxjs';
 import { particles, particlesAnimations } from '../..';
-import { EXCLUDED_NAMES } from './about.page.variables';
+import { SPECIE_PATTERN } from './about.page.variables';
 
 @Component({
   selector: 'px-about',
@@ -58,17 +58,7 @@ export class AboutPage implements OnInit, OnDestroy {
         );
 
         this.abilities = abilitiesNames.join(' | ');
-
-        let specieName = pokemon.name.replace(EXCLUDED_NAMES, '');
-
-        const exceptionName =
-          pokemon.name === 'mr-mime' ||
-          pokemon.name === 'mime-jr' ||
-          pokemon.name === 'mr-rime' ||
-          pokemon.name === 'mr-mime-galar';
-
-        if (exceptionName) specieName = pokemonName.replace('-galar', '');
-
+        const specieName = pokemon.name.replace(SPECIE_PATTERN, '');
         this.specie$ = this.getSpecieFilteredText(specieName);
         this.abilities$ = this.getPokemonAbilities(abilitiesUrls, pokemon);
 

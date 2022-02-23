@@ -19,18 +19,21 @@ const getFilterContent = () => cy.get(dataTestIDfilterContent);
 const getFilterDrawer = () => cy.get(dataTestIDfilterDrawer);
 const getSearchInput = () => cy.get(dataTestIDsearch);
 const getShortPokemonCard = () => cy.get(dataTestIDShortPokemonCard);
-const getType = () => cy.get(dataTestIDtype);
-const getSort = () => cy.get(sortTestID);
-const getRange = () => cy.get(rangeTestID);
+const getType = () => cy.get<HTMLSelectElement>(dataTestIDtype);
+const getSort = () => cy.get<HTMLSelectElement>(sortTestID);
+const getRange = () => cy.get<HTMLSelectElement>(rangeTestID);
 const getNotFound = () => cy.get(notFoundID);
 const getFrom = () => cy.get(fromTestID);
 const getTo = () => cy.get(toTestID);
 const getCustomRangeError = () => cy.get(customRangeErrorTestID);
-const getWeakness = () => cy.get(weaknessTestID);
-const getHeight = () => cy.get(heightTestID);
-const getWeight = () => cy.get(weightTestID);
+const getWeakness = () => cy.get<HTMLSelectElement>(weaknessTestID);
+const getHeight = () => cy.get<HTMLSelectElement>(heightTestID);
+const getWeight = () => cy.get<HTMLSelectElement>(weightTestID);
 
-const select = (select: Function, value: string) =>
+const select = (
+  select: () => Cypress.Chainable<JQuery<HTMLSelectElement>>,
+  value: string
+) =>
   select()
     .click()
     .then(() => {

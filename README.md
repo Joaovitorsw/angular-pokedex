@@ -131,21 +131,24 @@ $ yarn start
 
 ## :brain: _Conceitos Aplicados_
 
+
 <div align="center">
 
-|      :page_facing_up:      |
-| :------------------------: |
-|       Atomic Commit        |
-|    Conventional Commits    |
-|       API Consuming        |
-| Dynamic Template Rendering |
-|       ReactiveX            |
-|    Observable Operators    |
-|    Async/Await Operators   |
-|       HTTP Requests        |
-|     HTTP Interceptors      |
-|     LazyLoading Module     |
-|       Domain Modules       |
+|      :page_facing_up:       |
+| :-------------------------: |
+|        Atomic Commit        |
+|    Conventional Commits     |
+|        API Consuming        |
+| Dynamic Template Rendering  |
+| Progressive Web Application |
+|          ReactiveX          |
+|    Observable Operators     |
+|    Async/Await Operators    |
+|        HTTP Requests        |
+|      HTTP Interceptors      |
+|     LazyLoading Module      |
+|       Domain Modules        |
+|       Regexp Patterns       |
 
 </div>
 

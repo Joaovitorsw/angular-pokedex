@@ -8,7 +8,7 @@ import {
 import { PokeApiService } from '@pokedex/services';
 import { Pokemon, PokemonSpecies, Variety } from 'poke-api-models';
 import { combineLatest, map, Observable, of, switchMap, tap } from 'rxjs';
-import { EXCLUDED_NAMES } from '../../pages/about/about.page.variables';
+import { SPECIE_PATTERN } from '../../pages/about/about.page.variables';
 
 @Component({
   selector: 'px-forms-content',
@@ -104,15 +104,7 @@ export class FormsContentComponent implements OnInit {
     const species$ = forms$.pipe(
       switchMap((pokemons) => {
         const otherSpecies = pokemons.map((pokemon) => {
-          let name = pokemon.name.replace(EXCLUDED_NAMES, '');
-
-          const exceptionName =
-            pokemon.name === 'mr-mime' ||
-            pokemon.name === 'mime-jr' ||
-            pokemon.name === 'mr-rime' ||
-            pokemon.name === 'mr-mime-galar';
-
-          if (exceptionName) name = pokemon.name.replace('-galar', '');
+          const name = pokemon.name.replace(SPECIE_PATTERN, '');
           return this.pokeAPI.getSpeciesByNameOrID(name);
         });
         return combineLatest(otherSpecies);
