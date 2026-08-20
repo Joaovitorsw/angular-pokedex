@@ -10,28 +10,26 @@
   
 </div>
 
-<p align="center">
-  <img alt="poke-app" src=".github/angular-poke-app.png" width="350px" height="180px"/>
-</p>
-
 <p align="center"> 
   <img alt="Top Language" src="https://img.shields.io/github/languages/top/Joaovitorsw/angular-pokedex?color=3498db&style=for-the-badge">
   <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/Joaovitorsw/angular-pokedex?color=3498db&style=for-the-badge&label=Ultimo%20Commit">   
   <a href="https://github.com/Joaovitorsw">
     <img alt="Developed by João Vitor" src="https://img.shields.io/badge/Developer-João_Vitor-%3498db?color=3498db&style=for-the-badge&label=Desenvolvedor">
   </a>  
-  <img alt="Project License" src="https://img.shields.io/apm/l/vim-mode?style=for-the-badge&label=licen%C3%A7a"/>   
-  <img alt="Project Status" src="https://img.shields.io/badge/Finalizado-%3498db?color=green&style=for-the-badge&label=Status">
-
+  <img alt="Project License" src="https://img.shields.io/github/license/Joaovitorsw/angular-pokedex?style=for-the-badge&label=licen%C3%A7a"/>   
+  <img alt="Project Status" src="https://img.shields.io/badge/status-concluido-green?style=for-the-badge&label=Status">
 </p>
+
+<h1 align="center">Angular Pokedex</h1>
 
 <p align="center">
  <a href="#eye_speech_bubble-visualizar">Visualizar</a> •
  <a href="#information_source-sobre">Sobre</a> •
- <a href="#arrow_forward-executar">Executar</a> •
  <a href="#hammer_and_wrench-tecnologias">Tecnologias</a> • 
  <a href="#brain-conceitos-aplicados">Conceitos</a> •
  <a href="#sparkles-funcionalidades">Funcionalidades</a> •
+ <a href="#rocket-como-executar">Como executar</a> •
+ <a href="#label-palavras-chave">Palavras-chave</a> •
  <a href="#boy-autor">Autor</a> •
  <a href="#balance_scale-licença">Licença</a>
 </p>
@@ -42,88 +40,38 @@
 
 <div align="center">
 
-Deploy do front-end efetuado no [Netlify](https://www.netlify.com/) para visualizar: [Clique Aqui](https://joaovitorsw-angular-pokedex.netlify.app/)
+Preview online não informado no repositório.
 
-|                              :computer:Desktop                              |                              :iphone: Mobile                               |
-| :-------------------------------------------------------------------------: | :------------------------------------------------------------------------: |
-|  <kbd><img src=".github/previews/desktop-preview.jpg" alt="Tablet"/></kbd>  |  <kbd><img src=".github/previews/mobile-preview.jpg" alt="Mobile"/></kbd>  |
-| <kbd><img src=".github/previews/desktop-preview-2.jpg" alt="Tablet"/></kbd> | <kbd><img src=".github/previews/mobile-preview-2.jpg" alt="Mobile"/></kbd> |
-| <kbd><img src=".github/previews/desktop-preview-3.jpg" alt="Tablet"/></kbd> | <kbd><img src=".github/previews/mobile-preview-3.jpg" alt="Mobile"/></kbd> |
+|                             :computer: Desktop                             |                             :iphone: Mobile                              |
+| :-----------------------------------------------------------------------: | :----------------------------------------------------------------------: |
+| <kbd><img src=".github/previews/desktop-preview.jpg" alt="Desktop"/></kbd> | <kbd><img src=".github/previews/mobile-preview.jpg" alt="Mobile"/></kbd> |
 
 </div>
   
 ---
+
 ## :information_source: _Sobre_
 
 <div align="center">
 
-Aplicação feita em angular para visualizar os dados de um pokemon.
+Aplicação Angular criada para praticar arquitetura de componentes, rotas, services, consumo de APIs e organização de interfaces web modernas.
 
 ---
 
 </div>
 
-</div>
-
-## :arrow_forward: **Executar**
+## :hammer_and_wrench: _Tecnologias_
 
 <div align="center">
 
-Para executar esse projeto você precisa baixar este repositório, ter o Gerenciador de Pacotes do Node ([`NPM`](https://www.npmjs.com/get-npm)) ou o Gerenciador de Pacotes YARN ([`YARN`](https://yarnpkg.com/getting-started)) instalado.
-
-Abra o prompt de comando no diretório do projeto na pasta <code>angular-pokedex</code>, e execute os seguintes códigos:
-
-<details>
-  <summary><i>com <b>npm</b></i></summary>
-  
-  ```bash
-  # Instalar dependências
-  $ npm install ou npm i
-
-# Iniciar o servidor de desenvolvimento
-
-$ npm start
-
-````
-
-</details>
-
-<details>
-<summary><i>com <b>yarn</b></i></summary>
-
-```bash
-# Instalar dependências
-$ yarn install
-
-# Iniciar o servidor de desenvolvimento
-$ yarn start
-
-````
-
-</details>
-
-> ⚠️ O servidor de desenvolvimento será iniciado na porta: 1234 - Acesse <http://localhost:4200>
-
-</div>
-
----
-
-## :hammer*and_wrench: \_Tecnologias*
-
-<div align="center">
-
-|               :globe_with_meridians: FrontEnd               |
-| :---------------------------------------------------------: |
-|              [Angular 13](https://angular.io/)              |
-|     [Angular Material 13](https://material.angular.io/)     |
-|      [Karma 6.3](https://www.npmjs.com/package/karma)       |
-| [NG Particles](https://www.npmjs.com/package/ng-particles)  |
-|       [Testing Library](https://testing-library.com/)       |
-|   [Ts Mockito](https://www.npmjs.com/package/ts-mockito)    |
-|       [Cypres](https://www.npmjs.com/package/cypress)       |
-|      [Typescript 4.5](https://www.typescriptlang.org/)      |
-| [RxJS 7.1](https://rxjs-dev.firebaseapp.com/guide/overview) |
-|               [SCSS](https://sass-lang.com/)                |
+| :globe_with_meridians: Stack |
+| :--------------------------: |
+| [TypeScript](https://www.typescriptlang.org/) |
+| [HTML 5](https://www.w3schools.com/html/) |
+| [CSS3](https://www.w3schools.com/css/) |
+| [JavaScript ES6](https://developer.mozilla.org/en-US/docs/Web/JavaScript) |
+| [Angular](https://angular.io/) |
+| [RxJS](https://rxjs.dev/) |
 
 </div>
 
@@ -133,21 +81,15 @@ $ yarn start
 
 <div align="center">
 
-|      :page_facing_up:       |
-| :-------------------------: |
-|        Atomic Commit        |
-|    Conventional Commits     |
-|        API Consuming        |
-| Dynamic Template Rendering  |
-| Progressive Web Application |
-|          ReactiveX          |
-|    Observable Operators     |
-|    Async/Await Operators    |
-|        HTTP Requests        |
-|      HTTP Interceptors      |
-|     LazyLoading Module      |
-|       Domain Modules        |
-|       Regexp Patterns       |
+|  :page_facing_up:  |
+| :----------------: |
+| Componentizacao |
+| Rotas |
+| Services |
+| RxJS |
+| Formulários |
+| Consumo de API |
+| Testes |
 
 </div>
 
@@ -157,10 +99,43 @@ $ yarn start
 
 <div align="center">
 
-|                            :page_facing_up:                             |
-| :---------------------------------------------------------------------: |
-|               Acesso aos detalhes de cada um dos Pokemons               |
-| Filtro de pokemons por pesquisa,favoritos,gerações,peso,altura,fraqueza |
+|                     :page_facing_up:                      |
+| :-------------------------------------------------------: |
+| Listar e visualizar informações de Pokémon |
+| Consumir dados de API externa |
+
+</div>
+
+---
+
+## :rocket: _Como Executar_
+
+```bash
+npm install
+npm start
+```
+
+---
+
+## :label: _Palavras-chave_
+
+<div align="center">
+
+| :mag_right: Tags |
+| :---------------: |
+| `portfolio` |
+| `joaovitorsw` |
+| `angular` |
+| `typescript` |
+| `rxjs` |
+| `frontend` |
+| `spa` |
+| `pokedex` |
+| `pokemon` |
+| `api` |
+| `javascript` |
+| `css` |
+| `html` |
 
 </div>
 
@@ -186,11 +161,11 @@ Desenvolvido com ❤️ por João Vitor Pereira dos Santos 👋🏽 Meus Contato
 
 ---
 
-## :balance*scale: \_Licença*
+## :balance_scale: _Licença_
 
 <div align="center">
 
-Copyright ©️ 2021 [João Vitor Pereira dos Santos ](https://github.com/Joaovitorsw).<br />
-This project is licensed by [MIT](./LICENSE).
+Copyright ©️ 2026 [João Vitor Pereira dos Santos](https://github.com/Joaovitorsw).<br />
+Este projeto ainda não possui uma licença formal publicada.
 
 </div>
